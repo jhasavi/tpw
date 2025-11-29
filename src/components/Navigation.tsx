@@ -46,6 +46,7 @@ export default function Navigation() {
   const [learnMenuOpen, setLearnMenuOpen] = useState(false)
   const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false)
   const [aboutMenuOpen, setAboutMenuOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   return (
     <nav className="bg-white shadow-sm border-b border-purple-100">
@@ -138,21 +139,40 @@ export default function Navigation() {
                 </div>
               )}
             </div>
+
+            {/* User Account Menu */}
             {user ? (
-              <>
-                <Link href="/dashboard" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
-                  Dashboard
-                </Link>
-                <Link href="/dashboard?tab=profile" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
-                  Profile
-                </Link>
-                <button
-                  onClick={handleSignOut}
-                  className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50"
-                >
-                  Sign Out
+              <div className="relative" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
+                <button className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+                  <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
+                    {user.email?.[0]?.toUpperCase() || 'U'}
+                  </div>
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
-              </>
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                    <div className="py-1">
+                      <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+                        {user.email}
+                      </div>
+                      <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                        📊 Dashboard
+                      </Link>
+                      <Link href="/dashboard?tab=profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                        👤 Profile
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600"
+                      >
+                        🚪 Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : !loading && (
               <>
                 <Link href="/auth/login" className="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">
@@ -223,20 +243,29 @@ export default function Navigation() {
             <Link href="/contact" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
               📞 Contact
             </Link>
+            
             {user ? (
               <>
-                <Link href="/dashboard" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium">
-                  Dashboard
+                <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase border-t border-purple-100 mt-2">Account</div>
+                <div className="px-3 py-2 text-sm text-gray-500 pl-6">
+                  {user.email}
+                </div>
+                <Link href="/dashboard" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
+                  📊 Dashboard
+                </Link>
+                <Link href="/dashboard?tab=profile" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
+                  👤 Profile
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="block w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium"
+                  className="block w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6"
                 >
-                  Sign Out
+                  🚪 Sign Out
                 </button>
               </>
             ) : !loading && (
               <>
+                <div className="border-t border-purple-100 mt-2"></div>
                 <Link href="/auth/login" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium">
                   Sign In
                 </Link>

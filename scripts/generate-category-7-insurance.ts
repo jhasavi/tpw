@@ -858,8 +858,8 @@ const CATEGORY_7_INSURANCE = [
 async function uploadQuestions() {
   console.log('Starting upload of Category 7: Insurance questions...')
   
-  for (let i = 0; i < insuranceQuestions.length; i++) {
-    const question = insuranceQuestions[i]
+  for (let i = 0; i < CATEGORY_7_INSURANCE.length; i++) {
+    const question = CATEGORY_7_INSURANCE[i]
     
     const { data, error } = await supabase
       .from('quiz_questions')
@@ -868,16 +868,16 @@ async function uploadQuestions() {
     if (error) {
       console.error(`Error uploading question ${i + 1}:`, error)
     } else {
-      console.log(`✓ Uploaded question ${i + 1}/${insuranceQuestions.length}`)
+      console.log(`✓ Uploaded question ${i + 1}/${CATEGORY_7_INSURANCE.length}`)
     }
   }
   
   console.log('\n✅ Upload complete!')
-  console.log(`Total questions uploaded: ${insuranceQuestions.length}`)
+  console.log(`Total questions uploaded: ${CATEGORY_7_INSURANCE.length}`)
   console.log('Breakdown:')
-  console.log(`- Beginner: ${insuranceQuestions.filter(q => q.difficulty_level === 'beginner').length}`)
-  console.log(`- Intermediate: ${insuranceQuestions.filter(q => q.difficulty_level === 'intermediate').length}`)
-  console.log(`- Advanced: ${insuranceQuestions.filter(q => q.difficulty_level === 'advanced').length}`)
+  console.log(`- Beginner: ${CATEGORY_7_INSURANCE.filter(q => q.difficulty_level === 'beginner').length}`)
+  console.log(`- Intermediate: ${CATEGORY_7_INSURANCE.filter(q => q.difficulty_level === 'intermediate').length}`)
+  console.log(`- Advanced: ${CATEGORY_7_INSURANCE.filter(q => q.difficulty_level === 'advanced').length}`)
 }
 
 uploadQuestions()
