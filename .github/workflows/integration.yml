@@ -1,0 +1,74 @@
+name: Integration - Migrate & Simulate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate-and-simulate:
+    runs-on: ubuntu-latest
+    env:
+      API_PORT: 3001
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install API deps
+        working-directory: api
+        run: npm ci
+
+      - name: Install root deps (simulate script)
+        run: npm ci
+
+      - name: Apply DB migration
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "${DATABASE_URL}" ]; then
+            echo "DATABASE_URL secret is required"; exit 1
+          fi
+          psql "$DATABASE_URL" -f supabase/migrations/20251121_increment_progress.sql
+
+      - name: Check for required secrets
+        id: check-secrets
+        run: |
+          has_supabase=false
+          has_simulate=false
+          if [ -n "${{ secrets.SUPABASE_URL }}" ] && [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            has_supabase=true
+          fi
+          if [ -n "${{ secrets.SIMULATE_TOKEN }}" ] && [ -n "${{ secrets.SIMULATE_LESSON_ID }}" ]; then
+            has_simulate=true
+          fi
+          echo "has_supabase=$has_supabase" >> $GITHUB_OUTPUT
+          echo "has_simulate=$has_simulate" >> $GITHUB_OUTPUT
+
+      - name: Start API server (only if SUPABASE secrets present)
+        if: steps.check-secrets.outputs.has_supabase == 'true'
+        working-directory: api
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          PORT: ${{ env.API_PORT }}
+        run: |
+          nohup node server.js > api.log 2>&1 &
+          # wait for API to respond
+          for i in {1..15}; do
+            if curl -s "http://localhost:${API_PORT}/api/" >/dev/null 2>&1; then
+              echo "API is up"; break
+            fi
+            sleep 1
+          done
+
+      - name: Run simulate script (requires SUPABASE + simulate secrets)
+        if: steps.check-secrets.outputs.has_simulate == 'true'
+        env:
+          API_URL: http://localhost:${{ env.API_PORT }}/api
+          SIMULATE_TOKEN: ${{ secrets.SIMULATE_TOKEN }}
+          SIMULATE_LESSON_ID: ${{ secrets.SIMULATE_LESSON_ID }}
+        run: |
+          node scripts/simulate_lesson_play.js "$SIMULATE_LESSON_ID" "$SIMULATE_TOKEN" 30

@@ -1,0 +1,39 @@
+name: Migrations and RPC Check
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  migrations:
+    name: Run migrations and check RPC
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate secrets
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "ERROR: DATABASE_URL secret is not set. Add it to repository secrets to run this workflow.";
+            exit 1;
+          fi
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/run_migrations.js
+
+      - name: Check RPC exists
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/check_rpc_exists.js

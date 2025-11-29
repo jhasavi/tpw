@@ -1,0 +1,47 @@
+name: Migrations Test (Postgres service)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: tpw_test
+          POSTGRES_USER: tpw
+          POSTGRES_PASSWORD: tpw_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tpw -d tpw_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install psql client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            pg_isready -h localhost -p 5432 -U tpw && break || sleep 1
+          done
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgresql://tpw:tpw_pass@localhost:5432/tpw_test
+        run: |
+          node scripts/run_migrations.js
+
+      - name: Check RPC exists
+        env:
+          DATABASE_URL: postgresql://tpw:tpw_pass@localhost:5432/tpw_test
+        run: |
+          node scripts/check_rpc_exists.js

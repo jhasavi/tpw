@@ -1,0 +1,52 @@
+name: E2E Smoke Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  smoke-e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for Postgres
+        run: |
+          for i in `seq 1 15`; do
+            pg_isready -h localhost -p 5432 -U postgres && break
+            sleep 2
+          done
+      - name: Install dependencies
+        run: |
+          cd api
+          npm ci --no-audit --no-fund
+      - name: Apply migrations
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        run: |
+          psql "$DATABASE_URL" -f migrations/001_create_canonical_schema.sql
+          psql "$DATABASE_URL" -f migrations/002_add_rpc_increment_progress.sql
+      - name: Start API (background)
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        run: |
+          cd api
+          nohup node server.js > /tmp/api-ci.log 2>&1 &
+          sleep 3
+          tail -n 200 /tmp/api-ci.log || true
+      - name: Run smoke script
+        run: |
+          chmod +x scripts/run_smoke.sh || true
+          ./scripts/run_smoke.sh
