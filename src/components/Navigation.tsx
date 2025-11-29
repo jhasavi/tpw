@@ -9,12 +9,15 @@ import type { User } from '@supabase/supabase-js'
 export default function Navigation() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
+    setMounted(true)
+    
     // Get initial user
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)
@@ -27,7 +30,7 @@ export default function Navigation() {
     })
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth])
+  }, [])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
