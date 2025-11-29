@@ -1,23 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
-import * as dotenv from 'dotenv'
-import * as path from 'path'
-
-dotenv.config({ path: path.resolve(__dirname, '../.env.local') })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-interface QuizQuestion {
-  question_text: string
-  correct_answer: string
-  incorrect_answers: string[]
-  explanation: string
-  difficulty_level: 'beginner' | 'intermediate' | 'advanced'
-  category_id: number
-}
+// Note: category_id 7 should be created in quiz_categories table first
+// This matches "Insurance Fundamentals" category
 
-const insuranceQuestions: QuizQuestion[] = [
+const CATEGORY_7_INSURANCE = [
   // BEGINNER LEVEL (25 questions)
   {
     question_text: "What is the primary purpose of insurance?",
