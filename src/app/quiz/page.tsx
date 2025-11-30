@@ -51,33 +51,21 @@ export default function QuizCategoriesPage() {
         return;
       }
 
+      // Since we don't have category tracking in quiz_attempts yet,
+      // just show that quizzes have been attempted
       const { data: attempts } = await supabase
-        .from('quiz_attempts_detailed')
-        .select('category_id, score')
+        .from('quiz_attempts')
+        .select('score')
         .eq('user_id', user.id);
 
-      if (attempts) {
-        const stats: { [key: number]: { score: number; attempts: number; total: number } } = {};
+      if (attempts && attempts.length > 0) {
+        // For now, just track overall stats
+        // TODO: Update once category tracking is added to quiz_attempts
+        const avgScore = Math.round(
+          attempts.reduce((sum, a) => sum + (a.score || 0), 0) / attempts.length
+        );
         
-        attempts.forEach((attempt: any) => {
-          const categoryId = attempt.category_id;
-          if (!stats[categoryId]) {
-            stats[categoryId] = { score: 0, attempts: 0, total: 0 };
-          }
-          stats[categoryId].total += attempt.score;
-          stats[categoryId].attempts += 1;
-        });
-
-        // Calculate averages
-        const avgStats: { [key: number]: { score: number; attempts: number } } = {};
-        Object.entries(stats).forEach(([id, data]) => {
-          avgStats[parseInt(id)] = {
-            score: Math.round(data.total / data.attempts),
-            attempts: data.attempts
-          };
-        });
-
-        setUserStats(avgStats);
+        console.log(`User has completed ${attempts.length} quizzes with avg score of ${avgScore}%`);
       }
     } catch (error) {
       console.error('Error loading stats:', error);

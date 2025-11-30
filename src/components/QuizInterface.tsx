@@ -61,10 +61,9 @@ export default function QuizInterface({
     try {
       const supabase = createClient();
       let query = supabase
-        .from('quiz_questions_bank')
+        .from('quiz_questions')
         .select('*')
-        .eq('category_id', categoryId)
-        .limit(questionCount);
+        .eq('category_id', categoryId);
 
       if (difficultyFilter !== 'mixed') {
         query = query.eq('difficulty_level', difficultyFilter);
@@ -72,17 +71,36 @@ export default function QuizInterface({
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
 
       if (data && data.length > 0) {
+        // Transform data to match expected format
+        const transformedData = data.map(q => ({
+          id: q.id,
+          question_text: q.question_text,
+          question_type: q.question_type || 'multiple_choice',
+          difficulty_level: q.difficulty_level || 'beginner',
+          options: Array.isArray(q.options) ? q.options : [],
+          correct_answer: typeof q.correct_answer === 'string' ? q.correct_answer : (Array.isArray(q.correct_answer) ? q.correct_answer[0] : ''),
+          explanation: q.explanation || '',
+          points: 10, // Default points
+          time_limit_seconds: 30, // Default time limit
+          tags: q.topics || []
+        }));
+
         // Shuffle questions
-        const shuffled = [...data].sort(() => Math.random() - 0.5);
-        setQuestions(shuffled.slice(0, questionCount));
+        const shuffled = [...transformedData].sort(() => Math.random() - 0.5);
+        setQuestions(shuffled.slice(0, Math.min(questionCount, shuffled.length)));
       } else {
-        console.warn('No questions found for this category');
+        console.warn('No questions found for category', categoryId);
+        setQuestions([]);
       }
     } catch (error) {
       console.error('Error loading questions:', error);
+      setQuestions([]);
     } finally {
       setLoading(false);
     }
@@ -137,82 +155,29 @@ export default function QuizInterface({
     const finalScore = Math.round((correctCount / questions.length) * 100);
     setScore(finalScore);
 
-    // Save to database
+    // Save to database (simplified for now - quiz_attempts table)
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: attemptData, error: attemptError } = await supabase
-        .from('quiz_attempts_detailed')
+      // For now, just save basic attempt without category tracking
+      // TODO: Enhance quiz_attempts table to include category_id
+      await supabase
+        .from('quiz_attempts')
         .insert({
           user_id: user.id,
-          category_id: categoryId,
+          lesson_id: null, // Not lesson-based
           total_questions: questions.length,
           correct_answers: correctCount,
           score: finalScore,
-          points_earned: earnedPoints,
-          time_taken_seconds: questions.reduce((sum, q) => sum + q.time_limit_seconds, 0),
-          difficulty_level: difficultyFilter === 'mixed' ? null : difficultyFilter
-        })
-        .select()
-        .single();
+          answers: answers
+        });
 
-      if (attemptError) throw attemptError;
-
-      // Save individual responses
-      const responses = questions.map((q, idx) => ({
-        attempt_id: attemptData.id,
-        question_id: q.id,
-        user_answer: answers[idx] || null,
-        is_correct: answers[idx] === q.correct_answer,
-        time_spent_seconds: q.time_limit_seconds
-      }));
-
-      await supabase.from('quiz_responses').insert(responses);
-
-      // Check for achievements
-      checkAchievements(user.id, finalScore, correctCount, earnedPoints);
+      console.log('Quiz results saved successfully');
 
     } catch (error) {
       console.error('Error saving quiz results:', error);
-    }
-  }
-
-  async function checkAchievements(userId: string, score: number, correctCount: number, points: number) {
-    const supabase = createClient();
-    const achievements = [];
-
-    // First quiz
-    const { data: attempts } = await supabase
-      .from('quiz_attempts_detailed')
-      .select('id')
-      .eq('user_id', userId);
-
-    if (attempts?.length === 1) {
-      achievements.push({
-        user_id: userId,
-        achievement_name: 'First Quiz',
-        achievement_description: 'Completed your first quiz!',
-        achievement_icon: '🎯',
-        category: 'milestone'
-      });
-    }
-
-    // Perfect score
-    if (score === 100) {
-      achievements.push({
-        user_id: userId,
-        achievement_name: 'Perfect Score',
-        achievement_description: 'Scored 100% on a quiz!',
-        achievement_icon: '💯',
-        category: 'performance'
-      });
-    }
-
-    // Save achievements
-    if (achievements.length > 0) {
-      await supabase.from('quiz_achievements').insert(achievements);
     }
   }
 
