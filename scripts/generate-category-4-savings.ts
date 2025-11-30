@@ -256,8 +256,7 @@ async function uploadSavingsQuestions() {
     difficulty_level: q.difficulty_level,
     options: q.options, // Will be stored as JSONB array
     correct_answer: q.correct_answer, // Will be stored as JSONB
-    explanation: q.explanation,
-    topics: q.tags || q.topics || [] // text array
+    explanation: q.explanation
   }));
   
   const { data, error } = await supabase
