@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import PageViewTracker from "@/components/analytics/PageViewTracker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body className={inter.className}>
+        <PageViewTracker />
         <Navigation />
         {children}
         <footer className="bg-gray-900 text-white py-12">
