@@ -77,11 +77,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
     completedLessons = progressData?.filter(p => p.status === 'completed').length ?? 0
   }
 
-  // Check if lesson has content
+  // Check if lesson has content - handle both old and new content structures
   const hasContent = lessonData.content && 
                      typeof lessonData.content === 'object' &&
-                     'introduction' in lessonData.content &&
-                     lessonData.content.introduction
+                     (
+                       ('introduction' in lessonData.content && lessonData.content.introduction) ||
+                       ('sections' in lessonData.content && Array.isArray(lessonData.content.sections) && lessonData.content.sections.length > 0)
+                     )
 
   if (!hasContent) {
     return (

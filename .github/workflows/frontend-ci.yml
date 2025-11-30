@@ -9,6 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Use secrets if available, otherwise use dummy values for build testing
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key-for-build' }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 'dummy-key-for-build' }}
+      RESEND_FROM_EMAIL: ${{ secrets.RESEND_FROM_EMAIL || 'noreply@example.com' }}
+      CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL || 'contact@example.com' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'dummy-key-for-build' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
