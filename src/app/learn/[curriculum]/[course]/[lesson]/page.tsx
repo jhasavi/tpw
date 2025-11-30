@@ -51,6 +51,32 @@ export default async function LessonPage({ params }: LessonPageProps) {
     notFound()
   }
 
+  // Get all lessons in this course for navigation
+  const { data: allLessons } = await supabase
+    .from('lessons')
+    .select('id, slug, title, display_order')
+    .eq('course_id', courseData.id)
+    .order('display_order', { ascending: true })
+
+  const currentIndex = allLessons?.findIndex(l => l.id === lessonData.id) ?? -1
+  const previousLesson = currentIndex > 0 ? allLessons?.[currentIndex - 1] : null
+  const nextLesson = currentIndex >= 0 && allLessons && currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null
+  const totalLessons = allLessons?.length ?? 0
+  const lessonNumber = currentIndex + 1
+
+  // Get user's progress in this course
+  const { data: { user } } = await supabase.auth.getUser()
+  let completedLessons = 0
+  if (user) {
+    const { data: progressData } = await supabase
+      .from('lesson_progress')
+      .select('lesson_id, status')
+      .eq('user_id', user.id)
+      .in('lesson_id', allLessons?.map(l => l.id) ?? [])
+    
+    completedLessons = progressData?.filter(p => p.status === 'completed').length ?? 0
+  }
+
   // Check if lesson has content
   const hasContent = lessonData.content && 
                      typeof lessonData.content === 'object' &&
@@ -91,6 +117,27 @@ export default async function LessonPage({ params }: LessonPageProps) {
           <span className="mx-2">/</span>
           <span className="text-gray-900">{lesson.title}</span>
         </nav>
+
+        {/* Progress Indicator */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">
+              Lesson {lessonNumber} of {totalLessons}
+            </span>
+            <span className="text-sm font-medium text-purple-600">
+              {Math.round((completedLessons / totalLessons) * 100)}% Complete
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              className="bg-purple-600 h-2.5 rounded-full transition-all duration-300"
+              style={{ width: `${(completedLessons / totalLessons) * 100}%` }}
+            />
+          </div>
+          <div className="mt-2 text-xs text-gray-600">
+            {completedLessons} of {totalLessons} lessons completed in this course
+          </div>
+        </div>
 
         {/* Lesson Header */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
@@ -261,17 +308,82 @@ export default async function LessonPage({ params }: LessonPageProps) {
         {/* Progress Tracker */}
         <ProgressTracker lessonId={lessonData.id} courseId={courseData.id} />
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center">
+        {/* Lesson Navigation */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className="flex items-center justify-between gap-4">
+            {previousLesson ? (
+              <Link
+                href={`/learn/${curriculumSlug}/${courseSlug}/${previousLesson.slug}`}
+                className="flex-1 group"
+              >
+                <div className="flex items-center gap-3 p-4 rounded-lg border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-purple-100 flex items-center justify-center transition-colors">
+                      <svg className="w-5 h-5 text-gray-600 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="text-xs text-gray-500 mb-1">Previous Lesson</div>
+                    <div className="font-semibold text-gray-900 group-hover:text-purple-600 line-clamp-1">
+                      {previousLesson.title}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ) : (
+              <div className="flex-1 p-4 rounded-lg border-2 border-gray-100 bg-gray-50">
+                <div className="text-center text-gray-400 text-sm">First Lesson</div>
+              </div>
+            )}
+
+            <Link
+              href={`/learn/${curriculumSlug}/${courseSlug}`}
+              className="flex-shrink-0 px-6 py-3 text-gray-600 hover:text-purple-600 font-medium transition-colors"
+            >
+              All Lessons
+            </Link>
+
+            {nextLesson ? (
+              <Link
+                href={`/learn/${curriculumSlug}/${courseSlug}/${nextLesson.slug}`}
+                className="flex-1 group"
+              >
+                <div className="flex items-center gap-3 p-4 rounded-lg border-2 border-purple-500 bg-purple-50 hover:bg-purple-100 transition-all">
+                  <div className="flex-1 text-right">
+                    <div className="text-xs text-purple-600 mb-1">Next Lesson</div>
+                    <div className="font-semibold text-gray-900 line-clamp-1">
+                      {nextLesson.title}
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-purple-200 group-hover:bg-purple-300 flex items-center justify-center transition-colors">
+                      <svg className="w-5 h-5 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ) : (
+              <div className="flex-1 p-4 rounded-lg border-2 border-green-200 bg-green-50">
+                <div className="text-center text-green-700 font-semibold text-sm">
+                  🎉 Course Complete!
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Back to Courses */}
+        <div className="text-center">
           <Link
             href="/courses"
-            className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-2"
+            className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium"
           >
-            <span>←</span> Back to Courses
+            <span>←</span> Back to All Courses
           </Link>
-          <div className="text-gray-500 text-sm">
-            More lessons coming soon!
-          </div>
         </div>
       </div>
     </div>
