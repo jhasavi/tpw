@@ -125,38 +125,44 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
       return
     }
 
-    // First ensure the user profile exists
-    const { data: profile } = await supabase
+    // Ensure the user profile exists and create if it doesn't
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('id')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
+
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.error('Error checking profile:', profileError)
+    }
 
     if (!profile) {
       // Create profile if it doesn't exist
-      const { error: profileError } = await supabase
+      const { error: insertError } = await supabase
         .from('profiles')
         .insert({
           id: user.id,
-          email: user.email,
-          created_at: new Date().toISOString()
+          email: user.email || '',
+          full_name: user.user_metadata?.full_name || '',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
       
-      if (profileError) {
-        console.error('Error creating profile:', profileError)
-        alert('Please complete your profile setup first. Go to Profile page.')
-        return
+      if (insertError) {
+        console.error('Error creating profile:', insertError)
+        // Continue anyway - the lesson_progress table doesn't have FK constraint
       }
     }
 
-    // Now mark the lesson as complete
+    // Mark the lesson as complete (will work even without profile)
     const { error } = await supabase
       .from('lesson_progress')
       .upsert({
         user_id: user.id,
         lesson_id: lessonId,
         status: 'completed',
-        completed_at: new Date().toISOString()
+        completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }, {
         onConflict: 'user_id,lesson_id'
       })

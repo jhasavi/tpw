@@ -11,6 +11,10 @@ export default function Navigation() {
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [learnMenuOpen, setLearnMenuOpen] = useState(false)
+  const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false)
+  const [aboutMenuOpen, setAboutMenuOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -43,10 +47,23 @@ export default function Navigation() {
     return null
   }
 
-  const [learnMenuOpen, setLearnMenuOpen] = useState(false)
-  const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false)
-  const [aboutMenuOpen, setAboutMenuOpen] = useState(false)
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  // Prevent hydration mismatch by not rendering auth-dependent content until mounted
+  if (!mounted) {
+    return (
+      <nav className="bg-white shadow-sm border-b border-purple-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-3">
+                <img src="/images/logo-nobg.png" alt="The Purple Wings" className="h-10 w-auto" />
+                <span className="text-xl font-bold text-purple-700">The Purple Wings</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+    )
+  }
 
   return (
     <nav className="bg-white shadow-sm border-b border-purple-100">
