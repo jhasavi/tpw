@@ -1,62 +1,49 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Blog - Financial Education & Tips | The Purple Wings',
   description: 'Read expert articles on financial literacy, women\'s empowerment, budgeting, investing, and more.',
 }
 
-const blogPosts = [
-  {
-    id: 'fi-why-matters',
-    title: "Why Financial Independence Matters for Women",
-    slug: 'why-financial-independence-matters-for-women',
-    excerpt: 'Financial independence is about freedom, security, and the power to choose. Here is why it uniquely matters for women and how to get started.',
-    author: 'Editorial Team',
-    publishedAt: '2025-10-30',
-    category: 'Financial Independence',
-    tags: ['financial-independence', 'women-and-money', 'foundations'],
-    featuredImage: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200',
-    isFeatured: true,
-  },
-  {
-    id: 'fi-10-steps',
-    title: '10 Practical Steps to Build Financial Independence',
-    slug: '10-practical-steps-financial-independence',
-    excerpt: 'From budgeting and emergency savings to credit, debt, and retirement—ten focused actions to build momentum without overwhelm.',
-    author: 'Editorial Team',
-    publishedAt: '2025-10-30',
-    category: 'Guides',
-    tags: ['checklist', 'budgeting', 'credit', 'retirement'],
-    featuredImage: 'https://images.unsplash.com/photo-1553729784-e91953dec042?w=1200',
-    isFeatured: true,
-  },
-  {
-    id: 'negotiation-comp',
-    title: 'Negotiation for Women: Beyond Base Salary',
-    slug: 'negotiation-for-women-beyond-base-salary',
-    excerpt: 'Compensation is more than base pay. Learn what to negotiate and how to frame your value.',
-    author: 'Career Finance Team',
-    publishedAt: '2025-10-30',
-    category: 'Career',
-    tags: ['career', 'negotiation', 'compensation'],
-    featuredImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=1200',
-  },
-  {
-    id: 'life-changes-plan',
-    title: 'Planning for Life Changes: Caregiving, Divorce, and Loss',
-    slug: 'planning-for-life-changes-caregiving-divorce-loss',
-    excerpt: 'Build resilience with a readiness plan for caregiving, separation, or loss, without derailing long-term goals.',
-    author: 'Editorial Team',
-    publishedAt: '2025-10-30',
-    category: 'Planning',
-    tags: ['caregiving', 'divorce', 'resilience'],
-    featuredImage: 'https://images.unsplash.com/photo-1484980859177-5ac1249fda6f?w=1200',
-  },
-]
+export const dynamic = 'force-dynamic'
 
-export default function BlogPage() {
+interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  author: string
+  published_date: string
+  category: string
+  tags: string[]
+  featured_image_url: string
+  is_featured: boolean
+}
+
+async function getBlogPosts(): Promise<BlogPost[]> {
+  const supabase = await createClient()
+  
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('is_published', true)
+    .order('published_date', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching blog posts:', error)
+    return []
+  }
+
+  return data || []
+}
+
+export default async function BlogPage() {
+  const blogPosts = await getBlogPosts()
+  const featuredPosts = blogPosts.filter(post => post.is_featured)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       {/* Hero Section */}
@@ -93,11 +80,11 @@ export default function BlogPage() {
                 <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer h-full flex flex-col">
                   <div className="relative h-48 bg-gray-200">
                     <img
-                      src={post.featuredImage}
+                      src={post.featured_image_url}
                       alt={post.title}
                       className="w-full h-full object-cover"
                     />
-                    {post.isFeatured && (
+                    {post.is_featured && (
                       <span className="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                         ⭐ Featured
                       </span>
@@ -109,7 +96,7 @@ export default function BlogPage() {
                         {post.category}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {new Date(post.publishedAt).toLocaleDateString('en-US', { 
+                        {new Date(post.published_date).toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric', 
                           year: 'numeric' 

@@ -65,7 +65,7 @@ export default function ProgressPage() {
     // Fetch quiz attempts
     const { data: quizData } = await supabase
       .from('quiz_attempts')
-      .select('percentage')
+      .select('score, total_questions')
       .eq('user_id', user.id)
 
     // Fetch courses with all lessons completed
@@ -124,7 +124,7 @@ export default function ProgressPage() {
     const totalTime = progressData?.reduce((sum, p) => sum + (p.time_spent_minutes || 0), 0) || 0
     const quizCount = quizData?.length || 0
     const avgScore = quizData && quizData.length > 0
-      ? Math.round(quizData.reduce((sum, q) => sum + q.percentage, 0) / quizData.length)
+      ? Math.round(quizData.reduce((sum, q) => sum + ((q.score / q.total_questions) * 100), 0) / quizData.length)
       : 0
 
     const currentStats: ProgressStats = {

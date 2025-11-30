@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import HeroSlider from '@/components/HeroSlider'
+import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'The Purple Wings - Financial Empowerment for Women | Free Financial Education',
@@ -11,6 +12,26 @@ export const metadata: Metadata = {
     title: 'The Purple Wings - Financial Empowerment for Women',
     description: 'Free financial literacy platform helping women achieve financial independence',
     images: ['/images/logo-nobg.png'],
+    type: 'website',
+    siteName: 'The Purple Wings',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Purple Wings - Financial Empowerment for Women',
+    description: 'Free financial literacy platform helping women achieve financial independence',
+    images: ['/images/logo-nobg.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: '/images/logo-nobg.png',
@@ -19,8 +40,16 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
+  const organizationSchema = generateOrganizationSchema()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      
       {/* Hero Slider Section */}
       <HeroSlider />
 

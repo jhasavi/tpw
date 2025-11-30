@@ -17,30 +17,24 @@ export default function NewsletterSubscribePage() {
     setError('')
 
     try {
-      const supabase = createClient()
-      const { error: dbError } = await supabase
-        .from('newsletter_subscribers')
-        .insert({
-          email,
-          name: name || null,
-          subscribed_at: new Date().toISOString(),
-          status: 'active'
-        })
+      const response = await fetch('/api/email/newsletter-welcome', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name: name || undefined }),
+      })
 
-      if (dbError) {
-        if (dbError.code === '23505') {
-          setError('This email is already subscribed!')
-        } else {
-          throw dbError
-        }
-      } else {
-        setSuccess(true)
-        setEmail('')
-        setName('')
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to subscribe')
       }
+
+      setSuccess(true)
+      setEmail('')
+      setName('')
     } catch (err) {
       console.error('Subscription error:', err)
-      setError('Failed to subscribe. Please try again.')
+      setError(err instanceof Error ? err.message : 'Failed to subscribe. Please try again.')
     } finally {
       setLoading(false)
     }

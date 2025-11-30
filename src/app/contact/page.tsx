@@ -19,9 +19,17 @@ export default function ContactPage() {
     setErrorMessage('')
 
     try {
-      // For now, we'll just simulate sending
-      // In production, you'd send to an API endpoint
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/email/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message')
+      }
       
       setStatus('success')
       setFormData({ name: '', email: '', subject: '', message: '' })
@@ -29,7 +37,7 @@ export default function ContactPage() {
       setTimeout(() => setStatus('idle'), 5000)
     } catch (error) {
       setStatus('error')
-      setErrorMessage('Failed to send message. Please try again.')
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to send message. Please try again.')
     }
   }
 

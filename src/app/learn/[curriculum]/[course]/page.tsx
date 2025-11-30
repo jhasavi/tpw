@@ -33,19 +33,20 @@ export default async function CoursePage({ params }: CoursePageProps) {
   // Get course details
   const { data: courseData, error: courseError } = await supabase
     .from('courses')
-    .select(`
-      *,
-      curricula (
-        title,
-        slug
-      )
-    `)
+    .select('*')
     .eq('slug', course)
     .single()
 
   if (courseError || !courseData) {
     notFound()
   }
+
+  // Get curriculum details
+  const { data: curriculumData } = await supabase
+    .from('curricula')
+    .select('title, slug')
+    .eq('id', courseData.curriculum_id)
+    .single()
 
   // Get lessons for this course
   const { data: lessons, error: lessonsError } = await supabase
@@ -70,8 +71,8 @@ export default async function CoursePage({ params }: CoursePageProps) {
               Courses
             </Link>
             <span>/</span>
-            <Link href={`/courses/${curriculum}`} className="hover:text-purple-600">
-              {courseData.curricula?.title}
+            <Link href={`/courses`} className="hover:text-purple-600">
+              {curriculumData?.title || 'Curriculum'}
             </Link>
             <span>/</span>
             <span className="text-gray-900 font-medium">{courseData.title}</span>
