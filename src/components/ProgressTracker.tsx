@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { celebrateLessonComplete, checkMilestones } from '@/lib/celebrations'
 
 interface ProgressTrackerProps {
   lessonId: string
@@ -149,6 +150,10 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
     }
 
     setStatus('completed')
+    
+    // Trigger celebration
+    await celebrateLessonComplete(user.id, 'this lesson', 1)
+    await checkMilestones(user.id)
     
     // Show success message
     alert('🎉 Lesson completed! Great job!')
