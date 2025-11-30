@@ -859,11 +859,24 @@ async function uploadQuestions() {
   console.log('Starting upload of Category 7: Insurance questions...')
   
   for (let i = 0; i < CATEGORY_7_INSURANCE.length; i++) {
-    const question = CATEGORY_7_INSURANCE[i]
+    const q = CATEGORY_7_INSURANCE[i]
+    
+    // Transform to match database schema
+    const options = [...(q.incorrect_answers || []), q.correct_answer].sort(() => Math.random() - 0.5)
+    const questionForDB = {
+      category_id: q.category_id,
+      question_text: q.question_text,
+      question_type: 'multiple_choice',
+      difficulty_level: q.difficulty_level,
+      options: options,
+      correct_answer: q.correct_answer,
+      explanation: q.explanation,
+      topics: []
+    }
     
     const { data, error } = await supabase
       .from('quiz_questions')
-      .insert([question])
+      .insert([questionForDB])
     
     if (error) {
       console.error(`Error uploading question ${i + 1}:`, error)

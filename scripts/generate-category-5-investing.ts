@@ -1190,9 +1190,21 @@ async function uploadQuestions() {
   console.log('Starting upload of Category 5: Investing Basics questions...');
   
   try {
+    // Transform questions to match database schema
+    const questionsForDB = CATEGORY_5_INVESTING.map(q => ({
+      category_id: q.category_id,
+      question_text: q.question_text,
+      question_type: q.question_type,
+      difficulty_level: q.difficulty_level,
+      options: q.options,
+      correct_answer: q.correct_answer,
+      explanation: q.explanation,
+      topics: q.tags || []
+    }));
+
     const { data, error } = await supabase
       .from('quiz_questions')
-      .insert(CATEGORY_5_INVESTING);
+      .insert(questionsForDB);
 
     if (error) {
       console.error('Error uploading questions:', error);

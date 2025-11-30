@@ -248,16 +248,28 @@ console.log(`✅ Generated ${savingQuestions.length} Saving & Emergency Fund que
 async function uploadSavingsQuestions() {
   console.log('Uploading Savings category questions...');
   
+  // Transform questions to match database schema
+  const questionsForDB = savingQuestions.map(q => ({
+    category_id: q.category_id,
+    question_text: q.question_text,
+    question_type: q.question_type,
+    difficulty_level: q.difficulty_level,
+    options: q.options, // Will be stored as JSONB array
+    correct_answer: q.correct_answer, // Will be stored as JSONB
+    explanation: q.explanation,
+    topics: q.tags || q.topics || [] // text array
+  }));
+  
   const { data, error } = await supabase
-    .from('quiz_questions_bank')
-    .insert(savingQuestions);
+    .from('quiz_questions')
+    .insert(questionsForDB);
 
   if (error) {
     console.error('❌ Error uploading:', error);
     return false;
   }
 
-  console.log(`✅ Successfully uploaded ${savingQuestions.length} questions!`);
+  console.log(`✅ Successfully uploaded ${questionsForDB.length} questions!`);
   return true;
 }
 
