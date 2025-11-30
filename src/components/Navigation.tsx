@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navigation() {
   const [user, setUser] = useState<User | null>(null)
@@ -158,6 +159,7 @@ export default function Navigation() {
             </div>
 
             {/* User Account Menu */}
+            <ThemeToggle />
             {user ? (
               <div className="relative" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
                 <button className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">

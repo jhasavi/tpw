@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +17,18 @@ export const metadata: Metadata = {
     shortcut: '/images/logo-nobg.png',
     apple: '/images/logo-nobg.png',
   },
+  manifest: '/manifest.json',
+  themeColor: '#9333ea',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Purple Wing',
+  },
 };
 
 export default function RootLayout({
@@ -24,15 +37,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <GoogleAnalytics />
       </head>
       <body className={inter.className}>
-        <PageViewTracker />
-        <Navigation />
-        {children}
-        <footer className="bg-gray-900 text-white py-12">
+        <ThemeProvider>
+          <PageViewTracker />
+          <Navigation />
+          {children}
+          <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-4 gap-8">
               <div>
@@ -75,11 +89,12 @@ export default function RootLayout({
                 </div>
               </div>
             </div>
-            <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+            <div className="border-t border-gray-800 dark:border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
               <p>&copy; {new Date().getFullYear()} The Purple Wings. All rights reserved.</p>
             </div>
           </div>
         </footer>
+        </ThemeProvider>
       </body>
     </html>
   );
