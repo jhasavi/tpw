@@ -255,9 +255,17 @@ export default function LearningDashboard() {
       {/* Achievements */}
       {stats.completedLessons > 0 && (
         <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <span>🏆</span> Achievements
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <span>🏆</span> Achievements
+            </h2>
+            <Link
+              href="/progress?tab=achievements"
+              className="text-purple-600 hover:text-purple-700 font-medium text-sm"
+            >
+              View All →
+            </Link>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {stats.completedLessons >= 1 && (
               <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 text-center">
@@ -290,6 +298,39 @@ export default function LearningDashboard() {
           </div>
         </div>
       )}
+
+      {/* Quick Links */}
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <span>⚡</span> Quick Access
+        </h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          <Link
+            href="/profile"
+            className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-lg p-6 hover:shadow-md transition-all"
+          >
+            <div className="text-3xl mb-2">👤</div>
+            <div className="font-bold text-gray-900 mb-1">My Profile</div>
+            <div className="text-sm text-gray-600">Update your information</div>
+          </Link>
+          <Link
+            href="/bookmarks"
+            className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-lg p-6 hover:shadow-md transition-all"
+          >
+            <div className="text-3xl mb-2">🔖</div>
+            <div className="font-bold text-gray-900 mb-1">Bookmarks</div>
+            <div className="text-sm text-gray-600">Saved courses & lessons</div>
+          </Link>
+          <Link
+            href="/progress"
+            className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-lg p-6 hover:shadow-md transition-all"
+          >
+            <div className="text-3xl mb-2">📊</div>
+            <div className="font-bold text-gray-900 mb-1">Full Progress</div>
+            <div className="text-sm text-gray-600">Detailed stats & achievements</div>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
