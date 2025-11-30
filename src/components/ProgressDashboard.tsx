@@ -65,7 +65,7 @@ export default function ProgressDashboard() {
 
       // Get quiz attempts
       const { data: quizAttempts } = await supabase
-        .from('quiz_attempts_detailed')
+        .from('quiz_attempts')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });

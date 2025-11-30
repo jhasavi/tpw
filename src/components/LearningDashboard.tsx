@@ -63,13 +63,13 @@ export default function LearningDashboard() {
     const { data: progressData } = await supabase
       .from('lesson_progress')
       .select('status, time_spent_minutes, updated_at, lesson_id')
-      .eq('user_id', user.id)
+      .eq('user_id', currentUser.id)
 
     // Fetch quiz attempts stats
     const { data: quizData } = await supabase
       .from('quiz_attempts')
       .select('score, total_questions, percentage')
-      .eq('user_id', user.id)
+      .eq('user_id', currentUser.id)
 
     // Calculate stats
     const completed = progressData?.filter(p => p.status === 'completed').length || 0
