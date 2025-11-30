@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import BookmarkButton from '@/components/BookmarkButton'
 
 interface CoursePageProps {
   params: Promise<{
@@ -61,6 +62,22 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   const lessonsList = lessons || []
 
+  // Get user for bookmark button
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // Check if course is bookmarked
+  let isBookmarked = false
+  if (user) {
+    const { data: bookmark } = await supabase
+      .from('course_bookmarks')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('course_id', courseData.id)
+      .single()
+    
+    isBookmarked = !!bookmark
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       {/* Breadcrumb Navigation */}
@@ -106,9 +123,21 @@ export default async function CoursePage({ params }: CoursePageProps) {
             )}
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            {courseData.title}
-          </h1>
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 flex-1">
+              {courseData.title}
+            </h1>
+            {user && (
+              <BookmarkButton
+                type="course"
+                itemId={courseData.id}
+                itemTitle={courseData.title}
+                userId={user.id}
+                initialBookmarked={isBookmarked}
+                showLabel={true}
+              />
+            )}
+          </div>
           
           <p className="text-xl text-gray-600 leading-relaxed max-w-3xl">
             {courseData.description}

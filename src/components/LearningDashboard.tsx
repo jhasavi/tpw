@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import ProgressDashboard from './ProgressDashboard'
+import WelcomeWizard from './onboarding/WelcomeWizard'
 
 interface DashboardStats {
   totalLessons: number
@@ -41,6 +42,7 @@ export default function LearningDashboard() {
   const [loading, setLoading] = useState(true)
   const [recentCourses, setRecentCourses] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
+  const [showWizard, setShowWizard] = useState(false)
 
   useEffect(() => {
     loadDashboardData()
@@ -58,6 +60,18 @@ export default function LearningDashboard() {
     }
 
     setUser(currentUser)
+
+    // Check onboarding status
+    const { data: onboarding } = await supabase
+      .from('onboarding_progress')
+      .select('is_complete')
+      .eq('user_id', currentUser.id)
+      .single()
+
+    // Show wizard if user hasn't completed onboarding
+    if (!onboarding || !onboarding.is_complete) {
+      setShowWizard(true)
+    }
 
     // Fetch lesson progress stats
     const { data: progressData } = await supabase
@@ -165,7 +179,14 @@ export default function LearningDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      {showWizard && user && (
+        <WelcomeWizard 
+          user={user}
+          onComplete={() => setShowWizard(false)}
+        />
+      )}
+      <div className="space-y-6">
       {/* Welcome & Stats */}
       <div className="bg-gradient-to-br from-purple-600 to-purple-700 text-white rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold mb-2">Welcome Back!</h1>
@@ -332,5 +353,6 @@ export default function LearningDashboard() {
         </div>
       </div>
     </div>
+    </>
   )
 }

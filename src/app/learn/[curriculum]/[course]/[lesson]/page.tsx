@@ -5,6 +5,7 @@ import type { Lesson } from '@/types/curriculum'
 import QuizSection from '@/components/QuizSection'
 import ProgressTracker from '@/components/ProgressTracker'
 import LessonContent from '@/components/LessonContent'
+import BookmarkButton from '@/components/BookmarkButton'
 
 interface LessonPageProps {
   params: Promise<{
@@ -67,6 +68,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
   // Get user's progress in this course
   const { data: { user } } = await supabase.auth.getUser()
   let completedLessons = 0
+  let isBookmarked = false
+  
   if (user) {
     const { data: progressData } = await supabase
       .from('lesson_progress')
@@ -75,6 +78,16 @@ export default async function LessonPage({ params }: LessonPageProps) {
       .in('lesson_id', allLessons?.map(l => l.id) ?? [])
     
     completedLessons = progressData?.filter(p => p.status === 'completed').length ?? 0
+    
+    // Check if lesson is bookmarked
+    const { data: bookmark } = await supabase
+      .from('lesson_bookmarks')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('lesson_id', lessonData.id)
+      .single()
+    
+    isBookmarked = !!bookmark
   }
 
   // Check if lesson has content - handle both old and new content structures
@@ -143,15 +156,25 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
         {/* Lesson Header */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div className="flex-1">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                 {lesson.title}
               </h1>
               <p className="text-gray-600 text-lg">{lesson.description}</p>
             </div>
-            <div className="flex-shrink-0 ml-4">
-              <div className="text-sm text-gray-600">
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {user && (
+                <BookmarkButton
+                  type="lesson"
+                  itemId={lessonData.id}
+                  itemTitle={lesson.title}
+                  userId={user.id}
+                  initialBookmarked={isBookmarked}
+                  showLabel={false}
+                />
+              )}
+              <div className="text-sm text-gray-600 text-center">
                 <span className="block text-2xl mb-1">⏱️</span>
                 {lesson.durationMinutes} min
               </div>
