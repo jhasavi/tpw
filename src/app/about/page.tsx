@@ -3,12 +3,12 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About The Purple Wings - Empowering Women Through Financial Education | Shalini Jha',
-  description: 'Learn about The Purple Wings founder Shalini Jha and our mission to empower women through financial literacy. Founded during COVID-19 in Needham, MA, with support from Namaste Boston Homes, Needham Bank, ICON, and BJANE.',
-  keywords: 'Shalini Jha, The Purple Wings, women financial education, Needham Massachusetts, COVID-19 initiative, Namaste Boston Homes, Needham Bank, financial literacy, Sanjeev Jha, women empowerment',
+  title: 'About The Purple Wings - 501(c)(3) Nonprofit | Shalini Jha',
+  description: 'Learn about The Purple Wings, a 501(c)(3) nonprofit founded by President Shalini Jha to empower women through financial literacy. Featured in Needham Observer and Boston 25 News. Based in Needham, MA.',
+  keywords: 'Shalini Jha, The Purple Wings, 501c3 nonprofit, women financial education, Needham Massachusetts, COVID-19 initiative, Namaste Boston Homes, Needham Bank, financial literacy, Sanjeev Jha, women empowerment, Needham Observer, Aditi Pranjape',
   openGraph: {
-    title: 'About The Purple Wings - Founded by Shalini Jha',
-    description: 'Empowering women through financial literacy since the COVID-19 pandemic. Based in Needham, MA.',
+    title: 'About The Purple Wings - 501(c)(3) Nonprofit Founded by Shalini Jha',
+    description: 'Empowering women through financial literacy since the COVID-19 pandemic. Featured in media. Based in Needham, MA.',
     images: ['/images/Shalini.jpg'],
   }
 }
@@ -24,9 +24,20 @@ export default function AboutPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               About The Purple Wings
             </h1>
-            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-4">
+              A 501(c)(3) Nonprofit Organization
+            </p>
+            <p className="text-lg text-purple-100 max-w-3xl mx-auto mb-8">
               Empowering women through financial literacy, community support, and educational excellence
             </p>
+            <div className="mt-6">
+              <a href="https://needhamobserver.com/program-encourages-women-to-spread-financial-literacy-wings/" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 className="inline-flex items-center bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
+                📰 Featured in Needham Observer
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -41,12 +52,22 @@ export default function AboutPage() {
               </h2>
               <p className="text-lg text-gray-600 mb-6">
                 During the COVID-19 pandemic, when the world stood still and uncertainty gripped every household, 
-                <strong className="text-purple-600"> Shalini Jha</strong> recognized a critical need: women were 
-                facing unprecedented financial challenges, yet lacked accessible resources to navigate them.
+                <strong className="text-purple-600"> Shalini Jha</strong>, President and founder of The Purple Wings, 
+                recognized a critical need: women were facing unprecedented financial challenges, yet lacked accessible 
+                resources to navigate them.
               </p>
+              <div className="bg-purple-50 border-l-4 border-purple-600 p-6 my-6 rounded-r-lg">
+                <p className="text-gray-700 italic text-lg leading-relaxed">
+                  "Every time I meet women from different backgrounds, I become more determined to help those who 
+                  were not prepared for sudden changes in life. Financial literacy isn't just about money—it's about 
+                  giving women the power to navigate life's uncertainties with confidence."
+                </p>
+                <p className="text-purple-600 font-semibold mt-3">— Shalini Jha, President & Founder</p>
+              </div>
               <p className="text-lg text-gray-600 mb-6">
-                From her home in <strong>Needham, Massachusetts</strong>, Shalini founded The Purple Wings with a 
-                simple but powerful vision—to create a safe, welcoming space where women could build financial confidence 
+                From her home in <strong>Needham, Massachusetts</strong>, Shalini founded The Purple Wings as a 
+                <strong className="text-purple-600"> 501(c)(3) nonprofit organization</strong> with a simple but 
+                powerful vision—to create a safe, welcoming space where women could build financial confidence 
                 and independence, free from judgment and full of practical support.
               </p>
               <p className="text-lg text-gray-600">
@@ -68,9 +89,9 @@ export default function AboutPage() {
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-6 max-w-xs hidden lg:block">
                 <p className="text-gray-700 italic text-sm leading-relaxed">
-                  "Every woman deserves the knowledge and confidence to control her financial future."
+                  "I want to see women not just survive, but thrive—regardless of their background or circumstances."
                 </p>
-                <p className="text-purple-600 font-semibold text-xs mt-2">— Shalini Jha, Founder & CEO</p>
+                <p className="text-purple-600 font-semibold text-xs mt-2">— Shalini Jha, President & Founder</p>
               </div>
             </div>
           </div>
@@ -146,10 +167,11 @@ export default function AboutPage() {
                   />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Shalini Jha</h3>
-                <p className="text-purple-600 font-medium mb-3">Founder & CEO</p>
+                <p className="text-purple-600 font-medium mb-3">President & Founder</p>
                 <p className="text-gray-600 mb-4">
-                  Visionary founder who started The Purple Wings during COVID-19 to address the financial literacy gap. 
-                  Based in Needham, MA, Shalini brings passion and expertise to women's financial education.
+                  President and inspiration behind The Purple Wings. Featured in Needham Observer and Boston 25 News 
+                  for her work empowering women. Based in Needham, MA, Shalini's personal journey and determination 
+                  inspire thousands of women to take control of their financial futures.
                 </p>
               </div>
             </div>
@@ -198,19 +220,104 @@ export default function AboutPage() {
               <div className="text-center">
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <Image
-                    src="/images/Shweta.jpeg"
-                    alt="Shweta"
+                    src="/images/Aditi.jpeg"
+                    alt="Aditi Pranjape"
                     width={96}
                     height={96}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Shweta</h3>
-                <p className="text-green-600 font-medium mb-3">Community Helper</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Aditi Pranjape</h3>
+                <p className="text-green-600 font-medium mb-3">Community Connector</p>
                 <p className="text-gray-600 mb-4">
-                  Passionate volunteer who helps organize workshops and events. Shweta's dedication to empowering 
-                  women through financial education has made a significant impact in our community.
+                  Co-founder and community connector who bridges gaps between women seeking financial knowledge 
+                  and resources. A public health dietetic consultant, Aditi brings her passion for wellness to 
+                  financial empowerment.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Volunteers */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Dedicated Volunteers</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-xl shadow-md border border-purple-100">
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">Yulia</h4>
+                <p className="text-purple-600 font-medium mb-3">Volunteer Educator</p>
+                <p className="text-gray-600">
+                  Passionate volunteer dedicated to helping women understand complex financial concepts through 
+                  clear, accessible teaching and mentorship.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md border border-purple-100">
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">Yashodhara</h4>
+                <p className="text-purple-600 font-medium mb-3">Volunteer Educator</p>
+                <p className="text-gray-600">
+                  Committed volunteer who shares her expertise and time to ensure every woman has access to 
+                  quality financial education and support.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Media Coverage */}
+      <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Media Coverage</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              The Purple Wings has been featured in local and regional media for our impact on women's financial literacy
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-8 rounded-xl shadow-lg border-2 border-purple-200 dark:border-purple-800">
+              <div className="flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center">
+                    <span className="text-4xl">📰</span>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                    Needham Observer Feature
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                    "Program encourages women to spread financial literacy wings" - A comprehensive feature on how 
+                    Shalini Jha and her co-founders started The Purple Wings to help women overcome financial fear 
+                    and build confidence through education and community support.
+                  </p>
+                  <a 
+                    href="https://needhamobserver.com/program-encourages-women-to-spread-financial-literacy-wings/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold"
+                  >
+                    Read Full Article →
+                  </a>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Published: February 14, 2024</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-8 rounded-xl shadow-lg border-2 border-blue-200 dark:border-blue-800">
+              <div className="flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-4xl">📺</span>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                    Boston 25 News Coverage
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                    The Purple Wings was featured on Boston 25 News, highlighting our mission to empower women 
+                    through financial literacy and the impact we're making in the Greater Boston community.
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Television broadcast coverage</p>
+                </div>
               </div>
             </div>
           </div>

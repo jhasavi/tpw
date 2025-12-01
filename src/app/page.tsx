@@ -125,6 +125,32 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Inspirational Quote from Founder */}
+          <div className="max-w-4xl mx-auto mt-16 mb-8">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-8 rounded-2xl shadow-xl border-2 border-purple-200 dark:border-purple-800">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-20 h-20 mb-4 rounded-full overflow-hidden border-4 border-purple-300">
+                  <Image
+                    src="/images/Shalini.jpeg"
+                    alt="Shalini Jha"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <blockquote className="text-xl md:text-2xl font-medium text-gray-800 dark:text-gray-200 mb-4 italic leading-relaxed">
+                  "I want to see women not just survive, but thrive—regardless of their background or circumstances."
+                </blockquote>
+                <cite className="text-purple-600 dark:text-purple-400 font-semibold not-italic">
+                  — Shalini Jha, President & Founder
+                </cite>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                  The Purple Wings, 501(c)(3) Nonprofit Organization
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Women's Financial Literacy Curriculum */}
             <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-purple-200 hover:border-purple-400 transition-all">
