@@ -11,7 +11,7 @@ const slides = [
     subtitle: 'For Women, By Women',
     description: 'Build confidence and make informed financial decisions at your own pace',
     cta: 'Start Learning Free',
-    ctaLink: '/auth/signup',
+    ctaLink: '/auth',
   },
   {
     image: '/images/hero-2.jpg',
@@ -35,7 +35,7 @@ const slides = [
     subtitle: 'Starts Today',
     description: 'Free, accessible financial education designed specifically for women',
     cta: 'Get Started',
-    ctaLink: '/auth/signup',
+    ctaLink: '/auth',
   },
 ]
 

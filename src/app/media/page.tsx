@@ -13,7 +13,7 @@ const mediaArticles = [
     date: 'October 2024',
     url: 'https://needhamobserver.com/program-encourages-women-to-spread-financial-literacy-wings/',
     excerpt: 'Local program empowers women through financial education and community support.',
-    image: '/images/Class-1.jpeg'
+    image: '/images/needhamobserver.webp'
   },
   {
     title: 'She Had No Clue How Much Money She Had - Local Group Empowering Women to Understand Finances',
@@ -21,7 +21,7 @@ const mediaArticles = [
     date: 'September 2024',
     url: 'https://www.boston25news.com/news/local/she-had-no-clue-how-much-money-she-had-local-group-empowering-women-understand-finances/JBGKMMBLRRHQPLIP564E6NCNUY/',
     excerpt: 'TV coverage highlighting how The Purple Wings helps women gain financial confidence.',
-    image: '/images/Class-2.jpg'
+    image: '/images/sha1.png'
   },
   {
     title: 'She Had No Clue How Much Money She Had',
@@ -29,7 +29,7 @@ const mediaArticles = [
     date: 'September 2024',
     url: 'https://www.yahoo.com/news/she-had-no-clue-much-114224629.html',
     excerpt: 'National coverage of our mission to empower women through financial literacy.',
-    image: '/images/Class-3.jpg'
+    image: '/images/Booklet.jpg'
   },
   {
     title: 'ICON Celebrates India\'s Independence Day',
@@ -37,7 +37,7 @@ const mediaArticles = [
     date: 'August 2024',
     url: 'https://hometownweekly.net/needham/icon-celebrates-indias-independence-day/',
     excerpt: 'Community event featuring The Purple Wings and financial empowerment initiatives.',
-    image: '/images/1st-gathering_Jul23-2.jpeg'
+    image: '/images/icon5.jpg'
   }
 ]
 
