@@ -117,7 +117,14 @@ npx tsx scripts/create-self-assessment.ts
 
 - **Repository:** https://github.com/jhasavi/tpw
 - **Vercel Project:** prj_sNIVpOwJsHQXzv6gAfSoF9le4eUy
-- **Production:** (Add your URL after deployment)
+- **Production:** https://www.thepurplewings.org
+
+## 📰 Media Coverage
+
+- **Needham Observer:** [Program Encourages Women to Spread Financial Literacy Wings](https://needhamobserver.com/program-encourages-women-to-spread-financial-literacy-wings/)
+- **Boston 25 News:** [She Had No Clue How Much Money She Had - Local Group Empowering Women to Understand Finances](https://www.boston25news.com/news/local/she-had-no-clue-how-much-money-she-had-local-group-empowering-women-understand-finances/JBGKMMBLRRHQPLIP564E6NCNUY/)
+- **Yahoo News:** [She Had No Clue How Much Money She Had](https://www.yahoo.com/news/she-had-no-clue-much-114224629.html)
+- **Hometown Weekly:** [ICON Celebrates India's Independence Day](https://hometownweekly.net/needham/icon-celebrates-indias-independence-day/)
 
 ## 📄 License
 

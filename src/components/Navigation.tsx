@@ -122,7 +122,7 @@ export default function Navigation() {
                     <Link href="/blog" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
                       ✍️ Blog
                     </Link>
-                    <Link href="/about#media-coverage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                    <Link href="/media" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
                       📰 Media Coverage
                     </Link>
                     <Link href="/faq" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
@@ -251,6 +251,9 @@ export default function Navigation() {
             <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase">Resources</div>
             <Link href="/blog" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
               ✍️ Blog
+            </Link>
+            <Link href="/media" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
+              📰 Media Coverage
             </Link>
             <Link href="/faq" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
               ❓ FAQ
