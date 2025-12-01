@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { curricula } from '@/data/curricula'
 
 export default function CoursesPage() {
@@ -8,7 +9,7 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Explore Our Curriculum
           </h1>
@@ -16,6 +17,22 @@ export default function CoursesPage() {
             Two comprehensive learning paths designed for women at every stage of their financial journey. 
             Start where you are, learn at your own pace.
           </p>
+        </div>
+
+        {/* Inspirational Image */}
+        <div className="relative h-64 mb-12 rounded-2xl overflow-hidden shadow-xl">
+          <Image
+            src="/images/Women-fin.png"
+            alt="Women achieving financial independence"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-indigo-900/70 flex items-center justify-center">
+            <div className="text-center text-white px-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-2">Your Financial Journey Starts Here</h2>
+              <p className="text-xl text-purple-100">Free, comprehensive education designed for women</p>
+            </div>
+          </div>
         </div>
 
         {/* Women's Financial Literacy Curriculum */}

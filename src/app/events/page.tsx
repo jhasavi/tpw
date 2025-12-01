@@ -330,14 +330,22 @@ export default function EventsPage() {
 
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="text-3xl mb-3">🏠</div>
-              <h3 className="font-semibold text-gray-900 mb-2">Namaste Boston Homes</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">
+                <a href="https://www.namastebostonhomes.com/" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-purple-600 transition-colors">
+                  Namaste Boston Homes
+                </a>
+              </h3>
               <p className="text-sm text-gray-600">Real estate education partner</p>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="text-3xl mb-3">🤝</div>
               <h3 className="font-semibold text-gray-900 mb-2">Community Organizations</h3>
-              <p className="text-sm text-gray-600">ICON, BJANE, Needham Bank</p>
+              <p className="text-sm text-gray-600">
+                <a href="https://hometownweekly.net/needham/icon-celebrates-indias-independence-day/" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700">
+                  ICON
+                </a>, BJANE, Needham Bank
+              </p>
             </div>
           </div>
         </div>

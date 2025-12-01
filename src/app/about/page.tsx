@@ -314,10 +314,29 @@ export default function AboutPage() {
                     Boston 25 News Coverage
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                    The Purple Wings was featured on Boston 25 News, highlighting our mission to empower women 
-                    through financial literacy and the impact we're making in the Greater Boston community.
+                    "She had no clue how much money she had" - Boston 25 News featured The Purple Wings, 
+                    highlighting our mission to empower women through financial literacy and the impact we're 
+                    making in the Greater Boston community.
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Television broadcast coverage</p>
+                  <div className="flex gap-4">
+                    <a 
+                      href="https://www.boston25news.com/news/local/she-had-no-clue-how-much-money-she-had-local-group-empowering-women-understand-finances/JBGKMMBLRRHQPLIP564E6NCNUY/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold"
+                    >
+                      Watch on Boston 25 →
+                    </a>
+                    <a 
+                      href="https://www.yahoo.com/news/she-had-no-clue-much-114224629.html" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold"
+                    >
+                      Read on Yahoo News →
+                    </a>
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Television broadcast coverage</p>
                 </div>
               </div>
             </div>
@@ -347,7 +366,11 @@ export default function AboutPage() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">Namaste Boston Homes</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
+                <a href="https://www.namastebostonhomes.com/" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-purple-600 transition-colors">
+                  Namaste Boston Homes
+                </a>
+              </h3>
               <p className="text-sm text-gray-600 text-center mb-3">Real Estate Partner</p>
               <p className="text-gray-600 text-sm">
                 Supporting our mission through real estate expertise, homeownership education, and community outreach in the Greater Boston area.
@@ -395,7 +418,11 @@ export default function AboutPage() {
               <div className="w-20 h-20 mx-auto mb-4 rounded-lg bg-orange-100 flex items-center justify-center">
                 <span className="text-3xl">🤲</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">ICON</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
+                <a href="https://hometownweekly.net/needham/icon-celebrates-indias-independence-day/" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-purple-600 transition-colors">
+                  ICON
+                </a>
+              </h3>
               <p className="text-sm text-gray-600 text-center mb-3">Non-Profit Partner</p>
               <p className="text-gray-600 text-sm">
                 Community-focused non-profit supporting our educational outreach and community engagement initiatives.
@@ -419,7 +446,11 @@ export default function AboutPage() {
               <div className="w-20 h-20 mx-auto mb-4 rounded-lg bg-purple-100 flex items-center justify-center">
                 <span className="text-3xl">💻</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">Namaste Needham Lab</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
+                <a href="https://www.namasteneedham.com/" target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:text-purple-600 transition-colors">
+                  Namaste Needham Lab
+                </a>
+              </h3>
               <p className="text-sm text-gray-600 text-center mb-3">Technical Partner</p>
               <p className="text-gray-600 text-sm">
                 Providing comprehensive technical infrastructure, platform development, and technology support for our digital learning environment.

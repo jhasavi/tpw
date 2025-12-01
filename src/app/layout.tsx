@@ -95,7 +95,7 @@ export default function RootLayout({
               <p className="mt-2 text-xs">
                 Founded by <span className="text-purple-400">Shalini Jha</span> in Needham, MA | 
                 Technical Support by <span className="text-purple-400">Sanjeev Jha</span> and{' '}
-                <a href="https://namaste-needham-lab.org" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">
+                <a href="https://www.namasteneedham.com/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">
                   Namaste Needham Lab
                 </a>
               </p>

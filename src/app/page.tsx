@@ -86,6 +86,50 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Community Learning Photos */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Women Learning Together</h2>
+            <p className="text-xl text-gray-600">Join our thriving community of learners</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/learners-1.jpg"
+                alt="Women learning financial literacy"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/learners-2.jpg"
+                alt="Community workshop"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/learners-3.jpg"
+                alt="Interactive learning session"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-lg group">
+              <Image
+                src="/images/learners-6.jpg"
+                alt="Empowered women"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Learning Paths Section */}
       <section className="py-16 bg-gradient-to-br from-purple-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

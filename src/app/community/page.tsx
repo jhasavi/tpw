@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function CommunityPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Our Community
           </h1>
@@ -12,6 +13,34 @@ export default function CommunityPage() {
             Connect with other women on their financial empowerment journey. Learn together, support each other, 
             and build lasting connections—especially in Massachusetts.
           </p>
+        </div>
+
+        {/* Community Photos */}
+        <div className="grid md:grid-cols-3 gap-4 mb-12">
+          <div className="relative h-48 rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/1st-gathering_Jul23-2.jpeg"
+              alt="Community gathering"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative h-48 rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/TPW2.jpg"
+              alt="Women networking"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative h-48 rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/seminar.jpg"
+              alt="Community event"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {/* Coming Soon Banner */}

@@ -53,6 +53,51 @@ export default function PartnershipsPage() {
         </div>
       </section>
 
+      {/* Workshop & Event Photos */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Our Workshops in Action</h2>
+            <p className="text-xl text-gray-600">See the impact of financial education partnerships</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="relative h-72 rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src="/images/Class-1.jpeg"
+                alt="Financial literacy workshop"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                <p className="text-white font-semibold">Interactive Workshops</p>
+              </div>
+            </div>
+            <div className="relative h-72 rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src="/images/Class-2.jpg"
+                alt="Investment education session"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                <p className="text-white font-semibold">Expert-Led Sessions</p>
+              </div>
+            </div>
+            <div className="relative h-72 rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src="/images/Class-3.jpg"
+                alt="Community learning event"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                <p className="text-white font-semibold">Community Engagement</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Crisis Planning & Insurance Section */}
       <section className="py-16 bg-gradient-to-br from-purple-100 to-indigo-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
