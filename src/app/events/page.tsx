@@ -163,6 +163,9 @@ export default function EventsPage() {
               Join our community events, workshops, and webinars. Learn from experts, connect with peers, 
               and take actionable steps toward financial independence.
             </p>
+            <div className="inline-block bg-green-500 text-white px-6 py-3 rounded-lg font-semibold text-lg mb-4 shadow-lg">
+              🎉 Next Sessions Coming April 2026!
+            </div>
             <div className="flex flex-wrap gap-4 justify-center">
               <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
                 <span className="text-purple-100">✓ Free to Attend</span>

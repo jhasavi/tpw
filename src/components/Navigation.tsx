@@ -122,6 +122,9 @@ export default function Navigation() {
                     <Link href="/blog" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
                       ✍️ Blog
                     </Link>
+                    <Link href="/about#media-coverage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      📰 Media Coverage
+                    </Link>
                     <Link href="/faq" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
                       ❓ FAQ
                     </Link>
@@ -146,6 +149,9 @@ export default function Navigation() {
                   <div className="py-1">
                     <Link href="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
                       💜 Our Mission
+                    </Link>
+                    <Link href="/events" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      📅 Events
                     </Link>
                     <Link href="/partnerships" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
                       🤝 Partnerships

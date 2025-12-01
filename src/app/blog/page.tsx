@@ -95,10 +95,11 @@ export default async function BlogPage() {
               <Link key={post.id} href={`/blog/${post.slug}`}>
                 <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer h-full flex flex-col">
                   <div className="relative h-48 bg-gray-200">
-                    <img
+                    <Image
                       src={post.featured_image_url}
                       alt={post.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                     {post.is_featured && (
                       <span className="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold">
