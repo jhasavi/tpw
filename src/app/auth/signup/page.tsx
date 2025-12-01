@@ -38,7 +38,7 @@ export default function SignupPage() {
       if (error) {
         console.error('Signup error:', error)
         if (error.status === 429 || error.message.includes('rate limit') || error.message.includes('Too many')) {
-          setError('Too many signup attempts detected. Please wait a few minutes and try again, or use Google Sign In as an alternative.')
+          setError('Rate limit reached. Please wait 5-10 minutes and try again, or use Google Sign In instead. Your interest has been noted!')
         } else if (error.message.includes('already registered') || error.message.includes('already exists')) {
           setError('An account with this email already exists. Please sign in instead.')
         } else {

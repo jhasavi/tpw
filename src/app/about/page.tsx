@@ -221,7 +221,7 @@ export default function AboutPage() {
               <div className="text-center">
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <Image
-                    src="/images/Aditi.jpeg"
+                    src="/images/team.jpg"
                     alt="Aditi Pranjape"
                     width={96}
                     height={96}
