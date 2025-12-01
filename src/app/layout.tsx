@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'Purple Wing',
   },
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org',
+  },
+  openGraph: {
+    type: 'website',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org',
+    title: "The Purple Wings - Women's Financial Empowerment",
+    description: 'Learn finance from basics to advanced at your own pace.',
+    siteName: 'The Purple Wings',
+    images: [{ url: '/images/logo-nobg.png' }],
+  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'),
 };
 
 export const viewport: Viewport = {

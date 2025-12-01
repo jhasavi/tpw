@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import type { Lesson } from '@/types/curriculum'
@@ -18,6 +18,13 @@ interface LessonPageProps {
 export default async function LessonPage({ params }: LessonPageProps) {
   const { curriculum: curriculumSlug, course: courseSlug, lesson: lessonSlug } = await params
   const supabase = await createClient()
+
+  // Require auth and redirect to /auth with return url
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    const returnTo = `/learn/${curriculumSlug}/${courseSlug}/${lessonSlug}`
+    redirect(`/auth?returnTo=${encodeURIComponent(returnTo)}`)
+  }
 
   // Fetch lesson from database
   const { data: curriculaData } = await supabase
@@ -66,15 +73,16 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const lessonNumber = currentIndex + 1
 
   // Get user's progress in this course
-  const { data: { user } } = await supabase.auth.getUser()
+  // user is guaranteed here due to redirect above
+  const { data: { user: authedUser } } = await supabase.auth.getUser()
   let completedLessons = 0
   let isBookmarked = false
   
-  if (user) {
+  if (authedUser) {
     const { data: progressData } = await supabase
       .from('lesson_progress')
       .select('lesson_id, status')
-      .eq('user_id', user.id)
+      .eq('user_id', authedUser.id)
       .in('lesson_id', allLessons?.map(l => l.id) ?? [])
     
     completedLessons = progressData?.filter(p => p.status === 'completed').length ?? 0
@@ -83,7 +91,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
     const { data: bookmark } = await supabase
       .from('lesson_bookmarks')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('user_id', authedUser.id)
       .eq('lesson_id', lessonData.id)
       .single()
     
@@ -164,12 +172,12 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <p className="text-gray-600 text-lg">{lesson.description}</p>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
-              {user && (
+              {authedUser && (
                 <BookmarkButton
                   type="lesson"
                   itemId={lessonData.id}
                   itemTitle={lesson.title}
-                  userId={user.id}
+                  userId={authedUser.id}
                   initialBookmarked={isBookmarked}
                   showLabel={false}
                 />

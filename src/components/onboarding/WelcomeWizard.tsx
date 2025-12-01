@@ -86,12 +86,23 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
       .from('onboarding_progress')
       .select('*')
       .eq('user_id', user.id)
-      .single()
+      .maybeSingle()
+
+    // If recently deferred (within 24h), suppress wizard
+    const now = Date.now()
+    const deferredUntil = data?.deferred_at ? new Date(data.deferred_at).getTime() + 24 * 60 * 60 * 1000 : 0
 
     if (data?.is_complete) {
       onComplete?.()
+    } else if (deferredUntil && deferredUntil > now) {
+      onComplete?.()
     } else if (data?.current_step) {
       setCurrentStep(data.current_step)
+    } else {
+      // If no record, create a lightweight one and do not force the wizard immediately
+      await supabase
+        .from('onboarding_progress')
+        .upsert({ user_id: user.id, current_step: 0, completed_steps: [] }, { onConflict: 'user_id' })
     }
   }
 
@@ -124,7 +135,11 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
   }
 
   const handleSkip = async () => {
-    await completeOnboarding()
+    // Mark as deferred rather than complete to reduce annoyance
+    await supabase
+      .from('onboarding_progress')
+      .upsert({ user_id: user.id, is_complete: false, deferred_at: new Date().toISOString() }, { onConflict: 'user_id' })
+    onComplete?.()
   }
 
   const saveAssessment = async () => {
@@ -156,7 +171,10 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
       const { error: rpcError } = await supabase
         .rpc('generate_course_recommendations', { p_user_id: user.id })
 
-      if (rpcError) throw rpcError
+      // If RPC fails (e.g., missing profile answers), continue with a safe fallback
+      if (rpcError) {
+        console.warn('Recommendations RPC failed, using defaults:', rpcError.message)
+      }
 
       // Fetch the recommendations
       const { data, error } = await supabase
@@ -175,9 +193,27 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
         .limit(6)
 
       if (error) throw error
-      setRecommendations(data || [])
+      const recs = data || []
+      // Fallback if no recs: show a few popular beginner/intermediate courses
+      if (recs.length === 0) {
+        const { data: fallback } = await supabase
+          .from('courses')
+          .select('id, title, description, slug')
+          .in('difficulty_level', ['beginner', 'intermediate'])
+          .limit(6)
+        setRecommendations((fallback || []).map((c: any) => ({ id: c.id, courses: c, priority: 'suggested', reason: 'Great starting point' })))
+      } else {
+        setRecommendations(recs)
+      }
     } catch (error) {
       console.error('Error generating recommendations:', error)
+      // Show generic recommendations if errors occur
+      const { data: fallback } = await supabase
+        .from('courses')
+        .select('id, title, description, slug')
+        .in('difficulty_level', ['beginner', 'intermediate'])
+        .limit(6)
+      setRecommendations((fallback || []).map((c: any) => ({ id: c.id, courses: c, priority: 'suggested', reason: 'Popular starting point' })))
     } finally {
       setIsLoading(false)
     }

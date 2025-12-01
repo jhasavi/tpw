@@ -1,20 +1,13 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'
   return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: [
-          '/admin/',
-          '/api/',
-          '/dashboard/',
-          '/_next/',
-          '/auth/callback',
-        ],
-      },
-    ],
-    sitemap: 'https://www.thepurplewings.org/sitemap.xml',
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
+    sitemap: `${base}/sitemap.xml`,
+    host: base,
   }
 }
