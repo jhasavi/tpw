@@ -90,13 +90,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
     isBookmarked = !!bookmark
   }
 
-  // Check if lesson has content - handle both old and new content structures
-  const hasContent = lessonData.content && 
-                     typeof lessonData.content === 'object' &&
-                     (
-                       ('introduction' in lessonData.content && lessonData.content.introduction) ||
-                       ('sections' in lessonData.content && Array.isArray(lessonData.content.sections) && lessonData.content.sections.length > 0)
-                     )
+  // Check if lesson has content - handle old, new, and markdown-based content structures
+  const hasContent = lessonData.content &&
+    typeof lessonData.content === 'object' && (
+      ('introduction' in lessonData.content && lessonData.content.introduction) ||
+      ('sections' in lessonData.content && Array.isArray(lessonData.content.sections) && lessonData.content.sections.length > 0) ||
+      ('markdown' in lessonData.content && lessonData.content.markdown && typeof lessonData.content.markdown === 'string' && lessonData.content.markdown.length > 0)
+    )
 
   if (!hasContent) {
     return (
@@ -197,17 +197,28 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </div>
         </div>
 
-        {/* Introduction */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-          <div className="prose prose-purple max-w-none">
-            <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
-              {content.introduction}
-            </p>
+        {/* Introduction or Markdown */}
+        {content.introduction && (
+          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+            <div className="prose prose-purple max-w-none">
+              <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
+                {content.introduction}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
+        {!content.introduction && (content as any).markdown && (
+          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+            <div className="prose prose-purple max-w-none">
+              <div className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
+                {(content as any).markdown}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Content Sections */}
-        {content.sections.map((section, idx) => (
+        {content.sections && content.sections.map((section, idx) => (
           <div key={idx} className="bg-white rounded-xl shadow-lg p-8 mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.title}</h2>
             <div className="prose prose-purple max-w-none">
@@ -251,24 +262,26 @@ export default async function LessonPage({ params }: LessonPageProps) {
         ))}
 
         {/* Key Takeaways */}
-        <div className="bg-gradient-to-br from-purple-600 to-purple-700 text-white rounded-xl shadow-lg p-8 mb-6">
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <span>🌟</span> Key Takeaways
-          </h2>
-          <ul className="space-y-3">
-            {content.keyTakeaways.map((takeaway, idx) => (
-              <li key={idx} className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-white text-purple-600 rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
-                  {idx + 1}
-                </span>
-                <span className="leading-relaxed">{takeaway}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {Array.isArray(content.keyTakeaways) && content.keyTakeaways.length > 0 && (
+          <div className="bg-gradient-to-br from-purple-600 to-purple-700 text-white rounded-xl shadow-lg p-8 mb-6">
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <span>🌟</span> Key Takeaways
+            </h2>
+            <ul className="space-y-3">
+              {content.keyTakeaways.map((takeaway: string, idx: number) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-white text-purple-600 rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                    {idx + 1}
+                  </span>
+                  <span className="leading-relaxed">{takeaway}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Action Items */}
-        {content.actionItems && content.actionItems.length > 0 && (
+        {Array.isArray(content.actionItems) && content.actionItems.length > 0 && (
           <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span>✅</span> Action Items
@@ -277,7 +290,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               Apply what you've learned! Complete these steps in the next week:
             </p>
             <ul className="space-y-3">
-              {content.actionItems.map((item, idx) => (
+              {content.actionItems.map((item: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-3">
                   <input
                     type="checkbox"
@@ -291,13 +304,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
         )}
 
         {/* Resources */}
-        {content.resources && content.resources.length > 0 && (
+        {Array.isArray(content.resources) && content.resources.length > 0 && (
           <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span>📚</span> Resources & Tools
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              {content.resources.map((resource, idx) => (
+              {content.resources.map((resource: any, idx: number) => (
                 <div key={idx} className="border border-purple-200 rounded-lg p-4 hover:shadow-md transition-all">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">

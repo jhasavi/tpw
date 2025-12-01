@@ -25,6 +25,7 @@ export default function CoursesPage() {
             src="/images/Women-fin.png"
             alt="Women achieving financial independence"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-indigo-900/70 flex items-center justify-center">
@@ -219,7 +220,7 @@ export default function CoursesPage() {
         <div className="mt-16 text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Start Learning?</h3>
           <Link
-            href="/auth/signup"
+            href="/auth"
             className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl transition-all"
           >
             Create Free Account

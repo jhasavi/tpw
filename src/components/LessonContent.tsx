@@ -1,6 +1,8 @@
 'use client'
 
 import type { Lesson } from '@/types/curriculum'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface LessonContentProps {
   lesson: Lesson
@@ -42,6 +44,15 @@ export default function LessonContent({ lesson, courseTitle }: LessonContentProp
             {content.introduction.split('\n\n').map((paragraph: string, i: number) => (
               <p key={i}>{paragraph}</p>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Markdown-based content fallback */}
+      {!content.introduction && (content as any).markdown && (
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+          <div className="prose prose-purple max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{(content as any).markdown}</ReactMarkdown>
           </div>
         </div>
       )}

@@ -49,7 +49,7 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
       .select('status')
       .eq('user_id', user.id)
       .eq('lesson_id', lessonId)
-      .single()
+      .maybeSingle()
 
     if (data) {
       setStatus(data.status)
@@ -70,17 +70,19 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
       .select('id, status')
       .eq('user_id', user.id)
       .eq('lesson_id', lessonId)
-      .single()
+      .maybeSingle()
 
     if (!existing) {
       // Create new progress record
       await supabase
         .from('lesson_progress')
-        .insert({
+        .upsert({
           user_id: user.id,
           lesson_id: lessonId,
           status: 'in_progress',
           started_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,lesson_id'
         })
       
       setStatus('in_progress')
