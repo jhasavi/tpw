@@ -21,11 +21,11 @@ jobs:
           npx playwright install --with-deps
       - name: Run Playwright E2E smoke script against staging/frontend
         env:
-          FRONTEND_URL: ${{ secrets.STAGING_FRONTEND_URL }}
-          API_URL: ${{ secrets.STAGING_API_BASE }}
-          TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
-          COURSE_ID: ${{ secrets.E2E_COURSE_ID }}
+          FRONTEND_URL: ${{ secrets.STAGING_FRONTEND_URL || 'http://localhost:3000' }}
+          API_URL: ${{ secrets.STAGING_API_BASE || 'http://localhost:3001' }}
+          TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
+          TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'test123' }}
+          COURSE_ID: ${{ secrets.E2E_COURSE_ID || 'test-id' }}
         working-directory: ./frontend
         run: |
           # run the repository-level script which uses playwright installed in frontend
