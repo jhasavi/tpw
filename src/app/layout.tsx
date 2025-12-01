@@ -53,6 +53,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://db.ckdshqbrxctjadljjhhy.supabase.co" />
+        <link rel="preconnect" href="https://db.ckdshqbrxctjadljjhhy.supabase.co" />
         <GoogleAnalytics />
       </head>
       <body className={inter.className}>
