@@ -74,8 +74,24 @@ export default async function BlogPage() {
       {/* Blog Posts Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
+          {blogPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="inline-block p-6 bg-purple-100 rounded-full mb-4">
+                <svg className="w-16 h-16 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Coming Soon!</h2>
+              <p className="text-gray-600 mb-6">
+                We're working on exciting new blog content. Check back soon for financial tips and insights!
+              </p>
+              <Link href="/courses" className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                Explore Courses Instead
+              </Link>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {blogPosts.map((post) => (
               <Link key={post.id} href={`/blog/${post.slug}`}>
                 <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer h-full flex flex-col">
                   <div className="relative h-48 bg-gray-200">
@@ -120,6 +136,7 @@ export default async function BlogPage() {
               </Link>
             ))}
           </div>
+          )}
         </div>
       </section>
     </div>

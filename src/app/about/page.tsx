@@ -305,6 +305,18 @@ export default function AboutPage() {
                 Dedicated non-profit organization supporting women's empowerment and financial independence initiatives.
               </p>
             </div>
+
+            {/* Namaste Needham Lab */}
+            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-lg bg-purple-100 flex items-center justify-center">
+                <span className="text-3xl">💻</span>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">Namaste Needham Lab</h3>
+              <p className="text-sm text-gray-600 text-center mb-3">Technical Partner</p>
+              <p className="text-gray-600 text-sm">
+                Providing comprehensive technical infrastructure, platform development, and technology support for our digital learning environment.
+              </p>
+            </div>
           </div>
         </div>
       </section>

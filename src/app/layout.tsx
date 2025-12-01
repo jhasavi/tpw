@@ -9,9 +9,9 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The Purple Wings - Women's Financial Empowerment",
-  description: "A one-stop online home where women can learn finance from basics to advanced, at their own pace, and connect with other women who are learning too — especially in Massachusetts.",
-  keywords: ["financial literacy", "women empowerment", "Massachusetts", "finance education", "FINRA"],
+  title: "The Purple Wings - Women's Financial Empowerment by Shalini Jha",
+  description: "Founded by Shalini Jha in Needham, Massachusetts. A one-stop online home where women can learn finance from basics to advanced, at their own pace. Technical support by Sanjeev Jha and Namaste Needham Lab.",
+  keywords: ["Shalini Jha", "Shalini", "Sanjeev Jha", "Needham", "Needham MA", "Massachusetts", "financial literacy", "women empowerment", "finance education", "FINRA", "Namaste Needham Lab"],
   icons: {
     icon: '/images/logo-nobg.png',
     shortcut: '/images/logo-nobg.png',
@@ -91,6 +91,13 @@ export default function RootLayout({
             </div>
             <div className="border-t border-gray-800 dark:border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
               <p>&copy; {new Date().getFullYear()} The Purple Wings. All rights reserved.</p>
+              <p className="mt-2 text-xs">
+                Founded by <span className="text-purple-400">Shalini Jha</span> in Needham, MA | 
+                Technical Support by <span className="text-purple-400">Sanjeev Jha</span> and{' '}
+                <a href="https://namaste-needham-lab.org" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">
+                  Namaste Needham Lab
+                </a>
+              </p>
             </div>
           </div>
         </footer>

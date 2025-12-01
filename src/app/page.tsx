@@ -5,12 +5,12 @@ import HeroSlider from '@/components/HeroSlider'
 import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'The Purple Wings - Financial Empowerment for Women | Free Financial Education',
-  description: 'Free financial literacy platform for women. Learn budgeting, investing, retirement planning, and more. Founded by Shalini Jha in Needham, MA. Self-paced courses from beginner to advanced.',
-  keywords: 'women financial education, financial literacy for women, free finance courses, Shalini Jha, Needham MA, budgeting, investing, retirement planning, women empowerment',
+  title: 'The Purple Wings - Financial Empowerment for Women by Shalini Jha | Needham MA',
+  description: 'Founded by Shalini Jha in Needham, Massachusetts. Free financial literacy platform for women. Learn budgeting, investing, retirement planning, and more. Self-paced courses from beginner to advanced. Technical support by Sanjeev Jha and Namaste Needham Lab.',
+  keywords: 'Shalini Jha, Shalini, Sanjeev Jha, Needham, Needham MA, Massachusetts, women financial education, financial literacy for women, free finance courses, budgeting, investing, retirement planning, women empowerment, Namaste Needham Lab',
   openGraph: {
-    title: 'The Purple Wings - Financial Empowerment for Women',
-    description: 'Free financial literacy platform helping women achieve financial independence',
+    title: 'The Purple Wings - Financial Empowerment for Women by Shalini Jha',
+    description: 'Free financial literacy platform helping women achieve financial independence. Founded by Shalini Jha in Needham, MA.',
     images: ['/images/logo-nobg.png'],
     type: 'website',
     siteName: 'The Purple Wings',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Purple Wings - Financial Empowerment for Women',
+    title: 'The Purple Wings - Financial Empowerment for Women by Shalini Jha',
     description: 'Free financial literacy platform helping women achieve financial independence',
     images: ['/images/logo-nobg.png'],
   },
