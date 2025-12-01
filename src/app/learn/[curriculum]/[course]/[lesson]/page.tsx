@@ -333,19 +333,20 @@ export default async function LessonPage({ params }: LessonPageProps) {
         {/* Progress Tracker */}
         <ProgressTracker lessonId={lessonData.id} courseId={courseData.id} />
 
-        {/* Lesson Navigation */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        {/* Lesson Navigation - Enhanced Visibility */}
+        <div className="bg-gradient-to-r from-purple-100 via-purple-50 to-indigo-100 rounded-2xl shadow-2xl p-8 mb-6 border-4 border-purple-300">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">📚 Lesson Navigation</h3>
           <div className="flex items-center justify-between gap-4">
             {previousLesson ? (
               <Link
                 href={`/learn/${curriculumSlug}/${courseSlug}/${previousLesson.slug}`}
                 className="flex-1 group"
               >
-                <div className="flex items-center gap-3 p-4 rounded-lg border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all">
+                <div className="flex items-center gap-3 p-5 rounded-xl border-3 border-gray-300 hover:border-gray-500 bg-white hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl">
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-purple-100 flex items-center justify-center transition-colors">
-                      <svg className="w-5 h-5 text-gray-600 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    <div className="w-14 h-14 rounded-full bg-gray-200 group-hover:bg-gray-300 flex items-center justify-center transition-colors">
+                      <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
                       </svg>
                     </div>
                   </div>
@@ -365,9 +366,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
             <Link
               href={`/learn/${curriculumSlug}/${courseSlug}`}
-              className="flex-shrink-0 px-6 py-3 text-gray-600 hover:text-purple-600 font-medium transition-colors"
+              className="flex-shrink-0 px-8 py-5 bg-white hover:bg-purple-50 text-purple-700 hover:text-purple-900 font-bold transition-all border-3 border-purple-400 rounded-xl shadow-lg hover:shadow-xl text-lg"
             >
-              All Lessons
+              📖 All Lessons
             </Link>
 
             {nextLesson ? (
@@ -375,25 +376,25 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 href={`/learn/${curriculumSlug}/${courseSlug}/${nextLesson.slug}`}
                 className="flex-1 group"
               >
-                <div className="flex items-center gap-3 p-4 rounded-lg border-2 border-purple-500 bg-purple-50 hover:bg-purple-100 transition-all">
+                <div className="flex items-center gap-3 p-5 rounded-xl border-3 border-purple-500 bg-purple-600 hover:bg-purple-700 transition-all shadow-lg hover:shadow-2xl">
                   <div className="flex-1 text-right">
-                    <div className="text-xs text-purple-600 mb-1">Next Lesson</div>
-                    <div className="font-semibold text-gray-900 line-clamp-1">
+                    <div className="text-sm font-bold text-purple-100 mb-1">Next →</div>
+                    <div className="font-bold text-white line-clamp-2 text-sm">
                       {nextLesson.title}
                     </div>
                   </div>
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-purple-200 group-hover:bg-purple-300 flex items-center justify-center transition-colors">
-                      <svg className="w-5 h-5 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <div className="w-14 h-14 rounded-full bg-purple-400 group-hover:bg-purple-300 flex items-center justify-center transition-colors">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
                   </div>
                 </div>
               </Link>
             ) : (
-              <div className="flex-1 p-4 rounded-lg border-2 border-green-200 bg-green-50">
-                <div className="text-center text-green-700 font-semibold text-sm">
+              <div className="flex-1 p-5 rounded-xl border-3 border-green-400 bg-green-500">
+                <div className="text-center text-white font-bold text-lg">
                   🎉 Course Complete!
                 </div>
               </div>

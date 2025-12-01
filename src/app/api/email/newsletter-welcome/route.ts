@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       return NextResponse.json(
-        { error: 'Email already subscribed' },
+        { error: 'You\'re already subscribed! Check your email for our latest newsletter.' },
         { status: 400 }
       )
     }
@@ -46,8 +46,15 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       console.error('Database error:', dbError)
+      // Check if it's a duplicate error
+      if (dbError.code === '23505') {
+        return NextResponse.json(
+          { error: 'You\'re already subscribed! Check your email for our latest newsletter.' },
+          { status: 400 }
+        )
+      }
       return NextResponse.json(
-        { error: 'Failed to subscribe' },
+        { error: 'Failed to subscribe. Please try again or contact support.' },
         { status: 500 }
       )
     }
