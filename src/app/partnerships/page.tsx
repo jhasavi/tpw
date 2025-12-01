@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import DonateButton from '@/components/DonateButton'
 
 export default function PartnershipsPage() {
   return (

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import DonateButton from '@/components/DonateButton'
 
 export const metadata: Metadata = {
   title: 'About The Purple Wings - 501(c)(3) Nonprofit | Shalini Jha',
@@ -507,6 +508,31 @@ export default function AboutPage() {
               Explore Community
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Support Our Mission - Donate */}
+      <section className="py-16 bg-gradient-to-br from-purple-600 to-indigo-700 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Support Our Mission
+          </h2>
+          <p className="text-xl text-purple-100 mb-8">
+            As a 501(c)(3) nonprofit organization, we rely on donations to keep our financial education programs 
+            free and accessible to all women. Your contribution helps us reach more women and expand our impact.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <DonateButton size="lg" variant="secondary" />
+            <Link
+              href="/partnerships"
+              className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-semibold text-lg rounded-lg hover:bg-white hover:text-purple-600 transition-all"
+            >
+              Become a Partner
+            </Link>
+          </div>
+          <p className="text-sm text-purple-200 mt-6">
+            The Purple Wings is a registered 501(c)(3) nonprofit organization. Your donation may be tax-deductible.
+          </p>
         </div>
       </section>
     </div>

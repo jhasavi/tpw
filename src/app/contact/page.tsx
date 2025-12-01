@@ -68,6 +68,34 @@ export default function ContactPage() {
           </p>
         </div>
 
+        {/* Community Images */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="relative h-64 rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/Class-1.jpeg"
+              alt="Community learning session"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative h-64 rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/learners-2.jpg"
+              alt="Women learning together"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative h-64 rounded-xl overflow-hidden shadow-lg">
+            <Image
+              src="/images/TPW1.jpg"
+              alt="The Purple Wings event"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div>
@@ -81,8 +109,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    <a href="mailto:contact@thepurplewings.org" className="text-purple-600 hover:text-purple-700">
-                      contact@thepurplewings.org
+                    <a href="mailto:info@thepurplewings.org" className="text-purple-600 hover:text-purple-700">
+                      info@thepurplewings.org
                     </a>
                   </div>
                 </div>

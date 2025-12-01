@@ -379,12 +379,14 @@ export default function EventsPage() {
             We're always looking for financial experts and community leaders to share their knowledge. 
             Contact us to discuss partnership opportunities.
           </p>
-          <Link
-            href="mailto:info@thepurplewings.org"
-            className="inline-flex items-center justify-center px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Contact Us
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="mailto:info@thepurplewings.org"
+              className="inline-flex items-center justify-center px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Contact Us
+            </Link>
+          </div>
         </div>
       </section>
     </div>
