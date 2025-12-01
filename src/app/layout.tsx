@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -98,9 +99,15 @@ export default function RootLayout({
                   Namaste Needham Lab
                 </a>
               </p>
+              <div className="mt-4 text-xs">
+                <a href="/privacy" className="hover:text-white mx-2">Privacy Policy</a>
+                <span>•</span>
+                <a href="/terms" className="hover:text-white mx-2">Terms of Service</a>
+              </div>
             </div>
           </div>
         </footer>
+        <CookieConsent />
         </ThemeProvider>
       </body>
     </html>
