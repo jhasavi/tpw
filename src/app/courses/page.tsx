@@ -1,6 +1,16 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { curricula } from '@/data/curricula'
+
+export const metadata: Metadata = {
+  title: 'Financial Literacy Courses for Women | The Purple Wings',
+  description: 'Explore comprehensive financial courses: budgeting, investing, retirement planning, debt management. Free online learning for women.',
+  openGraph: {
+    title: 'Financial Literacy Courses for Women',
+    description: 'Free online courses covering budgeting, investing, retirement planning, and more.',
+  },
+}
 
 export default function CoursesPage() {
   const womensCurriculum = curricula.find(c => c.slug === 'womens-financial-literacy')

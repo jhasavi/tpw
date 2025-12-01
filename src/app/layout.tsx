@@ -6,13 +6,17 @@ import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import StructuredData from "@/components/StructuredData";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The Purple Wings - Women's Financial Empowerment by Shalini Jha",
-  description: "Founded by Shalini Jha in Needham, Massachusetts. A one-stop online home where women can learn finance from basics to advanced, at their own pace. Technical support by Sanjeev Jha and Namaste Needham Lab.",
-  keywords: ["Shalini Jha", "Shalini", "Sanjeev Jha", "Needham", "Needham MA", "Massachusetts", "financial literacy", "women empowerment", "finance education", "FINRA", "Namaste Needham Lab"],
+  title: {
+    default: "The Purple Wings - Women's Financial Empowerment",
+    template: "%s | The Purple Wings",
+  },
+  description: "Free online financial literacy courses for women. Learn budgeting, investing, retirement planning, and wealth building at your own pace. Founded by Shalini Jha in Needham, MA.",
+  keywords: ["financial literacy", "women empowerment", "finance education", "budgeting", "investing", "retirement planning", "Shalini Jha", "Needham MA", "FINRA"],
   icons: {
     icon: '/images/logo-nobg.png',
     shortcut: '/images/logo-nobg.png',
@@ -29,11 +33,23 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
+    locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org',
     title: "The Purple Wings - Women's Financial Empowerment",
-    description: 'Learn finance from basics to advanced at your own pace.',
+    description: 'Free online financial literacy courses for women. Learn budgeting, investing, and wealth building.',
     siteName: 'The Purple Wings',
-    images: [{ url: '/images/logo-nobg.png' }],
+    images: [{ 
+      url: '/images/logo-nobg.png',
+      width: 1200,
+      height: 630,
+      alt: 'The Purple Wings Logo',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "The Purple Wings - Women's Financial Empowerment",
+    description: 'Free online financial literacy courses for women',
+    images: ['/images/logo-nobg.png'],
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'),
 };
@@ -54,9 +70,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://db.ckdshqbrxctjadljjhhy.supabase.co" />
         <link rel="preconnect" href="https://db.ckdshqbrxctjadljjhhy.supabase.co" />
+        <StructuredData />
         <GoogleAnalytics />
       </head>
       <body className={inter.className}>

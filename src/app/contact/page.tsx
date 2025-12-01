@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
+// Note: Metadata must be added in a parent layout or via dynamic routes for client components
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
