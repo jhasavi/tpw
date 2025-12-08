@@ -1,16 +1,14 @@
 name: Frontend CI
 
+# Temporarily disabled - configure secrets in GitHub repo settings first
 on:
-  pull_request:
-    branches: [ main, 'fix/**', 'feat/**' ]
-  push:
-    branches: [ main ]
+  workflow_dispatch: # Manual trigger only
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Use secrets for actual values
+      # Use secrets with fallback values
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}

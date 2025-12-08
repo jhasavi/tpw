@@ -78,18 +78,33 @@ export default function QuizInterface({
 
       if (data && data.length > 0) {
         // Transform data to match expected format
-        const transformedData = data.map(q => ({
-          id: q.id,
-          question_text: q.question_text,
-          question_type: q.question_type || 'multiple_choice',
-          difficulty_level: q.difficulty_level || 'beginner',
-          options: Array.isArray(q.options) ? q.options : [],
-          correct_answer: typeof q.correct_answer === 'string' ? q.correct_answer : (Array.isArray(q.correct_answer) ? q.correct_answer[0] : ''),
-          explanation: q.explanation || '',
-          points: 10, // Default points
-          time_limit_seconds: 30, // Default time limit
-          tags: q.topics || []
-        }));
+        const transformedData = data.map(q => {
+          // Handle options - can be array of strings or array of objects
+          let optionsArray: string[] = [];
+          if (Array.isArray(q.options)) {
+            optionsArray = q.options.map(opt => {
+              if (typeof opt === 'string') return opt;
+              if (typeof opt === 'object' && opt !== null) {
+                // If it's an object with 'text' or 'value' property, extract it
+                return opt.text || opt.value || opt.option || String(opt);
+              }
+              return String(opt);
+            });
+          }
+
+          return {
+            id: q.id,
+            question_text: q.question_text,
+            question_type: q.question_type || 'multiple_choice',
+            difficulty_level: q.difficulty_level || 'beginner',
+            options: optionsArray,
+            correct_answer: typeof q.correct_answer === 'string' ? q.correct_answer : (Array.isArray(q.correct_answer) ? q.correct_answer[0] : ''),
+            explanation: q.explanation || '',
+            points: 10, // Default points
+            time_limit_seconds: 30, // Default time limit
+            tags: q.topics || []
+          };
+        });
 
         // Shuffle questions
         const shuffled = [...transformedData].sort(() => Math.random() - 0.5);
