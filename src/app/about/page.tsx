@@ -5,8 +5,8 @@ import DonateButton from '@/components/DonateButton'
 
 export const metadata: Metadata = {
   title: 'About The Purple Wings - 501(c)(3) Nonprofit for Women Financial Literacy | Needham, MA',
-  description: 'The Purple Wings is a 501(c)(3) nonprofit organization founded by Shalini Jha to empower women in Massachusetts through financial literacy education. Featured in Needham Observer, Boston 25 News, and Yahoo News. Serving Greater Boston area including Needham, Newton, Wellesley, and Waltham.',
-  keywords: 'women financial literacy Needham MA, female financial education Boston, 501c3 nonprofit Massachusetts, Shalini Jha financial education, women empowerment Greater Boston, financial literacy courses Needham, female financial coaches Massachusetts, women money management Greater Boston, Needham Observer financial literacy, Boston financial education for women',
+  description: 'The Purple Wings is a 501(c)(3) nonprofit organization founded by Shalini Jha, President and Inspiration, to empower women in Massachusetts through financial literacy education. Featured in Needham Observer, Boston 25 News, and Yahoo News. Serving Greater Boston area including Needham, Newton, Wellesley, and Waltham.',
+  keywords: 'women financial literacy Needham MA, female financial education Boston, 501c3 nonprofit Massachusetts, Shalini Jha President Inspiration, Shalini Jha financial education founder, women empowerment Greater Boston, financial literacy courses Needham, female financial coaches Massachusetts, women money management Greater Boston, Needham Observer financial literacy, Boston financial education for women',
   openGraph: {
     title: 'The Purple Wings - Empowering Women Through Financial Literacy | Needham, MA',
     description: 'Free and affordable financial literacy education for women in Massachusetts. Learn budgeting, investing, insurance, and more. Featured in local media.',
@@ -53,7 +53,7 @@ export default function AboutPage() {
               </h2>
               <p className="text-lg text-gray-600 mb-6">
                 During the COVID-19 pandemic, when the world stood still and uncertainty gripped every household, 
-                <strong className="text-purple-600"> Shalini Jha</strong>, President and founder of The Purple Wings, 
+                <strong className="text-purple-600"> Shalini Jha</strong>, President and Inspiration of The Purple Wings, 
                 recognized a critical need: women were facing unprecedented financial challenges, yet lacked accessible 
                 resources to navigate them.
               </p>
@@ -63,7 +63,7 @@ export default function AboutPage() {
                   were not prepared for sudden changes in life. Financial literacy isn't just about money—it's about 
                   giving women the power to navigate life's uncertainties with confidence."
                 </p>
-                <p className="text-purple-600 font-semibold mt-3">— Shalini Jha, President & Founder</p>
+                <p className="text-purple-600 font-semibold mt-3">— Shalini Jha, President & Inspiration</p>
               </div>
               <p className="text-lg text-gray-600 mb-6">
                 From her home in <strong>Needham, Massachusetts</strong>, Shalini founded The Purple Wings as a 
@@ -92,7 +92,7 @@ export default function AboutPage() {
                 <p className="text-gray-700 italic text-sm leading-relaxed">
                   "I want to see women not just survive, but thrive—regardless of their background or circumstances."
                 </p>
-                <p className="text-purple-600 font-semibold text-xs mt-2">— Shalini Jha, President & Founder</p>
+                <p className="text-purple-600 font-semibold text-xs mt-2">— Shalini Jha, President & Inspiration</p>
               </div>
             </div>
           </div>

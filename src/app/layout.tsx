@@ -7,6 +7,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import StructuredData from "@/components/StructuredData";
+import FloatingQuizCTA from "@/components/FloatingQuizCTA";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +16,8 @@ export const metadata: Metadata = {
     default: "The Purple Wings - Women's Financial Empowerment",
     template: "%s | The Purple Wings",
   },
-  description: "Free online financial literacy courses for women. Learn budgeting, investing, retirement planning, and wealth building at your own pace. Founded by Shalini Jha in Needham, MA.",
-  keywords: ["financial literacy", "women empowerment", "finance education", "budgeting", "investing", "retirement planning", "Shalini Jha", "Needham MA", "FINRA"],
+  description: "Free online financial literacy courses for women. Learn budgeting, investing, retirement planning, and wealth building at your own pace. Founded by Shalini Jha, President and Inspiration, in Needham, MA.",
+  keywords: ["financial literacy", "women empowerment", "finance education", "budgeting", "investing", "retirement planning", "Shalini Jha President Inspiration", "Needham MA", "FINRA"],
   icons: {
     icon: '/images/logo-nobg.png',
     shortcut: '/images/logo-nobg.png',
@@ -141,6 +142,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        <FloatingQuizCTA />
         <CookieConsent />
         </ThemeProvider>
       </body>

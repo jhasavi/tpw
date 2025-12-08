@@ -10,7 +10,7 @@ export default function StructuredData() {
     founder: {
       '@type': 'Person',
       name: 'Shalini Jha',
-      jobTitle: 'President & Founder',
+      jobTitle: 'President & Inspiration',
       description: 'Financial literacy advocate dedicated to empowering women through education',
     },
     address: {

@@ -257,7 +257,7 @@ export default function HomePage() {
                   "I want to see women not just survive, but thrive—regardless of their background or circumstances."
                 </blockquote>
                 <cite className="text-yellow-400 font-semibold not-italic">
-                  — Shalini Jha, President & Founder
+                  — Shalini Jha, President & Inspiration
                 </cite>
                 <p className="text-sm text-purple-200 mt-2">
                   The Purple Wings, 501(c)(3) Nonprofit Organization
