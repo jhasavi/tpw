@@ -88,9 +88,9 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
       .eq('user_id', user.id)
       .maybeSingle()
 
-    // If recently deferred (within 24h), suppress wizard
+    // If recently deferred (within 7 days), suppress wizard
     const now = Date.now()
-    const deferredUntil = data?.deferred_at ? new Date(data.deferred_at).getTime() + 24 * 60 * 60 * 1000 : 0
+    const deferredUntil = data?.deferred_at ? new Date(data.deferred_at).getTime() + 7 * 24 * 60 * 60 * 1000 : 0
 
     if (data?.is_complete) {
       onComplete?.()

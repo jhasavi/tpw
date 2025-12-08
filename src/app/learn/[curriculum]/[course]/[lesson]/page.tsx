@@ -6,6 +6,7 @@ import QuizSection from '@/components/QuizSection'
 import ProgressTracker from '@/components/ProgressTracker'
 import LessonContent from '@/components/LessonContent'
 import BookmarkButton from '@/components/BookmarkButton'
+import ProminentQuizCard from '@/components/ProminentQuizCard'
 
 interface LessonPageProps {
   params: Promise<{
@@ -347,6 +348,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
             </div>
           </div>
         )}
+
+        {/* Prominent Quiz Card - Test Your Knowledge */}
+        <ProminentQuizCard
+          lesson={{
+            id: lessonData.id,
+            slug: lessonSlug,
+            title: lesson.title
+          }}
+          user={authedUser}
+          className="mb-6"
+        />
 
         {/* Quiz Section */}
         <QuizSection lessonId={lessonData.id} lessonTitle={lesson.title} />

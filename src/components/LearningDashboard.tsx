@@ -6,6 +6,8 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import ProgressDashboard from './ProgressDashboard'
 import WelcomeWizard from './onboarding/WelcomeWizard'
+import GamificationPanel from './GamificationPanel'
+import ProminentQuizCard from './ProminentQuizCard'
 
 interface DashboardStats {
   totalLessons: number
@@ -211,6 +213,12 @@ export default function LearningDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Gamification Panel - Progress & Achievements */}
+      {user && <GamificationPanel user={user} />}
+
+      {/* Prominent Quiz Card - Challenge Section */}
+      {user && <ProminentQuizCard user={user} isDashboard={true} />}
 
       {/* Continue Learning */}
       {continueLesson && (

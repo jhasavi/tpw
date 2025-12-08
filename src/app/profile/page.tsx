@@ -169,6 +169,32 @@ export default function ProfilePage() {
     setProfile({ ...profile, interests: newInterests })
   }
 
+  const resetOnboarding = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+
+      // Reset onboarding progress so wizard appears again
+      const { error } = await supabase
+        .from('onboarding_progress')
+        .upsert(
+          {
+            user_id: user.id,
+            is_complete: false,
+            current_step: 0,
+            deferred_at: null
+          },
+          { onConflict: 'user_id' }
+        )
+
+      if (error) throw error
+      alert('Onboarding wizard will appear on your next page visit!')
+    } catch (error: any) {
+      console.error('Error resetting onboarding:', error)
+      alert('Failed to reset onboarding. Please try again.')
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 py-12">
@@ -436,6 +462,20 @@ export default function ProfilePage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Reset Onboarding */}
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <p className="text-sm text-gray-700 mb-3">
+              Want to revisit your learning path and goals? You can restart the onboarding wizard anytime.
+            </p>
+            <button
+              type="button"
+              onClick={() => resetOnboarding()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
+            >
+              Restart Onboarding Wizard
+            </button>
           </div>
 
           {/* Submit Button */}

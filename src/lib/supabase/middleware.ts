@@ -28,7 +28,12 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refreshing the auth token
-  await supabase.auth.getUser()
+  try {
+    await supabase.auth.getUser()
+  } catch (error) {
+    console.error('Error refreshing auth token in middleware:', error)
+    // Continue without blocking the request on auth errors
+  }
 
   return supabaseResponse
 }
