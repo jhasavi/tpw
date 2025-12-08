@@ -2,12 +2,15 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function FloatingQuizCTA() {
   const [isVisible, setIsVisible] = useState(true)
   const [isMinimized, setIsMinimized] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const pathname = usePathname()
+  const isOnQuizPage = pathname?.includes('/quiz')
 
   useEffect(() => {
     const checkUser = async () => {
@@ -18,7 +21,7 @@ export default function FloatingQuizCTA() {
     checkUser()
   }, [])
 
-  if (!isVisible || !user) return null
+  if (!isVisible || !user || isOnQuizPage) return null
 
   if (isMinimized) {
     return (
@@ -33,8 +36,8 @@ export default function FloatingQuizCTA() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 animate-slide-in-right">
-      <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-700 text-white rounded-2xl shadow-2xl p-6 max-w-sm relative overflow-hidden">
+    <div className="fixed bottom-4 right-4 z-50 animate-slide-in-right">
+      <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-700 text-white rounded-xl shadow-lg p-4 max-w-xs relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
@@ -62,37 +65,32 @@ export default function FloatingQuizCTA() {
         </button>
 
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-5xl animate-pulse">🎯</span>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-3xl animate-pulse">🎯</span>
             <div>
-              <h3 className="text-xl font-bold">Test Your Knowledge!</h3>
-              <p className="text-purple-200 text-sm">Take a quick quiz</p>
+              <h3 className="text-base font-bold">Test Your Knowledge!</h3>
+              <p className="text-purple-200 text-xs">Take a quick quiz</p>
             </div>
           </div>
 
-          <p className="text-purple-100 mb-5 text-sm leading-relaxed">
-            🚀 Challenge yourself with our interactive quizzes and track your progress. 
-            Earn points and badges as you learn!
+          <p className="text-purple-100 mb-4 text-xs leading-relaxed">
+            Challenge yourself with interactive quizzes and track your progress!
           </p>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <Link
               href="/quiz"
-              className="flex-1 bg-white text-purple-600 py-3 px-4 rounded-lg font-bold hover:bg-purple-50 transition-colors text-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+              className="flex-1 bg-white text-purple-600 py-2 px-3 rounded text-xs font-bold hover:bg-purple-50 transition-colors text-center"
             >
-              Start Quiz →
+              Start Quiz
             </Link>
             <Link
-              href="/assessment"
-              className="flex-1 bg-purple-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-purple-600 transition-colors text-center"
+              href="/quiz/personality"
+              className="flex-1 bg-purple-500 text-white py-2 px-3 rounded text-xs font-bold hover:bg-purple-600 transition-colors text-center"
             >
               Full Test
             </Link>
           </div>
-
-          <p className="text-xs text-purple-200 mt-3 text-center">
-            💡 Join hundreds taking quizzes daily!
-          </p>
         </div>
       </div>
     </div>

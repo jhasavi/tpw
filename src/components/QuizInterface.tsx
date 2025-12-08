@@ -41,6 +41,8 @@ export default function QuizInterface({
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [countdownToNext, setCountdownToNext] = useState(0);
+  const [showQuestionReview, setShowQuestionReview] = useState(false);
   
   const router = useRouter();
 
@@ -56,6 +58,13 @@ export default function QuizInterface({
       handleNextQuestion();
     }
   }, [timeLeft, quizStarted, quizCompleted]);
+
+  useEffect(() => {
+    if (countdownToNext > 0) {
+      const timer = setTimeout(() => setCountdownToNext(countdownToNext - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdownToNext]);
 
   async function loadQuestions() {
     try {
@@ -137,6 +146,7 @@ export default function QuizInterface({
     }
 
     setShowResult(true);
+    setCountdownToNext(3); // Show 3 second countdown
 
     // Move to next question after showing result
     setTimeout(() => {
@@ -144,6 +154,7 @@ export default function QuizInterface({
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedAnswer(null);
         setShowResult(false);
+        setCountdownToNext(0);
         setTimeLeft(questions[currentQuestionIndex + 1]?.time_limit_seconds || 30);
       } else {
         finishQuiz();
@@ -254,7 +265,7 @@ export default function QuizInterface({
   if (quizCompleted) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-lg shadow-xl p-8 text-center">
+        <div className="bg-white rounded-lg shadow-xl p-8 text-center mb-8">
           <div className={`text-6xl mb-4 ${score >= 80 ? '🎉' : score >= 60 ? '👍' : '💪'}`}>
             {score >= 80 ? '🎉' : score >= 60 ? '👍' : '💪'}
           </div>
@@ -284,21 +295,72 @@ export default function QuizInterface({
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-8">
+            <button
+              onClick={() => setShowQuestionReview(!showQuestionReview)}
+              className="flex-1 bg-purple-200 text-purple-800 px-6 py-3 rounded-lg hover:bg-purple-300 font-semibold transition-colors"
+            >
+              {showQuestionReview ? 'Hide Review' : 'Review Answers'}
+            </button>
             <button
               onClick={() => router.push('/quiz')}
-              className="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300"
+              className="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 font-semibold transition-colors"
             >
               Browse Quizzes
             </button>
             <button
               onClick={() => window.location.reload()}
-              className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700"
+              className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 font-semibold transition-colors"
             >
               Try Again
             </button>
           </div>
         </div>
+
+        {showQuestionReview && (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Review Your Answers</h3>
+            {questions.map((q, idx) => {
+              const userAnswer = answers[idx];
+              const isCorrect = userAnswer === q.correct_answer;
+              return (
+                <div key={idx} className={`p-6 rounded-lg border-l-4 ${
+                  isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <h4 className="font-semibold text-gray-900 flex-1">
+                      Question {idx + 1}: {q.question_text}
+                    </h4>
+                    {isCorrect ? (
+                      <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 ml-2" />
+                    ) : (
+                      <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 ml-2" />
+                    )}
+                  </div>
+                  
+                  <div className="mb-3">
+                    <p className="text-sm text-gray-700 mb-2">
+                      <strong>Your answer:</strong> {userAnswer || 'Not answered'}
+                    </p>
+                    {!isCorrect && (
+                      <p className="text-sm text-gray-700">
+                        <strong>Correct answer:</strong> {q.correct_answer}
+                      </p>
+                    )}
+                  </div>
+
+                  {q.explanation && (
+                    <div className="p-3 bg-white rounded border border-gray-200">
+                      <p className="text-sm text-gray-700">
+                        <strong>Explanation:</strong> {q.explanation}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
@@ -378,7 +440,13 @@ export default function QuizInterface({
             <p className={`font-semibold mb-2 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
               {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
             </p>
-            <p className="text-gray-700">{currentQuestion.explanation}</p>
+            <p className="text-gray-700 mb-3">{currentQuestion.explanation}</p>
+            {countdownToNext > 0 && (
+              <p className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                Next question in {countdownToNext} second{countdownToNext !== 1 ? 's' : ''}...
+              </p>
+            )}
           </div>
         )}
 
