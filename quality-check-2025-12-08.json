@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-12-08T01:30:10.666Z",
+  "lessonsScanned": 135,
+  "coursesScanned": 31,
+  "curriculaScanned": 2,
+  "issues": {
+    "comingSoon": [],
+    "errorLoading": [],
+    "missingContent": [],
+    "emptyCourses": [],
+    "orphanedLessons": []
+  },
+  "summary": {}
+}

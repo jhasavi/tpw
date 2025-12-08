@@ -4,12 +4,12 @@ import Link from 'next/link'
 import DonateButton from '@/components/DonateButton'
 
 export const metadata: Metadata = {
-  title: 'About The Purple Wings - 501(c)(3) Nonprofit | Shalini Jha',
-  description: 'Learn about The Purple Wings, a 501(c)(3) nonprofit founded by President Shalini Jha to empower women through financial literacy. Featured in Needham Observer and Boston 25 News. Based in Needham, MA.',
-  keywords: 'Shalini Jha, The Purple Wings, 501c3 nonprofit, women financial education, Needham Massachusetts, COVID-19 initiative, Namaste Boston Homes, Needham Bank, financial literacy, Sanjeev Jha, women empowerment, Needham Observer, Aditi Pranjape',
+  title: 'About The Purple Wings - 501(c)(3) Nonprofit for Women Financial Literacy | Needham, MA',
+  description: 'The Purple Wings is a 501(c)(3) nonprofit organization founded by Shalini Jha to empower women in Massachusetts through financial literacy education. Featured in Needham Observer, Boston 25 News, and Yahoo News. Serving Greater Boston area including Needham, Newton, Wellesley, and Waltham.',
+  keywords: 'women financial literacy Needham MA, female financial education Boston, 501c3 nonprofit Massachusetts, Shalini Jha financial education, women empowerment Greater Boston, financial literacy courses Needham, female financial coaches Massachusetts, women money management Greater Boston, Needham Observer financial literacy, Boston financial education for women',
   openGraph: {
-    title: 'About The Purple Wings - 501(c)(3) Nonprofit Founded by Shalini Jha',
-    description: 'Empowering women through financial literacy since the COVID-19 pandemic. Featured in media. Based in Needham, MA.',
+    title: 'The Purple Wings - Empowering Women Through Financial Literacy | Needham, MA',
+    description: 'Free and affordable financial literacy education for women in Massachusetts. Learn budgeting, investing, insurance, and more. Featured in local media.',
     images: ['/images/Shalini.jpg'],
   }
 }
@@ -145,6 +145,77 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Massachusetts Community Impact */}
+      <section className="py-16 bg-gradient-to-br from-purple-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Serving Greater Boston & Massachusetts</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Based in Needham, Massachusetts, we're building a community of financially empowered women across the Greater Boston area
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600">
+              <div className="text-4xl mb-4">📍</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Location</h3>
+              <p className="text-gray-600 mb-2">Headquartered in <strong>Needham, Massachusetts</strong>, serving women across:</p>
+              <ul className="text-gray-600 space-y-1 text-sm">
+                <li>• Greater Boston Area</li>
+                <li>• Needham, Newton, Wellesley</li>
+                <li>• Waltham, Cambridge, Brookline</li>
+                <li>• All of Massachusetts</li>
+              </ul>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600">
+              <div className="text-4xl mb-4">🎓</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">What We Offer</h3>
+              <p className="text-gray-600 mb-2">Free and affordable financial education including:</p>
+              <ul className="text-gray-600 space-y-1 text-sm">
+                <li>• Banking & Money Management</li>
+                <li>• Budgeting & Savings</li>
+                <li>• Investing & Retirement</li>
+                <li>• Insurance & Real Estate</li>
+              </ul>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600">
+              <div className="text-4xl mb-4">👥</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Community</h3>
+              <p className="text-gray-600 mb-2">Join thousands of women in Massachusetts who are:</p>
+              <ul className="text-gray-600 space-y-1 text-sm">
+                <li>• Taking control of their finances</li>
+                <li>• Building confidence & knowledge</li>
+                <li>• Connecting with other women</li>
+                <li>• Creating financial security</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-white p-8 rounded-xl shadow-lg border-2 border-purple-200">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Needham Chose The Purple Wings</h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  The Purple Wings emerged during the COVID-19 pandemic as Shalini Jha recognized a critical gap: women lacked access to 
+                  practical financial education. What started as a personal mission to help friends and community members has grown into 
+                  a registered 501(c)(3) nonprofit organization serving the greater Needham and Boston area.
+                </p>
+                <p className="text-gray-700 leading-relaxed">
+                  Featured in the <strong>Needham Observer</strong> and covered by <strong>Boston 25 News</strong>, our work has earned 
+                  local recognition for helping women overcome financial fear and build lasting wealth. Today, we're expanding our reach 
+                  across Massachusetts to ensure every woman has the tools for financial success.
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="text-6xl">🦋</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Team & Contributors */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -168,7 +239,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Shalini Jha</h3>
-                <p className="text-purple-600 font-medium mb-3">President & Founder</p>
+                <p className="text-purple-600 font-medium mb-3">President & Inspiration</p>
                 <p className="text-gray-600 mb-4">
                   President and inspiration behind The Purple Wings. Featured in Needham Observer and Boston 25 News 
                   for her work empowering women. Based in Needham, MA, Shalini's personal journey and determination 
@@ -177,22 +248,23 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+            <div className="bg-green-50 p-6 rounded-xl border-2 border-green-200">
               <div className="text-center">
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <Image
-                    src="/images/sanjeev.jpg"
-                    alt="Sanjeev Jha"
+                    src="/images/Aditi.jpeg"
+                    alt="Aditi Pranjape"
                     width={96}
                     height={96}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Sanjeev Jha</h3>
-                <p className="text-blue-600 font-medium mb-3">Technical Advisor & Contributor</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Aditi Pranjape</h3>
+                <p className="text-green-600 font-medium mb-3">Co-Founder & Community Connector</p>
                 <p className="text-gray-600 mb-4">
-                  Provides technical expertise and real estate investment knowledge. Instrumental in developing 
-                  the platform's technology infrastructure and contributing educational content on property investment.
+                  Co-founder and community connector who bridges gaps between women seeking financial knowledge 
+                  and resources. A public health dietetic consultant, Aditi brings her passion for wellness to 
+                  financial empowerment.
                 </p>
               </div>
             </div>
@@ -217,23 +289,22 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+            <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
               <div className="text-center">
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
                   <Image
-                    src="/images/team.jpg"
-                    alt="Aditi Pranjape"
+                    src="/images/sanjeev.jpg"
+                    alt="Sanjeev Jha"
                     width={96}
                     height={96}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Aditi Pranjape</h3>
-                <p className="text-green-600 font-medium mb-3">Community Connector</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Sanjeev Jha</h3>
+                <p className="text-blue-600 font-medium mb-3">Technical Advisor & Contributor</p>
                 <p className="text-gray-600 mb-4">
-                  Co-founder and community connector who bridges gaps between women seeking financial knowledge 
-                  and resources. A public health dietetic consultant, Aditi brings her passion for wellness to 
-                  financial empowerment.
+                  Provides technical expertise and real estate investment knowledge. Instrumental in developing 
+                  the platform's technology infrastructure and contributing educational content on property investment.
                 </p>
               </div>
             </div>
