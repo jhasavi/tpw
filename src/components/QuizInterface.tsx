@@ -82,7 +82,7 @@ export default function QuizInterface({
           // Handle options - can be array of strings or array of objects
           let optionsArray: string[] = [];
           if (Array.isArray(q.options)) {
-            optionsArray = q.options.map(opt => {
+            optionsArray = q.options.map((opt: any) => {
               if (typeof opt === 'string') return opt;
               if (typeof opt === 'object' && opt !== null) {
                 // If it's an object with 'text' or 'value' property, extract it
