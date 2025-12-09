@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Clock, Award, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
+import { Clock, Award, CheckCircle, XCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface QuizQuestion {
   id: string;
@@ -90,6 +90,8 @@ export default function QuizInterface({
         const transformedData = data.map(q => {
           // Handle options - can be array of strings or array of objects
           let optionsArray: string[] = [];
+          let correctAnswerText = '';
+          
           if (Array.isArray(q.options)) {
             optionsArray = q.options.map((opt: any) => {
               if (typeof opt === 'string') return opt;
@@ -99,6 +101,21 @@ export default function QuizInterface({
               }
               return String(opt);
             });
+
+            // Determine the correct answer text based on format
+            const correctAns = typeof q.correct_answer === 'string' ? q.correct_answer : (Array.isArray(q.correct_answer) ? q.correct_answer[0] : '');
+            
+            // Check if correct_answer is a value/id (like "b") or the full text
+            if (Array.isArray(q.options) && q.options.length > 0 && typeof q.options[0] === 'object') {
+              // Options are objects - need to find the matching text by value/id
+              const matchingOption = q.options.find((opt: any) => 
+                opt.value === correctAns || opt.id === correctAns
+              );
+              correctAnswerText = matchingOption ? (matchingOption.text || matchingOption.value || correctAns) : correctAns;
+            } else {
+              // Options are strings - correct answer is already the text
+              correctAnswerText = correctAns;
+            }
           }
 
           return {
@@ -107,7 +124,7 @@ export default function QuizInterface({
             question_type: q.question_type || 'multiple_choice',
             difficulty_level: q.difficulty_level || 'beginner',
             options: optionsArray,
-            correct_answer: typeof q.correct_answer === 'string' ? q.correct_answer : (Array.isArray(q.correct_answer) ? q.correct_answer[0] : ''),
+            correct_answer: correctAnswerText,
             explanation: q.explanation || '',
             points: 10, // Default points
             time_limit_seconds: 30, // Default time limit
@@ -139,6 +156,16 @@ export default function QuizInterface({
     setSelectedAnswer(answer);
   }
 
+  function handlePreviousQuestion() {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setSelectedAnswer(answers[currentQuestionIndex - 1] || null);
+      setShowResult(false);
+      setCountdownToNext(0);
+      setTimeLeft(questions[currentQuestionIndex - 1]?.time_limit_seconds || 30);
+    }
+  }
+
   function handleNextQuestion() {
     // Save answer
     if (selectedAnswer) {
@@ -146,7 +173,7 @@ export default function QuizInterface({
     }
 
     setShowResult(true);
-    setCountdownToNext(3); // Show 3 second countdown
+    setCountdownToNext(6); // Show 6 second countdown
 
     // Move to next question after showing result
     setTimeout(() => {
@@ -159,7 +186,7 @@ export default function QuizInterface({
       } else {
         finishQuiz();
       }
-    }, 3000); // Show result for 3 seconds
+    }, 6000); // Show result for 6 seconds
   }
 
   async function finishQuiz() {
@@ -451,14 +478,25 @@ export default function QuizInterface({
         )}
 
         {!showResult && (
-          <button
-            onClick={handleNextQuestion}
-            disabled={!selectedAnswer}
-            className="mt-6 w-full bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          <div className="mt-6 flex gap-3">
+            {currentQuestionIndex > 0 && (
+              <button
+                onClick={handlePreviousQuestion}
+                className="flex-shrink-0 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 flex items-center justify-center gap-2 font-semibold transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Previous
+              </button>
+            )}
+            <button
+              onClick={handleNextQuestion}
+              disabled={!selectedAnswer}
+              className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-semibold transition-colors"
+            >
+              {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
         )}
       </div>
     </div>
