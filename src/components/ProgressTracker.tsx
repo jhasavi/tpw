@@ -14,11 +14,22 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
   const [status, setStatus] = useState<'not_started' | 'in_progress' | 'completed'>('not_started')
   const [startTime, setStartTime] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    loadProgress()
-    markAsStarted()
+    // Initialize progress tracking with proper error handling
+    const initializeProgress = async () => {
+      try {
+        await loadProgress()
+        await markAsStarted()
+      } catch (err) {
+        console.error('Error initializing progress:', err)
+        setError(null) // Don't show error to user, just log it
+      }
+    }
+
+    initializeProgress()
     
     // Track time spent
     const start = Date.now()
@@ -26,142 +37,196 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
 
     // Update time spent every 30 seconds
     const interval = setInterval(() => {
-      updateTimeSpent(start)
+      updateTimeSpent(start).catch((err) => {
+        console.error('Error updating time spent:', err)
+      })
     }, 30000)
 
     return () => {
       clearInterval(interval)
-      updateTimeSpent(start)
+      // Final time update on unmount
+      updateTimeSpent(start).catch((err) => {
+        console.error('Error on final time update:', err)
+      })
     }
   }, [lessonId])
 
   const loadProgress = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        setLoading(false)
+        return
+      }
+
+      const { data, error: queryError } = await supabase
+        .from('lesson_progress')
+        .select('status')
+        .eq('user_id', user.id)
+        .eq('lesson_id', lessonId)
+        .maybeSingle()
+
+      if (queryError && queryError.code !== 'PGRST116') {
+        console.error('Error loading progress:', queryError)
+      }
+
+      if (data) {
+        setStatus(data.status)
+      }
+      
       setLoading(false)
-      return
+    } catch (err) {
+      console.error('Exception loading progress:', err)
+      setLoading(false)
+      // Continue without throwing - user can still use lesson
     }
-
-    const { data } = await supabase
-      .from('lesson_progress')
-      .select('status')
-      .eq('user_id', user.id)
-      .eq('lesson_id', lessonId)
-      .maybeSingle()
-
-    if (data) {
-      setStatus(data.status)
-    }
-    
-    setLoading(false)
   }
 
   const markAsStarted = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) return
-
-    // Check if progress exists
-    const { data: existing } = await supabase
-      .from('lesson_progress')
-      .select('id, status')
-      .eq('user_id', user.id)
-      .eq('lesson_id', lessonId)
-      .maybeSingle()
-
-    if (!existing) {
-      // Create new progress record
-      await supabase
-        .from('lesson_progress')
-        .upsert({
-          user_id: user.id,
-          lesson_id: lessonId,
-          status: 'in_progress',
-          started_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id,lesson_id'
-        })
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
       
-      setStatus('in_progress')
-    } else if (existing.status === 'not_started') {
-      // Update to in_progress
-      await supabase
+      if (!user) return
+
+      // Check if progress exists
+      const { data: existing, error: selectError } = await supabase
         .from('lesson_progress')
-        .update({
-          status: 'in_progress',
-          started_at: new Date().toISOString()
-        })
-        .eq('id', existing.id)
-      
-      setStatus('in_progress')
+        .select('id, status')
+        .eq('user_id', user.id)
+        .eq('lesson_id', lessonId)
+        .maybeSingle()
+
+      if (selectError && selectError.code !== 'PGRST116') {
+        console.error('Error checking existing progress:', selectError)
+        return
+      }
+
+      if (!existing) {
+        // Create new progress record
+        const { error: insertError } = await supabase
+          .from('lesson_progress')
+          .upsert({
+            user_id: user.id,
+            lesson_id: lessonId,
+            status: 'in_progress',
+            started_at: new Date().toISOString()
+          }, {
+            onConflict: 'user_id,lesson_id'
+          })
+        
+        if (insertError) {
+          console.error('Error creating progress record:', insertError)
+          return
+        }
+        
+        setStatus('in_progress')
+      } else if (existing.status === 'not_started') {
+        // Update to in_progress
+        const { error: updateError } = await supabase
+          .from('lesson_progress')
+          .update({
+            status: 'in_progress',
+            started_at: new Date().toISOString()
+          })
+          .eq('id', existing.id)
+        
+        if (updateError) {
+          console.error('Error updating progress to in_progress:', updateError)
+          return
+        }
+        
+        setStatus('in_progress')
+      }
+    } catch (err) {
+      console.error('Exception marking as started:', err)
+      // Continue without throwing
     }
   }
 
   const updateTimeSpent = async (startTimestamp: number) => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) return
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) return
 
-    const timeSpentMinutes = Math.floor((Date.now() - startTimestamp) / 60000)
-    
-    if (timeSpentMinutes > 0) {
-      await supabase
-        .from('lesson_progress')
-        .update({
-          time_spent_minutes: timeSpentMinutes
-        })
-        .eq('user_id', user.id)
-        .eq('lesson_id', lessonId)
+      const timeSpentMinutes = Math.floor((Date.now() - startTimestamp) / 60000)
+      
+      if (timeSpentMinutes > 0) {
+        const { error: updateError } = await supabase
+          .from('lesson_progress')
+          .update({
+            time_spent_minutes: timeSpentMinutes
+          })
+          .eq('user_id', user.id)
+          .eq('lesson_id', lessonId)
+
+        if (updateError) {
+          console.error('Error updating time spent:', updateError)
+        }
+      }
+    } catch (err) {
+      console.error('Exception updating time spent:', err)
+      // Continue without throwing
     }
   }
 
   const markAsCompleted = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      alert('Please sign in to track your progress')
-      return
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        alert('Please sign in to track your progress')
+        return
+      }
+
+      setLoading(true)
+
+      // Mark the lesson as complete using upsert
+      const { error: updateError } = await supabase
+        .from('lesson_progress')
+        .upsert({
+          user_id: user.id,
+          lesson_id: lessonId,
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,lesson_id'
+        })
+
+      if (updateError) {
+        console.error('Error marking lesson complete:', updateError)
+        setLoading(false)
+        alert('Error saving progress. Please try again.')
+        return
+      }
+
+      setStatus('completed')
+      
+      // Trigger celebration with error handling
+      try {
+        await celebrateLessonComplete(user.id, 'this lesson', 1)
+        await checkMilestones(user.id)
+      } catch (celebrationErr) {
+        console.error('Error during celebration:', celebrationErr)
+        // Continue anyway - celebration is non-critical
+      }
+      
+      // Show success message
+      alert('🎉 Lesson completed! Great job!')
+      
+      // Refresh to show updated progress
+      router.refresh()
+    } catch (err) {
+      console.error('Exception marking as completed:', err)
+      setLoading(false)
+      alert('An unexpected error occurred. Please try again.')
     }
-
-    setLoading(true)
-
-    // Mark the lesson as complete using upsert
-    const { error } = await supabase
-      .from('lesson_progress')
-      .upsert({
-        user_id: user.id,
-        lesson_id: lessonId,
-        status: 'completed',
-        completed_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'user_id,lesson_id'
-      })
-
-    setLoading(false)
-
-    if (error) {
-      console.error('Error marking lesson complete:', error)
-      alert('Error saving progress. Please try again.')
-      return
-    }
-
-    setStatus('completed')
-    
-    // Trigger celebration
-    await celebrateLessonComplete(user.id, 'this lesson', 1)
-    await checkMilestones(user.id)
-    
-    // Show success message
-    alert('🎉 Lesson completed! Great job!')
-    
-    // Refresh to show updated progress
-    router.refresh()
   }
 
   if (loading) return null

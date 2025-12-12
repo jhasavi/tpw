@@ -462,6 +462,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         </div>
       </div>
     </div>
+    )
   } catch (error) {
     console.error('Unexpected error in lesson page:', error)
     throw error

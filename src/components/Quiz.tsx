@@ -35,42 +35,48 @@ export default function Quiz({ lessonId, lessonTitle, onComplete }: QuizProps) {
   }, [lessonId])
 
   const loadQuestions = async () => {
-    setLoading(true)
-    const supabase = createClient()
+    try {
+      setLoading(true)
+      const supabase = createClient()
 
-    // Fetch quiz questions for this lesson
-    const { data: lessonQuizzes, error } = await supabase
-      .from('lesson_quizzes')
-      .select(`
-        question_id,
-        quiz_questions (
-          id,
-          question_text,
-          question_type,
-          options,
-          correct_answer,
-          explanation,
-          difficulty_level
-        )
-      `)
-      .eq('lesson_id', lessonId)
-      .order('display_order', { ascending: true })
+      // Fetch quiz questions for this lesson
+      const { data: lessonQuizzes, error } = await supabase
+        .from('lesson_quizzes')
+        .select(`
+          question_id,
+          quiz_questions (
+            id,
+            question_text,
+            question_type,
+            options,
+            correct_answer,
+            explanation,
+            difficulty_level
+          )
+        `)
+        .eq('lesson_id', lessonId)
+        .order('display_order', { ascending: true })
 
-    if (error) {
-      console.error('Error loading quiz questions:', error)
+      if (error) {
+        console.error('Error loading quiz questions:', error)
+        setLoading(false)
+        return
+      }
+
+      if (lessonQuizzes) {
+        const loadedQuestions = lessonQuizzes
+          .map((lq: any) => lq.quiz_questions)
+          .filter(Boolean) as QuizQuestion[]
+        
+        setQuestions(loadedQuestions)
+      }
+
       setLoading(false)
-      return
+    } catch (err) {
+      console.error('Exception loading quiz questions:', err)
+      setLoading(false)
+      // Continue without throwing - quiz will show "Coming Soon"
     }
-
-    if (lessonQuizzes) {
-      const loadedQuestions = lessonQuizzes
-        .map((lq: any) => lq.quiz_questions)
-        .filter(Boolean) as QuizQuestion[]
-      
-      setQuestions(loadedQuestions)
-    }
-
-    setLoading(false)
   }
 
   const handleAnswerSelect = (answerId: string) => {
@@ -120,29 +126,35 @@ export default function Quiz({ lessonId, lessonTitle, onComplete }: QuizProps) {
   }
 
   const saveQuizAttempt = async () => {
-    const supabase = createClient()
-    
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    try {
+      const supabase = createClient()
+      
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-    const finalScore = score + (isCorrect ? 1 : 0)
-    const percentage = Math.round((finalScore / questions.length) * 100)
+      const finalScore = score + (isCorrect ? 1 : 0)
+      const percentage = Math.round((finalScore / questions.length) * 100)
 
-    // Save quiz attempt
-    const { error } = await supabase
-      .from('quiz_attempts')
-      .insert({
-        user_id: user.id,
-        lesson_id: lessonId,
-        score: finalScore,
-        total_questions: questions.length,
-        percentage,
-        answers: answers
-      })
+      // Save quiz attempt
+      const { error } = await supabase
+        .from('quiz_attempts')
+        .insert({
+          user_id: user.id,
+          lesson_id: lessonId,
+          score: finalScore,
+          total_questions: questions.length,
+          percentage,
+          answers: answers
+        })
 
-    if (error) {
-      console.error('Error saving quiz attempt:', error)
+      if (error) {
+        console.error('Error saving quiz attempt:', error)
+        // Don't throw - quiz is still completed, just failed to save attempt
+      }
+    } catch (err) {
+      console.error('Exception saving quiz attempt:', err)
+      // Continue anyway - user experience more important than saving attempt
     }
   }
 
