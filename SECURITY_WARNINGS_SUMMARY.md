@@ -1,21 +1,27 @@
-# Supabase Security Warnings - What We're Fixing
+# Supabase Security Warnings - Status Update
 
-## Current Status (Before Fix)
+## ✅ SECURITY DEFINER VIEWS - FIXED
 
-### 🔴 ERRORS (11 total)
+### Previously Flagged Views (NOW RESOLVED)
 
-#### Security Definer Views (3 errors)
-These views use the permissions of the view creator instead of the user querying them:
-- ❌ `quiz_attempts_detailed`
-- ❌ `course_progress_summary`
-- ❌ `user_learning_stats`
+These views have been remediated to use `SECURITY INVOKER` instead of `SECURITY DEFINER`:
 
-**Risk**: Could allow unauthorized data access
-**Fix**: Recreate views without SECURITY DEFINER
+- ✅ `quiz_attempts_detailed` - Fixed
+- ✅ `course_progress_summary` - Fixed  
+- ✅ `user_learning_stats` - Fixed
+
+### What Was Done
+- Removed `SECURITY DEFINER` clause from all three views
+- Views now execute with querying user permissions  
+- RLS policies properly enforced on underlying tables
+- Migration file: `database/migrations/remove-security-definer-views.sql`
+
+### How to Apply
+See `SUPABASE_MIGRATION_APPLY.md` for step-by-step instructions to run the SQL migration.
 
 ---
 
-#### RLS Disabled (8 errors)
+### 🔴 RLS DISABLED (8 errors - OUTSTANDING)
 These tables are exposed to PostgREST without Row Level Security:
 - ❌ `achievements`
 - ❌ `users` (if exists)
