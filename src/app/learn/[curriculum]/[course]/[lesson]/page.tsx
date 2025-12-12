@@ -4,9 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Lesson } from '@/types/curriculum'
 import QuizSection from '@/components/QuizSection'
 import ProgressTracker from '@/components/ProgressTracker'
-import LessonContent from '@/components/LessonContent'
 import BookmarkButton from '@/components/BookmarkButton'
-import ProminentQuizCard from '@/components/ProminentQuizCard'
 
 interface LessonPageProps {
   params: Promise<{
