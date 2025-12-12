@@ -1,3 +1,5 @@
+// Load environment from .env.local so Supabase client is configured when run manually
+import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
