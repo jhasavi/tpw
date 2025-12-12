@@ -349,23 +349,6 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </div>
         )}
 
-        {/* Prominent Quiz Card - Test Your Knowledge */}
-        <ProminentQuizCard
-          lesson={{
-            id: lessonData.id,
-            slug: lessonSlug,
-            title: lesson.title
-          }}
-          user={authedUser}
-          className="mb-6"
-        />
-
-        {/* Quiz Section */}
-        <QuizSection lessonId={lessonData.id} lessonTitle={lesson.title} />
-
-        {/* Progress Tracker */}
-        <ProgressTracker lessonId={lessonData.id} courseId={courseData.id} />
-
         {/* Lesson Navigation - Enhanced Visibility */}
         <div className="bg-gradient-to-r from-purple-100 via-purple-50 to-indigo-100 rounded-2xl shadow-2xl p-8 mb-6 border-4 border-purple-300">
           <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">📚 Lesson Navigation</h3>
@@ -434,6 +417,12 @@ export default async function LessonPage({ params }: LessonPageProps) {
             )}
           </div>
         </div>
+
+        {/* Quiz Section - placed below navigation and sized consistently */}
+        <QuizSection lessonId={lessonData.id} lessonTitle={lesson.title} />
+
+        {/* Progress Tracker */}
+        <ProgressTracker lessonId={lessonData.id} courseId={courseData.id} />
 
         {/* Back to Courses */}
         <div className="text-center">

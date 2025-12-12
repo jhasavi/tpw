@@ -32,13 +32,13 @@ export default function QuizSection({ lessonId, lessonTitle, onQuizStart, onQuiz
 
   if (!showQuiz) {
     return (
-      <div className="bg-gradient-to-br from-purple-600 to-indigo-700 border-2 border-purple-400 rounded-xl p-8 text-center mb-6 shadow-xl">
+      <div className="bg-gradient-to-r from-purple-100 via-purple-50 to-indigo-100 rounded-2xl shadow-2xl p-8 mb-6 border-4 border-purple-300 text-center">
         <div className="text-7xl mb-4 animate-bounce">🎯</div>
-        <h3 className="text-3xl font-bold text-white mb-3">Test Your Knowledge!</h3>
-        <p className="text-purple-100 mb-2 text-lg">
+        <h3 className="text-3xl font-bold text-gray-900 mb-3">Test Your Knowledge!</h3>
+        <p className="text-gray-700 mb-2 text-lg">
           Challenge yourself and earn points by taking this interactive quiz.
         </p>
-        <div className="flex items-center justify-center gap-6 mb-6 text-purple-100">
+        <div className="flex items-center justify-center gap-6 mb-6 text-gray-700">
           <div className="flex items-center gap-2">
             <span className="text-2xl">⚡</span>
             <span className="text-sm">Quick & Fun</span>
@@ -54,7 +54,7 @@ export default function QuizSection({ lessonId, lessonTitle, onQuizStart, onQuiz
         </div>
         <button
           onClick={handleStartQuiz}
-          className="bg-white text-purple-700 px-10 py-4 rounded-lg hover:bg-purple-50 font-bold text-lg shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+          className="bg-white text-purple-700 px-10 py-4 rounded-lg hover:bg-purple-50 font-bold text-lg shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 border-2 border-purple-400"
         >
           🚀 Start Quiz Now!
         </button>
