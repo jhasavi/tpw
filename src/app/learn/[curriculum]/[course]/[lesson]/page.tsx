@@ -17,48 +17,64 @@ interface LessonPageProps {
 }
 
 export default async function LessonPage({ params }: LessonPageProps) {
-  const { curriculum: curriculumSlug, course: courseSlug, lesson: lessonSlug } = await params
-  const supabase = await createClient()
+  try {
+    const { curriculum: curriculumSlug, course: courseSlug, lesson: lessonSlug } = await params
+    const supabase = await createClient()
 
-  // Require auth and redirect to /auth with return url
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    const returnTo = `/learn/${curriculumSlug}/${courseSlug}/${lessonSlug}`
-    redirect(`/auth?returnTo=${encodeURIComponent(returnTo)}`)
-  }
+    // Require auth and redirect to /auth with return url
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      const returnTo = `/learn/${curriculumSlug}/${courseSlug}/${lessonSlug}`
+      redirect(`/auth?returnTo=${encodeURIComponent(returnTo)}`)
+    }
 
-  // Fetch lesson from database
-  const { data: curriculaData } = await supabase
-    .from('curricula')
-    .select('id, title')
-    .eq('slug', curriculumSlug)
-    .single()
+    // Fetch lesson from database
+    const { data: curriculaData, error: curriculaError } = await supabase
+      .from('curricula')
+      .select('id, title')
+      .eq('slug', curriculumSlug)
+      .single()
 
-  if (!curriculaData) {
-    notFound()
-  }
+    if (curriculaError) {
+      console.error('Error fetching curriculum:', { slug: curriculumSlug, error: curriculaError })
+      notFound()
+    }
 
-  const { data: courseData } = await supabase
-    .from('courses')
-    .select('id, title')
-    .eq('curriculum_id', curriculaData.id)
-    .eq('slug', courseSlug)
-    .single()
+    if (!curriculaData) {
+      notFound()
+    }
 
-  if (!courseData) {
-    notFound()
-  }
+    const { data: courseData, error: courseError } = await supabase
+      .from('courses')
+      .select('id, title')
+      .eq('curriculum_id', curriculaData.id)
+      .eq('slug', courseSlug)
+      .single()
 
-  const { data: lessonData } = await supabase
-    .from('lessons')
-    .select('*')
-    .eq('course_id', courseData.id)
-    .eq('slug', lessonSlug)
-    .single()
+    if (courseError) {
+      console.error('Error fetching course:', { slug: courseSlug, curriculumId: curriculaData.id, error: courseError })
+      notFound()
+    }
 
-  if (!lessonData) {
-    notFound()
-  }
+    if (!courseData) {
+      notFound()
+    }
+
+    const { data: lessonData, error: lessonError } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('course_id', courseData.id)
+      .eq('slug', lessonSlug)
+      .single()
+
+    if (lessonError) {
+      console.error('Error fetching lesson:', { slug: lessonSlug, courseId: courseData.id, error: lessonError })
+      notFound()
+    }
+
+    if (!lessonData) {
+      notFound()
+    }
 
   // Get all lessons in this course for navigation
   const { data: allLessons } = await supabase
@@ -435,5 +451,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
         </div>
       </div>
     </div>
-  )
+  } catch (error) {
+    console.error('Unexpected error in lesson page:', error)
+    throw error
+  }
 }
