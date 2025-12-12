@@ -74,44 +74,57 @@ export default async function LessonPage({ params }: LessonPageProps) {
       notFound()
     }
 
-  // Get all lessons in this course for navigation
-  const { data: allLessons } = await supabase
-    .from('lessons')
-    .select('id, slug, title, display_order')
-    .eq('course_id', courseData.id)
-    .order('display_order', { ascending: true })
+    // Get all lessons in this course for navigation
+    const { data: allLessons, error: allLessonsError } = await supabase
+      .from('lessons')
+      .select('id, slug, title, display_order')
+      .eq('course_id', courseData.id)
+      .order('display_order', { ascending: true })
 
-  const currentIndex = allLessons?.findIndex(l => l.id === lessonData.id) ?? -1
+    if (allLessonsError) {
+      console.error('Error fetching all lessons for navigation:', allLessonsError)
+    }
+
+    const currentIndex = allLessons?.findIndex(l => l.id === lessonData.id) ?? -1
   const previousLesson = currentIndex > 0 ? allLessons?.[currentIndex - 1] : null
   const nextLesson = currentIndex >= 0 && allLessons && currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null
   const totalLessons = allLessons?.length ?? 0
   const lessonNumber = currentIndex + 1
 
-  // Get user's progress in this course
-  // user is guaranteed here due to redirect above
-  const { data: { user: authedUser } } = await supabase.auth.getUser()
-  let completedLessons = 0
-  let isBookmarked = false
-  
-  if (authedUser) {
-    const { data: progressData } = await supabase
-      .from('lesson_progress')
-      .select('lesson_id, status')
-      .eq('user_id', authedUser.id)
-      .in('lesson_id', allLessons?.map(l => l.id) ?? [])
+    // Get user's progress in this course
+    // user is guaranteed here due to redirect above
+    const { data: { user: authedUser } } = await supabase.auth.getUser()
+    let completedLessons = 0
+    let isBookmarked = false
     
-    completedLessons = progressData?.filter(p => p.status === 'completed').length ?? 0
-    
-    // Check if lesson is bookmarked
-    const { data: bookmark } = await supabase
-      .from('lesson_bookmarks')
-      .select('id')
-      .eq('user_id', authedUser.id)
-      .eq('lesson_id', lessonData.id)
-      .single()
-    
-    isBookmarked = !!bookmark
-  }
+    if (authedUser) {
+      const { data: progressData, error: progressError } = await supabase
+        .from('lesson_progress')
+        .select('lesson_id, status')
+        .eq('user_id', authedUser.id)
+        .in('lesson_id', allLessons?.map(l => l.id) ?? [])
+      
+      if (progressError) {
+        console.error('Error fetching lesson progress:', progressError)
+      } else {
+        completedLessons = progressData?.filter(p => p.status === 'completed').length ?? 0
+      }
+      
+      // Check if lesson is bookmarked
+      const { data: bookmark, error: bookmarkError } = await supabase
+        .from('lesson_bookmarks')
+        .select('id')
+        .eq('user_id', authedUser.id)
+        .eq('lesson_id', lessonData.id)
+        .single()
+      
+      if (bookmarkError && bookmarkError.code !== 'PGRST116') {
+        // PGRST116 is "not found" error, which is expected
+        console.error('Error fetching bookmark:', bookmarkError)
+      } else {
+        isBookmarked = !!bookmark
+      }
+    }
 
   // Check if lesson has content - handle old, new, and markdown-based content structures
   const hasContent = lessonData.content &&
