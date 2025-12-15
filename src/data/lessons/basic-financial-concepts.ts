@@ -1,234 +1,408 @@
-import { Lesson } from '@/types/curriculum'
+// src/data/lessons/basic-financial-concepts.ts
 
-/**
- * Lesson: Basic Financial Concepts
- * Course: Financial Literacy Basics
- */
+const basicFinancialConceptsLesson = {
+  id: "basic-financial-concepts",
+  moduleId: "financial-literacy-basics",
+  slug: "basic-financial-concepts",
+  title: "Basic Financial Concepts",
+  estimatedMinutes: 40,
+  level: "beginner",
+  audience: ["women", "adult-learners"],
+  tags: ["foundations", "money-basics", "financial-literacy"],
 
-export const basicFinancialConcepts: Lesson = {
-  id: 'basic-financial-concepts',
-  courseId: 'financial-literacy-basics',
-  slug: 'basic-financial-concepts',
-  title: 'Basic Financial Concepts',
-  description: 'Master the fundamental financial terms and concepts that form the foundation of your financial life.',
-  durationMinutes: 40,
-  displayOrder: 2,
   objectives: [
-    'Understand the difference between income, expenses, assets, and liabilities',
-    'Learn how to calculate your net worth',
-    'Distinguish between needs and wants in your spending',
-    'Understand cash flow and why it matters',
-    'Build a foundation for making informed financial decisions'
+    "Understand the core building blocks of personal finance: income, expenses, assets, liabilities, cash flow, and net worth.",
+    "Recognize how small daily money choices add up over time, especially for women facing wage gaps or career breaks.",
+    "Learn the ideas of interest, compound growth, inflation, and risk vs. return in simple language.",
+    "Feel confident using these concepts to read your own financial situation, not just theory on a page."
   ],
+
   keyConcepts: [
-    'Income vs. Expenses',
-    'Assets vs. Liabilities',
-    'Net Worth',
-    'Cash Flow',
-    'Needs vs. Wants'
+    "Income vs. expenses",
+    "Assets vs. liabilities",
+    "Cash flow",
+    "Net worth",
+    "Interest and compound interest",
+    "Inflation",
+    "Risk and return",
+    "Time value of money"
   ],
-  content: {
-    introduction: `Money can feel overwhelming when you don't understand the basic language. But here's the truth: the core concepts of personal finance are actually quite simple. Once you understand these building blocks, everything else starts to make sense.
 
-Think of this lesson as learning the alphabet before writing a book. You don't need a finance degree to understand your money—you just need to know a few key terms and how they work together.
+  // Main lesson content as MDX/markdown
+  content: `
+# Basic Financial Concepts
 
-By the end of this lesson, you'll be able to look at your financial life with clarity and confidence. Let's break it down together.`,
+## 1. Lesson Purpose
 
-    sections: [
-      {
-        title: '1. Income: Money Coming In',
-        content: `Income is any money you receive regularly. It's the foundation of your financial life because you can't spend, save, or invest what you don't have.
+This lesson gives you the **core vocabulary of money**. Once you understand these basic concepts, every other financial decision becomes clearer: budgeting, paying off debt, investing, buying a home, or planning for retirement.
 
-Income comes in many forms:
-• Salary or wages from your job
-• Self-employment income from your business
-• Tips, bonuses, or commissions
-• Government benefits (Social Security, disability, unemployment)
-• Child support or alimony
-• Investment returns (dividends, interest, rent)
+For many women, money talk has been kept vague or intimidating on purpose. In Purple Wings, we remove the mystery and give you **simple, honest explanations** so you can make decisions for yourself — not just trust whoever sounds confident.
 
-The key is to think about your income in terms of what you actually receive after taxes—your "take-home pay" or "net income." This is what you have available to spend and save.`,
-        examples: [
-          'Sarah works as a teacher earning $55,000/year. After taxes and deductions, she takes home about $3,400/month—this is her net income.',
-          'Maria runs a house cleaning business and earns anywhere from $2,000-$4,000/month depending on how many clients she has. Her income is irregular, so she plans based on her lowest months.',
-          'Jennifer receives $1,800/month in Social Security plus $600/month from a part-time job at a bookstore—her total monthly income is $2,400.'
-        ],
-        tips: [
-          'Always base your budget on take-home pay, not gross salary',
-          'If your income varies, plan for the low months and save extra during high months',
-          'Track all income sources, even small ones—they add up',
-          'Consider ways to increase income through raises, side work, or new skills'
-        ]
-      },
-      {
-        title: '2. Expenses: Money Going Out',
-        content: `Expenses are what you spend money on. Understanding your expenses is crucial because this is where most people lose control of their finances.
+---
 
-There are two main types of expenses:
+## 2. Real-World Women's Scenarios
 
-**Fixed Expenses** stay the same each month:
-• Rent or mortgage
-• Car payment
-• Insurance premiums
-• Loan payments
-• Phone bill
+Here are three situations where basic financial concepts matter:
 
-**Variable Expenses** change from month to month:
-• Groceries
-• Gas
-• Utilities (can vary seasonally)
-• Entertainment
-• Shopping
-• Dining out
+- **Aisha, 36, single mom**  
+  Aisha earns a steady salary but still feels like she is “bad with money.” When she lists her income, expenses, debts, and savings, she realizes her biggest issue isn’t discipline — it’s **high-interest debt** eating her cash flow.
 
-The goal isn't to eliminate all expenses—you need to spend money to live! The goal is to be intentional about where your money goes and make sure your expenses don't exceed your income.`,
-        examples: [
-          'Lisa spends $1,200/month on fixed expenses (rent, car, insurance) and about $800/month on variable expenses (groceries, gas, fun). Her total expenses are around $2,000/month.',
-          'When Ana reviewed her expenses, she found she was spending $300/month on takeout without realizing it. She didn\'t need to eliminate it entirely—she just reduced it to $100/month.',
-          'Rachel\'s heating bill jumps from $80 in summer to $250 in winter. She budgets $150/month year-round and uses the extra from summer months to cover winter costs.'
-        ],
-        tips: [
-          'Track expenses for at least one month to see where money really goes',
-          'Don\'t judge yourself—just observe and learn',
-          'Look for "invisible" expenses like subscriptions you forgot about',
-          'Remember: small recurring expenses add up to big money over time'
-        ]
-      },
-      {
-        title: '3. Assets vs. Liabilities: What You Own and What You Owe',
-        content: `These two concepts are the foundation of building wealth.
+- **Meera, 29, early-career professional**  
+  Meera is finally earning more, but inflation and rent hikes make her feel stuck. Learning about **inflation and compound growth** helps her see why investing early, even small amounts, protects her future power.
 
-**Assets** are things you own that have value:
-• Cash and savings
-• Your home (if you own it)
-• Retirement accounts (401k, IRA)
-• Investments (stocks, bonds, mutual funds)
-• Your car
-• Valuable possessions (jewelry, art, collectibles)
+- **Lina, 48, re-entering the workforce after caregiving**  
+  Lina worries she is “too late.” Understanding **net worth** (not just income) helps her focus on building assets and protecting what she has, instead of feeling ashamed about past years of lower earnings.
 
-**Liabilities** are debts you owe:
-• Credit card balances
-• Student loans
-• Car loans
-• Mortgage
-• Personal loans
-• Medical bills
+You will use the same concepts in this lesson to look at **your own numbers**.
 
-Here's the simple rule: to build wealth, you want to increase your assets and decrease your liabilities over time.
+---
 
-Not all debt is bad—a mortgage that helps you own a home can be a smart use of debt. But high-interest credit card debt that grows faster than you can pay it is holding you back.`,
-        examples: [
-          'Keisha owns a car worth $12,000 but still owes $8,000 on the loan. The car is an asset ($12,000) and the loan is a liability ($8,000).',
-          'Patricia has $5,000 in savings, $15,000 in her 401k, and owns furniture worth about $3,000. Her total assets: $23,000.',
-          'Nina has $8,000 in credit card debt, $25,000 in student loans, and no assets except $500 in checking. She realizes she needs to focus on paying down debt while building savings.'
-        ],
-        tips: [
-          'Your assets should grow faster than your liabilities',
-          'Focus on paying off high-interest debt first',
-          'Building assets (savings, investments) is just as important as paying off debt',
-          'Some assets like cars lose value over time—they\'re still assets, but be realistic about their worth'
-        ]
-      },
-      {
-        title: '4. Net Worth: Your Financial Snapshot',
-        content: `Your net worth is the simplest measure of your overall financial health. It's calculated like this:
+## 3. Key Concepts in Plain Language
 
-**Net Worth = Total Assets - Total Liabilities**
+### 3.1 Income
 
-In plain English: Add up everything you own, subtract everything you owe, and what's left is your net worth.
+**Income** is money that comes in.
 
-Your net worth can be positive or negative:
-• Positive net worth means you own more than you owe
-• Negative net worth means you owe more than you own
+- Salary or wages
+- Tips and commissions
+- Side gig or freelance money
+- Benefits like child support, alimony, or government benefits
+- Interest or dividends from savings and investments
 
-Don't panic if your net worth is negative—many people start there, especially with student loans or when first starting out. What matters is the direction it's moving.
+> Question: Is your income stable, growing, or unpredictable?
 
-Calculate your net worth at least once a year. Watching it grow over time is incredibly motivating!`,
-        examples: [
-          'Samantha has $3,000 in savings, $10,000 in retirement, and owes $15,000 in student loans. Her net worth: $13,000 - $15,000 = -$2,000 (negative, but improving)',
-          'Diane has $50,000 in home equity, $30,000 in retirement, $10,000 in savings, and $5,000 in credit card debt. Her net worth: $90,000 - $5,000 = $85,000',
-          'Young professionals with student debt often start with negative net worth. That\'s okay! The goal is to move the number up each year.'
-        ],
-        tips: [
-          'Calculate your net worth today—it\'s your financial starting point',
-          'Don\'t compare your net worth to others—compare it to your own past',
-          'Small, consistent improvements add up to big changes over years',
-          'Celebrate progress: paying off $5,000 in debt increases your net worth by $5,000!'
-        ]
-      },
-      {
-        title: '5. Cash Flow: The Money Movement',
-        content: `Cash flow is simply the movement of money in and out of your life each month.
+This matters because stable income supports long-term commitments (like rent or mortgage), while variable income requires extra planning.
 
-**Positive Cash Flow:** You have money left over after paying expenses
-Income > Expenses = Money to save/invest
+---
 
-**Negative Cash Flow:** You spend more than you earn
-Income < Expenses = Going into debt or draining savings
+### 3.2 Expenses
 
-**Neutral Cash Flow:** You break even
-Income = Expenses = Living paycheck to paycheck
+**Expenses** are money that goes out.
 
-Your goal is positive cash flow—even if it's just $50/month. That's $50 that can go toward savings, debt payoff, or investing.
+- Fixed: rent, mortgage, insurance, childcare, loan payments  
+- Variable: groceries, gas, utilities, phone, internet, medical costs  
+- Lifestyle: eating out, gifts, subscriptions, beauty, travel  
 
-Many people make good money but still struggle because their expenses match or exceed their income. This is why understanding cash flow matters more than how much you earn.`,
-        examples: [
-          'Carmen earns $3,500/month and spends $3,000. Her cash flow is +$500/month, which she uses to build emergency savings.',
-          'Brittany earns $4,000/month but spends $4,200. Her cash flow is -$200/month, and she\'s using credit cards to cover the gap—this needs to change.',
-          'After tracking expenses, Michelle found she could cut $150/month in subscriptions and reduce eating out by $100. This changed her cash flow from neutral to +$250/month.'
-        ],
-        tips: [
-          'Track your cash flow for 3 months to understand your true patterns',
-          'If cash flow is negative, you must either earn more or spend less (or both)',
-          'Positive cash flow gives you options: save, invest, or enjoy life without guilt',
-          'Small improvements to cash flow compound dramatically over time'
-        ]
-      }
-    ],
+A simple way to think about expenses:
 
-    keyTakeaways: [
-      'Income minus expenses equals cash flow—this is your most important monthly number',
-      'Assets are what you own, liabilities are what you owe, and net worth is the difference',
-      'Positive cash flow means you\'re moving forward financially, even if it\'s slow',
-      'Not all expenses are bad, but they should be intentional and aligned with your values',
-      'Your net worth is your financial scorecard—track it and watch it grow over time',
-      'Understanding these basics gives you the language to take control of your money',
-      'You don\'t need to be perfect—you just need to be aware and intentional'
-    ],
+> Every rupee or dollar you spend says something about your **priorities today**.  
+> Every rupee or dollar you save or invest says something about your **priorities tomorrow**.
 
-    actionItems: [
-      'Calculate your current net worth using the simple formula: Assets - Liabilities',
-      'Track all income and expenses for the next 30 days to understand your cash flow',
-      'List your fixed vs. variable expenses to see where you have flexibility',
-      'Identify one expense you can reduce to improve your cash flow by at least $50/month',
-      'Set a calendar reminder to recalculate your net worth in 3 months and watch your progress'
-    ],
+In later lessons, we will sort expenses into **needs, wants, and goals**.
 
-    resources: [
-      {
-        title: 'Net Worth Calculator',
-        type: 'calculator',
-        description: 'Simple spreadsheet to calculate and track your net worth over time',
-        url: 'https://www.nerdwallet.com/article/finance/net-worth-calculator'
-      },
-      {
-        title: 'Expense Tracking Template',
-        type: 'worksheet',
-        description: 'Download a free monthly expense tracker to identify where your money goes',
-        url: 'https://www.vertex42.com/ExcelTemplates/money-management-template.html'
-      },
-      {
-        title: 'Cash Flow Worksheet',
-        type: 'worksheet',
-        description: 'Calculate your monthly cash flow and identify opportunities for improvement',
-        url: 'https://www.consumerfinance.gov/consumer-tools/budget-worksheet/'
-      },
-      {
-        title: 'Personal Finance Glossary',
-        type: 'article',
-        description: 'Reference guide for common financial terms and concepts',
-        url: 'https://www.investopedia.com/personal-finance-4427760'
-      }
-    ]
-  }
-}
+---
+
+### 3.3 Assets and Liabilities
+
+These two concepts describe what you **own** and what you **owe**.
+
+- **Assets** = things you own that have value or can grow in value.  
+  Examples:
+  - Cash in bank accounts
+  - Emergency fund
+  - Retirement accounts
+  - Investments (stocks, bonds, mutual funds)
+  - Home equity
+  - A business you own
+
+- **Liabilities** = what you owe to others.  
+  Examples:
+  - Credit card balances
+  - Personal loans
+  - Car loans
+  - Student loans
+  - Mortgage
+  - Money owed to family or friends
+
+Not all liabilities are “bad” — a reasonable mortgage or student loan can support long-term goals. But **high-interest, growing debt** (like many credit cards) is dangerous because it works against you every month.
+
+---
+
+### 3.4 Net Worth
+
+**Net worth** is a simple formula:
+
+> **Net worth = Total assets − Total liabilities**
+
+This is not a judgment of your worth as a person.  
+It is just a snapshot of your financial position today.
+
+- Positive net worth: you own more than you owe.  
+- Negative net worth: you owe more than you own (common when starting out, and fixable).
+
+For women, net worth is especially important because:
+
+- We often have **interruptions in income** (caregiving, illness, relocation).  
+- We live longer on average, so our money needs to last more years.  
+- Assets (like savings, investments, home equity) can protect us during transitions like divorce, job loss, or widowhood.
+
+---
+
+### 3.5 Cash Flow
+
+**Cash flow** is about timing:
+
+> How much money flows in versus how much flows out **each month**.
+
+- Positive cash flow: income > expenses  
+- Negative cash flow: expenses > income
+
+Healthy cash flow gives you **choices**:
+- Pay off debt faster  
+- Build an emergency fund  
+- Invest for future goals  
+
+Weak cash flow makes everything harder, even if your income looks okay on paper. Later modules will help you reshape your cash flow.
+
+---
+
+### 3.6 Interest and Compound Interest
+
+**Interest** is the cost of borrowing or the reward for saving.
+
+- When you **borrow**, you pay interest.  
+- When you **save or invest**, you may earn interest.
+
+**Simple interest**: interest is calculated only on the original amount.  
+**Compound interest**: interest is calculated on the original amount **plus** previous interest.
+
+Example (simplified):
+
+- You invest 100 each month at 6% per year for 10 years.  
+- Because of compounding, your money grows faster in later years than in early years.
+
+For women, compounding is especially powerful because:
+
+- Even if income is lower or interrupted, **starting earlier** with small amounts can still build meaningful wealth.  
+- Time can help close some of the gap created by wage inequality.
+
+---
+
+### 3.7 Inflation
+
+**Inflation** means prices rise over time.  
+The same basket of groceries or medical services will cost more in 5, 10, or 20 years.
+
+If your money **never grows**, inflation quietly shrinks its power.
+
+Inflation is why:
+- Keeping all savings in a low-interest account for decades is risky.  
+- Investing for long-term goals (retirement, children’s education, future housing) matters.
+
+---
+
+### 3.8 Risk and Return
+
+Every financial decision has two sides:
+
+- **Risk**: the chance that things go wrong or are different than expected.  
+- **Return**: what you might gain over time.
+
+General pattern:
+
+- Higher potential return usually comes with higher risk.  
+- Very “safe” options (like cash) often have low return and may lose ground to inflation.
+
+Your job is not to avoid all risk. Your job is to **choose the right level of risk** for your situation, goals, and time horizon.
+
+Women often carry risk in other parts of life (caregiving, career sacrifice), so financial risk should be thoughtful, not reckless.
+
+---
+
+## 4. Step-by-Step: See Your Own Financial Picture
+
+Set aside 20–30 minutes for this exercise. You do not need exact numbers; rough estimates are a great start.
+
+### Step 1: List your income
+
+Write down monthly amounts:
+
+- Salary or wages (after tax if easier)
+- Side income
+- Benefits (child support, alimony, etc.)
+- Any other regular money coming in
+
+Add them up. This is your **monthly income**.
+
+---
+
+### Step 2: List your regular expenses
+
+You can do this quickly:
+
+1. Open your banking app or recent statements.  
+2. Look at the last full month.  
+3. Write down:
+   - Housing (rent/mortgage)
+   - Utilities (electricity, gas, water, internet, phone)
+   - Transportation (fuel, public transit, car payment, insurance)
+   - Food (groceries, eating out)
+   - Debt repayments (loans, credit cards)
+   - Childcare/school costs
+   - Subscriptions (streaming, apps, gym)
+   - Health (meds, doctor visits, insurance)
+
+Add them up. This is your **monthly expenses**.
+
+---
+
+### Step 3: Calculate your monthly cash flow
+
+Use this simple formula:
+
+> **Monthly cash flow = Income − Expenses**
+
+- If positive: great! That extra amount can go toward goals.  
+- If negative: don’t panic. This lesson is about awareness, not shame. Upcoming lessons will help you adjust.
+
+---
+
+### Step 4: List your assets and liabilities
+
+On one page, make two columns:
+
+- **Assets**  
+  - Cash in bank accounts  
+  - Emergency fund  
+  - Savings and investments  
+  - Retirement accounts (401(k), IRA, EPF, PPF, etc.)  
+  - Property or land  
+  - Business ownership
+
+- **Liabilities**  
+  - Credit card balances  
+  - Personal loans  
+  - Car or bike loans  
+  - Student loans  
+  - Mortgage  
+  - Money owed to family/friends
+
+Estimate values. Perfection is not required.
+
+---
+
+### Step 5: Estimate your net worth
+
+Add up assets.  
+Add up liabilities.  
+Subtract:
+
+> **Net worth = Assets − Liabilities**
+
+Write down the number, even if it feels uncomfortable.
+
+This is your **starting point**, not your final story.
+
+---
+
+## 5. Practical Tools You Can Use
+
+You can keep this simple:
+
+- A notebook or journal titled “My Money Map”
+- A spreadsheet (Google Sheets, Excel, or Numbers)
+- A simple budgeting app that lets you enter:
+  - Income
+  - Expenses
+  - Debts
+  - Savings/investments
+
+The goal for this lesson is not a perfect system. The goal is **clarity**.
+
+---
+
+## 6. Empowerment Mindset Shift
+
+Many women have been told:
+
+- “You’re not good with numbers.”
+- “Your husband/partner will handle the money.”
+- “Talking about money is greedy or unladylike.”
+
+Purple Wings replaces those messages with:
+
+- You have the **right** to understand your financial life.  
+- You have the **ability** to learn these concepts step by step.  
+- You have the **power** to change direction at any age.
+
+Knowing your income, expenses, assets, liabilities, and net worth is **not selfish**.  
+It is an act of **self-respect and safety**.
+
+---
+
+## 7. Reflection Questions
+
+You can answer these in your journal:
+
+1. Before this lesson, how did you feel when people talked about “net worth” or “assets”? Has that feeling shifted?
+2. Which part of your financial picture feels clearest right now: income, expenses, assets, or liabilities? Which feels foggiest?
+3. When you think about your future self 10 years from now, what do you want your net worth and cash flow to support?
+4. What messages about money did you hear growing up, especially as a girl or woman? How have those messages influenced your choices?
+5. What is one small, kind thing you can say to yourself today about your relationship with money?
+
+---
+
+## 8. Homework (Small, Actionable Steps)
+
+Complete these in the next 3–5 days:
+
+1. **Write your Money Snapshot**  
+   On one page, write:
+   - Monthly income (total)
+   - Monthly expenses (total)
+   - Assets (rough total)
+   - Liabilities (rough total)
+   - Net worth (assets minus liabilities)
+
+2. **Highlight one concern and one strength**  
+   - Concern example: “My cash flow is negative.”  
+   - Strength example: “I have no high-interest debt,” or “I already have some savings.”
+
+3. **Choose one simple improvement**  
+   For example:
+   - Cancel one subscription you don’t use.
+   - Move 10–20 each week into a separate savings account.
+   - List your highest-interest debt in order, ready for the debt lesson.
+
+4. **Share with a trusted person (optional)**  
+   If it feels safe, share your Money Snapshot with a friend, sibling, mentor, or partner who respects your goals. Ask them to support you, not judge you.
+
+5. **Schedule a check-in**  
+   Put a 20-minute “Money Check-in” on your calendar for one week from today. In that session, you will review this snapshot and notice any changes.
+
+Remember: this lesson is about **seeing clearly**. You do not have to fix everything today. Awareness is the first, powerful step toward independence.
+`,
+
+  reflectionQuestions: [
+    "Which concept (income, expenses, assets, liabilities, cash flow, net worth) was new or surprising to you?",
+    "What emotions came up when you wrote down your own numbers?",
+    "How might knowing your net worth and cash flow influence your decisions over the next year?"
+  ],
+
+  homework: [
+    "Create a one-page 'Money Snapshot' with your income, expenses, assets, liabilities, and net worth.",
+    "Identify one financial strength and one main concern from your snapshot.",
+    "Choose and commit to one small improvement you can start this week (for example, cancel a subscription or set up an automatic small transfer to savings).",
+    "Schedule a 20-minute money check-in on your calendar for next week."
+  ],
+
+  resources: [
+    {
+      type: "worksheet",
+      title: "Money Snapshot Worksheet",
+      description: "A simple one-page template to list your income, expenses, assets, liabilities, and net worth."
+    },
+    {
+      type: "tool",
+      title: "Net Worth Tracker",
+      description: "A basic spreadsheet or app where you can update your assets and liabilities every few months."
+    },
+    {
+      type: "tip-list",
+      title: "Conversation Starters About Money",
+      description: "Prompts to talk about money safely with a partner, friend, or mentor."
+    }
+  ]
+};
+
+export default basicFinancialConceptsLesson;
