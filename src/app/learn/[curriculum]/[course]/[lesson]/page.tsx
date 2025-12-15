@@ -218,19 +218,21 @@ export default async function LessonPage({ params }: LessonPageProps) {
           </div>
 
           {/* Learning Objectives */}
-          <div className="bg-purple-50 border-l-4 border-purple-600 p-6 mt-6">
-            <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <span>🎯</span> What You'll Learn
-            </h3>
-            <ul className="space-y-2">
-              {lesson.objectives.map((obj, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-gray-700">
-                  <span className="text-purple-600 mt-1">✓</span>
-                  <span>{obj}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {lesson.objectives && Array.isArray(lesson.objectives) && lesson.objectives.length > 0 && (
+            <div className="bg-purple-50 border-l-4 border-purple-600 p-6 mt-6">
+              <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <span>🎯</span> What You'll Learn
+              </h3>
+              <ul className="space-y-2">
+                {lesson.objectives.map((obj, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-gray-700">
+                    <span className="text-purple-600 mt-1">✓</span>
+                    <span>{obj}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Introduction or Markdown */}
