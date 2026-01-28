@@ -89,3 +89,5 @@ node_modules
 *_backup_*
 convert_backup_*
 courses_backup_*
+
+/purple-wings-tools
