@@ -8,6 +8,8 @@ import PageViewTracker from "@/components/analytics/PageViewTracker";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import StructuredData from "@/components/StructuredData";
 import FloatingQuizCTA from "@/components/FloatingQuizCTA";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -78,11 +80,13 @@ export default function RootLayout({
         <GoogleAnalytics />
       </head>
       <body className={inter.className}>
-        <ThemeProvider>
-          <PageViewTracker />
-          <Navigation />
-          {children}
-          <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12">
+        <ErrorBoundary>
+          <ThemeProvider>
+            <PageViewTracker />
+            <Navigation />
+            <BreadcrumbNavigation />
+            {children}
+            <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-4 gap-8">
               <div>
@@ -145,6 +149,7 @@ export default function RootLayout({
         <FloatingQuizCTA />
         <CookieConsent />
         </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -79,13 +79,13 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-1">
-            <Link href="/" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+            <Link href="/" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50" aria-label="Home page">
               Home
             </Link>
             
             {/* Learn Dropdown */}
             <div className="relative" onMouseEnter={() => setLearnMenuOpen(true)} onMouseLeave={() => setLearnMenuOpen(false)}>
-              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center">
+              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center" aria-label="Learn dropdown menu" aria-expanded={learnMenuOpen}>
                 Learn
                 <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -168,7 +168,7 @@ export default function Navigation() {
             <ThemeToggle />
             {user ? (
               <div className="relative" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
-                <button className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+                <button className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50" aria-label="User account menu" aria-expanded={userMenuOpen}>
                   <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
@@ -218,6 +218,8 @@ export default function Navigation() {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="text-gray-700 hover:text-purple-600 p-2"
+              aria-label="Toggle mobile menu"
+              aria-expanded={menuOpen}
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {menuOpen ? (
