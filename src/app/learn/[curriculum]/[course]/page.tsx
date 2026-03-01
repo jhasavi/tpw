@@ -80,22 +80,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
-      {/* Breadcrumb Navigation */}
-      <div className="bg-white border-b border-purple-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-600">
-            <Link href="/courses" className="hover:text-purple-600">
-              Courses
-            </Link>
-            <span>/</span>
-            <Link href={`/courses`} className="hover:text-purple-600">
-              {curriculumData?.title || 'Curriculum'}
-            </Link>
-            <span>/</span>
-            <span className="text-gray-900 font-medium">{courseData.title}</span>
-          </nav>
-        </div>
-      </div>
+      {/* Page-level breadcrumb removed — using global breadcrumb in layout */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Course Header */}
