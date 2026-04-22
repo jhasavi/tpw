@@ -82,6 +82,18 @@ export default function Navigation() {
             <Link href="/" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50" aria-label="Home page">
               Home
             </Link>
+            <Link href="/stories" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+              Stories
+            </Link>
+            <Link href="/life-stage/40s" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+              Life Stages
+            </Link>
+            <Link href="/campaigns/purple-wings-challenge" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+              Challenge
+            </Link>
+            <Link href="/quiz/retirement-readiness" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
+              Retirement Quiz
+            </Link>
             
             {/* Learn Dropdown */}
             <div className="relative" onMouseEnter={() => setLearnMenuOpen(true)} onMouseLeave={() => setLearnMenuOpen(false)}>

@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendContactEmail } from '@/lib/email'
+import { contactFormLimiter, getClientIdentifier } from '@/lib/rate-limiter'
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const identifier = getClientIdentifier(request)
+    if (!contactFormLimiter.isAllowed(identifier)) {
+      return contactFormLimiter.getResponse()
+    }
     const body = await request.json()
     const { name, email, subject, message } = body
 

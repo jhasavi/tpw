@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendNewsletterWelcome } from '@/lib/email'
 import { createClient } from '@/lib/supabase/server'
+import { newsletterLimiter, getClientIdentifier } from '@/lib/rate-limiter'
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const identifier = getClientIdentifier(request)
+    if (!newsletterLimiter.isAllowed(identifier)) {
+      return newsletterLimiter.getResponse()
+    }
     const body = await request.json()
     const { email, name } = body
 

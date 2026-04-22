@@ -8,13 +8,18 @@ import { celebrateLessonComplete, checkMilestones } from '@/lib/celebrations'
 interface ProgressTrackerProps {
   lessonId: string
   courseId: string
+  courseSlug?: string
+  courseTitle?: string
+  curriculumTitle?: string
 }
 
-export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerProps) {
+export default function ProgressTracker({ lessonId, courseId, courseSlug, courseTitle, curriculumTitle }: ProgressTrackerProps) {
   const [status, setStatus] = useState<'not_started' | 'in_progress' | 'completed'>('not_started')
   const [startTime, setStartTime] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [courseComplete, setCourseComplete] = useState(false)
+  const [certUrl, setCertUrl] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -216,6 +221,27 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
         console.error('Error during celebration:', celebrationErr)
         // Continue anyway - celebration is non-critical
       }
+
+      // Check if this completes the whole course
+      if (courseSlug && courseTitle) {
+        try {
+          const res = await fetch('/api/course/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseId, courseSlug, courseTitle, curriculumTitle }),
+          })
+          const data = await res.json()
+          if (data.complete) {
+            setCourseComplete(true)
+            if (data.certificateUrl) setCertUrl(data.certificateUrl)
+            // Don't show the generic alert below — the UI will update
+            router.refresh()
+            return
+          }
+        } catch (err) {
+          console.error('Course completion check failed:', err)
+        }
+      }
       
       // Show success message
       alert('🎉 Lesson completed! Great job!')
@@ -230,6 +256,28 @@ export default function ProgressTracker({ lessonId, courseId }: ProgressTrackerP
   }
 
   if (loading) return null
+
+  // Course completion banner
+  if (courseComplete && certUrl) {
+    return (
+      <div className="sticky bottom-4 z-10">
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-xl border-2 border-yellow-400 p-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-white text-center sm:text-left">
+              <p className="text-xl font-bold">🎉 You completed the course!</p>
+              <p className="text-purple-200 text-sm mt-1">Your certificate is ready to download.</p>
+            </div>
+            <a
+              href={certUrl}
+              className="flex-shrink-0 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-bold px-6 py-3 rounded-lg transition-colors shadow-lg"
+            >
+              🏆 View Certificate →
+            </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="sticky bottom-4 z-10">

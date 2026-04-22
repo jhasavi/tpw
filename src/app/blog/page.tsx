@@ -2,13 +2,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { cacheWrapper, CACHE_DURATIONS } from '@/lib/data-cache'
 
 export const metadata: Metadata = {
   title: 'Blog - Financial Education & Tips | The Purple Wings',
   description: 'Read expert articles on financial literacy, women\'s empowerment, budgeting, investing, and more.',
 }
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-static'
 
 interface BlogPost {
   id: string
@@ -24,20 +25,26 @@ interface BlogPost {
 }
 
 async function getBlogPosts(): Promise<BlogPost[]> {
-  const supabase = await createClient()
-  
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('is_published', true)
-    .order('published_date', { ascending: false })
+  return cacheWrapper(
+    'blog-posts',
+    async () => {
+      const supabase = await createClient()
+      
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('is_published', true)
+        .order('published_date', { ascending: false })
 
-  if (error) {
-    console.error('Error fetching blog posts:', error)
-    return []
-  }
+      if (error) {
+        console.error('Error fetching blog posts:', error)
+        return []
+      }
 
-  return data || []
+      return data || []
+    },
+    CACHE_DURATIONS.MEDIUM
+  )
 }
 
 export default async function BlogPage() {

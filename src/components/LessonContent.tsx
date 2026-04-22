@@ -3,6 +3,7 @@
 import type { Lesson } from '@/types/curriculum'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { trackResourceUrl, resourceIcon } from '@/lib/affiliate'
 
 interface LessonContentProps {
   lesson: Lesson
@@ -109,20 +110,27 @@ export default function LessonContent({ lesson, courseTitle }: LessonContentProp
             {content.resources.map((resource: any, i: number) => (
               <div key={i} className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-colors">
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">{resource.type === 'article' ? '📄' : resource.type === 'video' ? '🎥' : '🔗'}</span>
+                  <span className="text-2xl">{resourceIcon(resource.type)}</span>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{resource.title}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-semibold text-gray-900">{resource.title}</h4>
+                      {resource.type && (
+                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full capitalize">
+                          {resource.type}
+                        </span>
+                      )}
+                    </div>
                     {resource.description && (
                       <p className="text-sm text-gray-600 mt-1">{resource.description}</p>
                     )}
                     {resource.url && (
                       <a
-                        href={resource.url}
+                        href={trackResourceUrl(resource.url, lesson.slug, resource.title)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-purple-600 hover:text-purple-700 font-medium mt-2 inline-block"
+                        className="text-sm text-purple-600 hover:text-purple-700 font-medium mt-2 inline-flex items-center gap-1"
                       >
-                        Access Resource →
+                        Access Resource <span aria-hidden>→</span>
                       </a>
                     )}
                   </div>

@@ -250,8 +250,11 @@ export async function sendUserWelcome(user: UserWelcomeData) {
   }
 }
 
-export async function sendCourseCompletion(user: { email: string; name: string }, course: { title: string; curriculum: string }) {
+export async function sendCourseCompletion(user: { email: string; name: string }, course: { title: string; curriculum: string; slug?: string }) {
   try {
+    const certificateUrl = course.slug
+      ? `https://www.thepurplewings.org/certificate/${course.slug}`
+      : `https://www.thepurplewings.org/dashboard`
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: user.email,
@@ -279,15 +282,20 @@ export async function sendCourseCompletion(user: { email: string; name: string }
                 <p style="color: #e9d5ff; margin: 5px 0 0 0; font-size: 14px;">Completed on ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
               </div>
             </div>
+            <div style="margin: 24px 0; text-align: center;">
+              <a href="${certificateUrl}" style="display: inline-block; background: #7c3aed; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                View &amp; Print Certificate →
+              </a>
+            </div>
             <h2 style="color: #7c3aed; margin-top: 30px;">What's Next?</h2>
             <p style="color: #374151; line-height: 1.6;">
               Keep the momentum going! Here are some recommended next steps:
             </p>
             <ul style="color: #374151; line-height: 1.8;">
-              <li>Take a quiz to test your knowledge</li>
+              <li>Download or print your certificate and share it on LinkedIn</li>
               <li>Explore the next course in the curriculum</li>
-              <li>Share your achievement with the community</li>
-              <li>Apply what you've learned to your financial goals</li>
+              <li>Take a quiz to reinforce what you've learned</li>
+              <li>Apply what you've learned to your real financial goals</li>
             </ul>
             <div style="margin: 30px 0;">
               <a href="https://www.thepurplewings.org/dashboard" style="display: inline-block; background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 5px;">
@@ -316,6 +324,190 @@ export async function sendCourseCompletion(user: { email: string; name: string }
     return { success: true, data }
   } catch (error) {
     console.error('Error sending course completion:', error)
+    return { success: false, error }
+  }
+}
+
+// ─── Drip sequence ─────────────────────────────────────────────────────────
+
+/**
+ * Day 3 drip: Nudge user to start their first lesson
+ */
+export async function sendDripDay3(user: UserWelcomeData) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: user.email,
+      subject: `${user.name.split(' ')[0]}, your financial journey is waiting 💜`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
+            <div style="font-size: 48px;">📚</div>
+            <h1 style="color: white; margin: 10px 0 0 0; font-size: 26px;">Ready to Start?</h1>
+          </div>
+          <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p style="color: #374151; line-height: 1.6; font-size: 16px;">
+              Hi ${user.name.split(' ')[0]},
+            </p>
+            <p style="color: #374151; line-height: 1.6;">
+              You signed up 3 days ago — and we want to make sure you get the most out of your membership.
+              The #1 thing that separates women who improve their finances from those who don't? 
+              <strong>Starting.</strong>
+            </p>
+            <div style="background: #f3f4f6; border-left: 4px solid #7c3aed; padding: 20px; border-radius: 4px; margin: 24px 0;">
+              <p style="color: #374151; margin: 0; font-weight: bold;">🎯 Suggested first lesson:</p>
+              <p style="color: #374151; margin: 8px 0 0 0;">
+                <strong>Financial Literacy Basics → Understanding Money & Banking</strong><br/>
+                <span style="color: #6b7280; font-size: 14px;">30 minutes · Beginner · No math required</span>
+              </p>
+            </div>
+            <p style="color: #374151; line-height: 1.6;">
+              Just 30 minutes today can change how you think about money forever.
+            </p>
+            <div style="margin: 28px 0; text-align: center;">
+              <a href="https://www.thepurplewings.org/learn/womens-financial-literacy/financial-literacy-basics/understanding-money-banking"
+                 style="display: inline-block; background: #7c3aed; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                Start My First Lesson →
+              </a>
+            </div>
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+              All courses are free. No credit card ever needed.<br/>
+              — Shalini &amp; The Purple Wings Team
+            </p>
+          </div>
+        </div>
+      `,
+    })
+    if (error) return { success: false, error }
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error sending day-3 drip:', error)
+    return { success: false, error }
+  }
+}
+
+/**
+ * Day 7 drip: Share what successful learners do; nudge quiz
+ */
+export async function sendDripDay7(user: UserWelcomeData) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: user.email,
+      subject: `What women who master money have in common 🌟`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
+            <div style="font-size: 48px;">🌟</div>
+            <h1 style="color: white; margin: 10px 0 0 0; font-size: 26px;">One Week In!</h1>
+          </div>
+          <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p style="color: #374151; line-height: 1.6; font-size: 16px;">Hi ${user.name.split(' ')[0]},</p>
+            <p style="color: #374151; line-height: 1.6;">
+              You've been part of The Purple Wings community for a week. Here's something 
+              we've noticed about women who make real financial progress:
+            </p>
+            <div style="margin: 24px 0;">
+              ${[
+                ['📍', 'They know <strong>exactly where they stand</strong> — not a guess, an assessment.'],
+                ['⏱️', 'They spend <strong>15 minutes a day</strong>, not hours on weekends.'],
+                ['🎯', 'They focus on <strong>one goal at a time</strong> — not everything at once.'],
+                ['🤝', 'They learn with a <strong>community</strong> — not alone.'],
+              ].map(([icon, text]) => `
+                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                  <span style="font-size: 20px; flex-shrink: 0;">${icon}</span>
+                  <p style="color: #374151; margin: 0; line-height: 1.5;">${text}</p>
+                </div>
+              `).join('')}
+            </div>
+            <p style="color: #374151; line-height: 1.6;">
+              Not sure where you stand? Take our 15-question Financial Assessment. It takes 5 minutes 
+              and tells you exactly which areas to focus on first.
+            </p>
+            <div style="margin: 28px 0; text-align: center;">
+              <a href="https://www.thepurplewings.org/quiz/personality"
+                 style="display: inline-block; background: #7c3aed; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                Take My Free Assessment →
+              </a>
+            </div>
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+              — Shalini &amp; The Purple Wings Team<br/>
+              <a href="https://www.thepurplewings.org/newsletter/unsubscribe" style="color: #9ca3af;">Unsubscribe</a>
+            </p>
+          </div>
+        </div>
+      `,
+    })
+    if (error) return { success: false, error }
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error sending day-7 drip:', error)
+    return { success: false, error }
+  }
+}
+
+/**
+ * Day 14 drip: Progress check + course recommendation based on goals
+ */
+export async function sendDripDay14(user: UserWelcomeData) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: user.email,
+      subject: `2 weeks down — here's your personalized learning path 🗺️`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
+            <div style="font-size: 48px;">🗺️</div>
+            <h1 style="color: white; margin: 10px 0 0 0; font-size: 26px;">Your Learning Path</h1>
+          </div>
+          <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p style="color: #374151; line-height: 1.6; font-size: 16px;">Hi ${user.name.split(' ')[0]},</p>
+            <p style="color: #374151; line-height: 1.6;">
+              Two weeks! Whether you've completed a course or just logged in once, we're glad you're here. 
+              Here's the full learning path most of our members follow:
+            </p>
+            <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin: 24px 0;">
+              ${[
+                ['1', 'Financial Literacy Basics', '5 lessons · Foundation', '/learn/womens-financial-literacy/financial-literacy-basics/understanding-money-banking'],
+                ['2', 'Budgeting Basics', '5 lessons · Control your spending', '/learn/womens-financial-literacy/budgeting-basics/budgeting-basics-intro'],
+                ['3', 'Emergency Planning', '4 lessons · Build your safety net', '/courses'],
+                ['4', 'Credit Management', '6 lessons · Own your credit score', '/courses'],
+                ['5', 'Investing Fundamentals', '5 lessons · Make money work for you', '/courses'],
+              ].map(([num, title, desc, url]) => `
+                <div style="display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid #e5e7eb;">
+                  <div style="width: 32px; height: 32px; background: #7c3aed; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <span style="color: white; font-weight: bold; font-size: 14px;">${num}</span>
+                  </div>
+                  <div style="flex: 1;">
+                    <a href="https://www.thepurplewings.org${url}" style="color: #7c3aed; font-weight: bold; text-decoration: none;">${title}</a>
+                    <p style="color: #6b7280; font-size: 13px; margin: 2px 0 0 0;">${desc}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <p style="color: #374151; line-height: 1.6;">
+              Also — our next <strong>free in-person workshop is coming April 2026</strong> in Needham, MA. 
+              <a href="https://www.thepurplewings.org/events" style="color: #7c3aed;">Get notified when registration opens →</a>
+            </p>
+            <div style="margin: 28px 0; text-align: center;">
+              <a href="https://www.thepurplewings.org/dashboard"
+                 style="display: inline-block; background: #7c3aed; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                View My Dashboard →
+              </a>
+            </div>
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+              — Shalini &amp; The Purple Wings Team<br/>
+              <a href="https://www.thepurplewings.org/newsletter/unsubscribe" style="color: #9ca3af;">Unsubscribe</a>
+            </p>
+          </div>
+        </div>
+      `,
+    })
+    if (error) return { success: false, error }
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error sending day-14 drip:', error)
     return { success: false, error }
   }
 }

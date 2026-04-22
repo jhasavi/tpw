@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Lesson } from '@/types/curriculum'
 import QuizSection from '@/components/QuizSection'
 import ProgressTracker from '@/components/ProgressTracker'
+import ProgressPersistence from '@/components/ProgressPersistence'
 import BookmarkButton from '@/components/BookmarkButton'
 
 interface LessonPageProps {
@@ -192,6 +193,18 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
         {/* Lesson Header */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+          <ProgressPersistence 
+            courseId={courseData.id}
+            lessonId={lessonData.id}
+            onProgressRestored={(progress) => {
+              if (progress && typeof progress.scrollPosition === 'number') {
+                setTimeout(() => {
+                  window.scrollTo(0, progress.scrollPosition || 0)
+                }, 100)
+              }
+            }}
+          />
+          
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex-1">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
@@ -451,7 +464,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <QuizSection lessonId={lessonData.id} lessonTitle={lesson.title} />
 
         {/* Progress Tracker */}
-        <ProgressTracker lessonId={lessonData.id} courseId={courseData.id} />
+        <ProgressTracker
+          lessonId={lessonData.id}
+          courseId={courseData.id}
+          courseSlug={courseSlug}
+          courseTitle={courseData.title}
+          curriculumTitle={curriculaData.title}
+        />
 
         {/* Back to Courses */}
         <div className="text-center">

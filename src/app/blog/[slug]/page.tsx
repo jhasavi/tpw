@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { cacheWrapper, CACHE_DURATIONS } from '@/lib/data-cache'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-static'
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -26,21 +27,27 @@ interface BlogPost {
 }
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const supabase = await createClient()
-  
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('slug', slug)
-    .eq('is_published', true)
-    .single()
+  return cacheWrapper(
+    `blog-post-${slug}`,
+    async () => {
+      const supabase = await createClient()
+      
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .single()
 
-  if (error) {
-    console.error('Error fetching blog post:', error)
-    return null
-  }
+      if (error) {
+        console.error('Error fetching blog post:', error)
+        return null
+      }
 
-  return data
+      return data
+    },
+    CACHE_DURATIONS.LONG
+  )
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {

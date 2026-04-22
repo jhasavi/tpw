@@ -233,6 +233,144 @@ export default function PartnershipsPage() {
         </div>
       </section>
 
+      {/* Sponsorship Tiers */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-purple-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Sponsorship Packages
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Choose a partnership level that fits your goals. All packages include our commitment to
+              education-first, authentic engagement with our community.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Bronze */}
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-amber-200 p-8 flex flex-col">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+                  <span className="text-3xl">🥉</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Bronze Partner</h3>
+                <div className="mt-3">
+                  <span className="text-4xl font-extrabold text-amber-700">$2,500</span>
+                  <span className="text-gray-500 ml-1">/year</span>
+                </div>
+              </div>
+              <ul className="space-y-3 flex-1 mb-8">
+                {[
+                  'Logo on our website Partners page',
+                  'Mention in 2 newsletters (3,000+ subscribers)',
+                  '1 sponsored social media post',
+                  'Certificate of community impact',
+                  'Annual impact report with metrics',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-gray-700 text-sm">
+                    <span className="text-amber-600 mt-0.5 flex-shrink-0">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact?subject=Bronze+Partnership+Inquiry"
+                className="block text-center px-6 py-3 border-2 border-amber-500 text-amber-700 font-semibold rounded-lg hover:bg-amber-50 transition-all"
+              >
+                Get Started
+              </Link>
+            </div>
+
+            {/* Silver — Featured */}
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl shadow-2xl p-8 flex flex-col relative transform md:-translate-y-4">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span className="bg-yellow-400 text-yellow-900 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
+                  Most Popular
+                </span>
+              </div>
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                  <span className="text-3xl">🥈</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white">Silver Partner</h3>
+                <div className="mt-3">
+                  <span className="text-4xl font-extrabold text-white">$7,500</span>
+                  <span className="text-purple-200 ml-1">/year</span>
+                </div>
+              </div>
+              <ul className="space-y-3 flex-1 mb-8">
+                {[
+                  'Everything in Bronze',
+                  'Logo on homepage + all course pages',
+                  'Sponsored course module (branded lesson)',
+                  '4 newsletter features with dedicated section',
+                  '1 co-hosted webinar or workshop (live)',
+                  'Monthly engagement metrics dashboard',
+                  'Featured in 1 blog article',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-purple-100 text-sm">
+                    <span className="text-yellow-400 mt-0.5 flex-shrink-0">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact?subject=Silver+Partnership+Inquiry"
+                className="block text-center px-6 py-3 bg-white text-purple-700 font-bold rounded-lg hover:bg-purple-50 shadow-lg transition-all"
+              >
+                Get Started
+              </Link>
+            </div>
+
+            {/* Gold */}
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-yellow-400 p-8 flex flex-col">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+                  <span className="text-3xl">🥇</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Gold Partner</h3>
+                <div className="mt-3">
+                  <span className="text-4xl font-extrabold text-yellow-700">$20,000</span>
+                  <span className="text-gray-500 ml-1">/year</span>
+                </div>
+              </div>
+              <ul className="space-y-3 flex-1 mb-8">
+                {[
+                  'Everything in Silver',
+                  'Named sponsor of entire course track',
+                  'Dedicated landing page for your services',
+                  'Quarterly live events co-branded',
+                  '12 newsletter features (monthly)',
+                  'Opt-in lead generation from your content',
+                  'Preferred speaker opportunities',
+                  'Executive advisory board seat',
+                  'Custom impact report for your CSR team',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-gray-700 text-sm">
+                    <span className="text-yellow-600 mt-0.5 flex-shrink-0">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact?subject=Gold+Partnership+Inquiry"
+                className="block text-center px-6 py-3 border-2 border-yellow-500 text-yellow-700 font-semibold rounded-lg hover:bg-yellow-50 transition-all"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
+
+          <p className="text-center text-gray-500 mt-8 text-sm">
+            Non-profit / community org discounts available. Custom packages for multi-year commitments.{' '}
+            <Link href="/contact?subject=Custom+Partnership" className="text-purple-600 underline">
+              Contact us
+            </Link>{' '}
+            to discuss.
+          </p>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-purple-600 to-indigo-700 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

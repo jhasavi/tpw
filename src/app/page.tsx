@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import HeroSlider from '@/components/HeroSlider'
+import RedesignedHero from '@/components/RedesignedHero'
+import ImpactMetrics from '@/components/ImpactMetrics'
+import SuccessStories from '@/components/SuccessStories'
+import QuickWins from '@/components/QuickWins'
 import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -50,8 +53,19 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
       
-      {/* Hero Slider Section */}
-      <HeroSlider />
+      {/* Redesigned Hero Section */}
+      <RedesignedHero />
+
+      {/* Impact Metrics Section */}
+      <ImpactMetrics />
+
+      {/* Success Stories Section */}
+      <SuccessStories />
+
+      {/* Quick Wins Section */}
+      <section className="py-16 bg-white">
+        <QuickWins />
+      </section>
 
       {/* Why This Matters Section - Enhanced with Purple Theme */}
       <section className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 py-16 text-white">

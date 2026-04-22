@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
+import EventRegistrationForm from '@/components/EventRegistrationForm'
 
 export const metadata: Metadata = {
   title: 'Financial Education Events - The Purple Wings | Needham, MA',
@@ -201,6 +202,71 @@ export default function EventsPage() {
               <div className="text-4xl font-bold text-purple-600 mb-2">100%</div>
               <div className="text-gray-600">Free Access</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Upcoming Events — Registration */}
+      <section className="py-16 bg-gradient-to-br from-purple-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-block bg-green-100 text-green-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+              📅 Upcoming Events
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Register for Spring 2026
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Our next series kicks off April 2026 in Needham, MA. Reserve your seat — spots fill fast!
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                slug: 'spring-2026-investing',
+                title: 'Investing for Beginners',
+                date: 'April 3, 2026',
+                description: 'Stock market basics, ETFs vs mutual funds, and building your first portfolio. Perfect for first-time investors.',
+                category: 'Investing',
+                speaker: 'Investment Expert — TBA',
+              },
+              {
+                slug: 'spring-2026-retirement',
+                title: 'Retirement Planning for Women',
+                date: 'April 10, 2026',
+                description: 'How to maximize your 401k, IRA, and Social Security. Why women need to plan differently — and how to get ahead.',
+                category: 'Retirement',
+                speaker: 'Certified Financial Planner — TBA',
+              },
+              {
+                slug: 'spring-2026-real-estate',
+                title: 'Real Estate as a Wealth Tool',
+                date: 'April 17, 2026',
+                description: 'From first home to rental properties — how to use real estate to build lasting wealth even on a single income.',
+                category: 'Real Estate',
+                speaker: 'Sanjeev Jha — Real Estate Expert',
+              },
+            ].map(event => (
+              <div key={event.slug} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="p-6 border-b border-gray-100">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      categoryColors[event.category] ?? 'bg-gray-100 text-gray-700'
+                    }`}>
+                      {event.category}
+                    </span>
+                    <span className="text-xs text-gray-500 font-medium">📅 {event.date}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h3>
+                  <p className="text-sm text-purple-600 font-medium mb-3">Speaker: {event.speaker}</p>
+                  <p className="text-gray-600 text-sm">{event.description}</p>
+                </div>
+                <div className="p-6">
+                  <EventRegistrationForm eventSlug={event.slug} eventTitle={event.title} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

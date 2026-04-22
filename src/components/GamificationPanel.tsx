@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
+import ShareAchievement from '@/components/ShareAchievement'
 
 interface GamificationStats {
   current_streak: number
@@ -149,6 +150,26 @@ export default function GamificationPanel({ user, className = '' }: Gamification
           <p className="text-sm text-yellow-800">
             <span className="font-bold">🎉 Amazing!</span> You have a {stats.current_streak}-day learning streak!
           </p>
+        </div>
+      )}
+
+      {/* Share section — show when user has made real progress */}
+      {(stats.lessons_completed >= 1 || stats.current_streak >= 3) && (
+        <div className="mt-6 pt-5 border-t border-purple-100">
+          <ShareAchievement
+            type={stats.lessons_completed >= 5 ? 'course' : 'achievement'}
+            title={
+              stats.lessons_completed >= 5
+                ? `${stats.lessons_completed} lessons completed on The Purple Wings`
+                : stats.current_streak >= 3
+                ? `${stats.current_streak}-day learning streak`
+                : 'Financial literacy journey'
+            }
+            description={
+              `I've completed ${stats.lessons_completed} lesson${stats.lessons_completed !== 1 ? 's' : ''} and earned ${stats.total_points} points on The Purple Wings — a free financial literacy platform for women. Join me!`
+            }
+            url="https://www.thepurplewings.org/courses"
+          />
         </div>
       )}
     </div>
