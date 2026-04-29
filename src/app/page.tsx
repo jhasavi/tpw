@@ -5,25 +5,30 @@ import RedesignedHero from '@/components/RedesignedHero'
 import ImpactMetrics from '@/components/ImpactMetrics'
 import SuccessStories from '@/components/SuccessStories'
 import QuickWins from '@/components/QuickWins'
+import TrustBar from '@/components/TrustBar'
 import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'The Purple Wings - Financial Empowerment for Women by Shalini Jha | Needham MA',
-  description: 'Founded by Shalini Jha in Needham, Massachusetts. Free financial literacy platform for women. Learn budgeting, investing, retirement planning, and more. Self-paced courses from beginner to advanced. Technical support by Sanjeev Jha and Namaste Needham Lab.',
-  keywords: 'Shalini Jha, Shalini, Sanjeev Jha, Needham, Needham MA, Massachusetts, women financial education, financial literacy for women, free finance courses, budgeting, investing, retirement planning, women empowerment, Namaste Needham Lab',
+  title: 'The Purple Wings - Free Financial Education for Women | Needham, MA',
+  description: 'Free online financial literacy courses for women — budgeting, investing, retirement planning, and wealth building. Founded by Shalini Jha in Needham, MA. Start learning today, no credit card needed.',
+  keywords: 'financial literacy for women, free finance courses for women, budgeting for women, investing for women, retirement planning, women financial empowerment, Shalini Jha, Needham MA, Massachusetts nonprofit',
   openGraph: {
-    title: 'The Purple Wings - Financial Empowerment for Women by Shalini Jha',
-    description: 'Free financial literacy platform helping women achieve financial independence. Founded by Shalini Jha in Needham, MA.',
-    images: ['/images/logo-nobg.png'],
+    title: 'The Purple Wings - Free Financial Education for Women',
+    description: 'Free financial literacy courses helping women build confidence, independence, and security. Founded by Shalini Jha in Needham, MA.',
+    images: [{ url: '/images/Women-fin.png', width: 1200, height: 630, alt: 'The Purple Wings - Women\'s Financial Empowerment' }],
     type: 'website',
     siteName: 'The Purple Wings',
     locale: 'en_US',
+    url: 'https://www.thepurplewings.org',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Purple Wings - Financial Empowerment for Women by Shalini Jha',
-    description: 'Free financial literacy platform helping women achieve financial independence',
-    images: ['/images/logo-nobg.png'],
+    title: 'The Purple Wings - Free Financial Education for Women',
+    description: 'Free financial literacy courses helping women build confidence, independence, and security.',
+    images: ['/images/Women-fin.png'],
+  },
+  alternates: {
+    canonical: 'https://www.thepurplewings.org',
   },
   robots: {
     index: true,
@@ -55,6 +60,9 @@ export default function HomePage() {
       
       {/* Redesigned Hero Section */}
       <RedesignedHero />
+
+      {/* Trust Signals Bar */}
+      <TrustBar />
 
       {/* Impact Metrics Section */}
       <ImpactMetrics />
@@ -117,53 +125,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Success Stories Teaser */}
-      <section className="py-16 bg-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Real Women, Real Results</h2>
-            <p className="mt-4 text-xl text-gray-600">See what financial literacy has unlocked for our community</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-purple-200">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-2xl">👩‍💼</div>
-                <div className="ml-3">
-                  <div className="font-bold text-gray-900">Sarah M.</div>
-                  <div className="text-sm text-gray-600">Marketing Manager</div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic mb-3">"Negotiated a $15K raise after taking the salary negotiation course. Finally feel confident discussing money!"</p>
-              <div className="text-purple-600 font-semibold">💰 $15,000 salary increase</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-purple-200">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-2xl">👩‍🏫</div>
-                <div className="ml-3">
-                  <div className="font-bold text-gray-900">Priya K.</div>
-                  <div className="text-sm text-gray-600">Teacher</div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic mb-3">"Started investing with just $100/month. My portfolio is now worth over $12K in 3 years!"</p>
-              <div className="text-purple-600 font-semibold">📈 $12,000 invested</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-purple-200">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-2xl">👩‍⚕️</div>
-                <div className="ml-3">
-                  <div className="font-bold text-gray-900">Lisa R.</div>
-                  <div className="text-sm text-gray-600">Nurse</div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic mb-3">"Paid off $8K in credit card debt using the budget strategies. Now I'm building an emergency fund!"</p>
-              <div className="text-purple-600 font-semibold">🎉 Debt-free journey</div>
-            </div>
-          </div>
-          <div className="text-center">
-            <Link href="/community" className="inline-block text-purple-600 hover:text-purple-700 font-semibold text-lg">
-              Read more success stories →
-            </Link>
-          </div>
+      {/* Newsletter Signup Section */}
+      <section className="py-14 bg-purple-50">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-4xl mb-4">📬</div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+            Weekly Financial Tips, Free
+          </h2>
+          <p className="text-lg text-gray-600 mb-6">
+            Join 500+ women getting practical money tips every week. No jargon, no spam — just actionable advice designed for women.
+          </p>
+          <Link
+            href="/newsletter/subscribe"
+            className="inline-block bg-purple-600 text-white hover:bg-purple-700 px-8 py-4 rounded-lg font-bold text-lg transition-colors shadow-md hover:shadow-lg"
+          >
+            Subscribe for Free Tips →
+          </Link>
+          <p className="mt-3 text-sm text-gray-500">No spam, ever. Unsubscribe anytime.</p>
         </div>
       </section>
 

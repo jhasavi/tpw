@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { createMember } from '@/lib/janagana'
 
 function AuthContent() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
@@ -84,6 +85,19 @@ function AuthContent() {
         setMode('login')
         setLoading(false)
       } else {
+        // Create member in JanaGana CRM
+        try {
+          const nameParts = fullName.split(' ')
+          await createMember({
+            email,
+            firstName: nameParts[0] || '',
+            lastName: nameParts.slice(1).join(' ') || '',
+          })
+        } catch (err) {
+          console.error('Failed to create JanaGana member:', err)
+          // Don't block signup if JanaGana fails
+        }
+        
         setMessage('Account created! Check email to confirm, or sign in now.')
         setTimeout(() => setMode('login'), 2000)
       }

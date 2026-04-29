@@ -16,7 +16,7 @@ export interface SEOConfig {
 const SITE_URL = 'https://www.thepurplewings.org'
 const SITE_NAME = 'The Purple Wings'
 const DEFAULT_DESCRIPTION = 'Empowering women through financial literacy. Free courses, resources, and community support for achieving financial independence.'
-const DEFAULT_IMAGE = `${SITE_URL}/images/og-default.png`
+const DEFAULT_IMAGE = `${SITE_URL}/images/Women-fin.png`
 const TWITTER_HANDLE = '@ThePurpleWings'
 
 export function generateSEO(config: SEOConfig): Metadata {

@@ -1,12 +1,45 @@
+import { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+interface CurriculumPageProps {
+  params: Promise<{ curriculum: string }>
+}
+
+export async function generateMetadata({ params }: CurriculumPageProps): Promise<Metadata> {
+  const { curriculum: slug } = await params
+  const supabase = await createClient()
+
+  const { data: curriculum } = await supabase
+    .from('curricula')
+    .select('title, description')
+    .eq('slug', slug)
+    .single()
+
+  const title = curriculum?.title
+    ? `${curriculum.title} | The Purple Wings`
+    : 'Financial Literacy Curriculum | The Purple Wings'
+  const description = curriculum?.description ||
+    'Explore our free financial literacy curriculum for women. Learn budgeting, investing, retirement planning, and more.'
+  const canonicalUrl = `https://www.thepurplewings.org/learn/${slug}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      images: [{ url: 'https://www.thepurplewings.org/images/Women-fin.png' }],
+    },
+  }
+}
+
 export default async function CurriculumPage({ 
   params 
-}: { 
-  params: Promise<{ curriculum: string }>
-}) {
+}: CurriculumPageProps) {
   const { curriculum: slug } = await params
   const supabase = await createClient()
   

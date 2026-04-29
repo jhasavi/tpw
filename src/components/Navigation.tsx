@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
@@ -56,7 +57,7 @@ export default function Navigation() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-3">
-                <img src="/images/logo-nobg.png" alt="The Purple Wings" className="h-10 w-auto" />
+                <Image src="/images/logo-nobg.png" alt="The Purple Wings" width={40} height={40} className="h-10 w-auto" priority />
                 <span className="text-xl font-bold text-purple-700">The Purple Wings</span>
               </Link>
             </div>
@@ -72,7 +73,7 @@ export default function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-3">
-              <img src="/images/logo-nobg.png" alt="The Purple Wings" className="h-10 w-auto" />
+              <Image src="/images/logo-nobg.png" alt="The Purple Wings" width={40} height={40} className="h-10 w-auto" priority />
               <span className="text-xl font-bold text-purple-700">The Purple Wings</span>
             </Link>
           </div>
@@ -122,7 +123,7 @@ export default function Navigation() {
 
             {/* Resources Dropdown */}
             <div className="relative" onMouseEnter={() => setResourcesMenuOpen(true)} onMouseLeave={() => setResourcesMenuOpen(false)}>
-              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center">
+              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center" aria-label="Resources dropdown menu" aria-expanded={resourcesMenuOpen}>
                 Resources
                 <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

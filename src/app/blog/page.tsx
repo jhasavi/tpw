@@ -5,8 +5,11 @@ import { createClient } from '@/lib/supabase/server'
 import { cacheWrapper, CACHE_DURATIONS } from '@/lib/data-cache'
 
 export const metadata: Metadata = {
-  title: 'Blog - Financial Education & Tips | The Purple Wings',
-  description: 'Read expert articles on financial literacy, women\'s empowerment, budgeting, investing, and more.',
+  title: 'Financial Wisdom Blog - Tips & Guides for Women | The Purple Wings',
+  description: 'Expert articles on financial literacy, budgeting, investing, and women\'s financial empowerment. Practical guides designed for women at every stage of their financial journey.',
+  alternates: {
+    canonical: 'https://www.thepurplewings.org/blog',
+  },
 }
 
 export const dynamic = 'force-static'
@@ -82,19 +85,45 @@ export default async function BlogPage() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {blogPosts.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="inline-block p-6 bg-purple-100 rounded-full mb-4">
-                <svg className="w-16 h-16 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center py-8 mb-12">
+                <div className="inline-block p-6 bg-purple-100 rounded-full mb-4">
+                  <svg className="w-16 h-16 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Articles Coming Soon!</h2>
+                <p className="text-gray-600 mb-6 max-w-lg mx-auto">
+                  We&apos;re crafting practical, women-centered financial guides. Subscribe to be the first to know when new articles drop.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link href="/newsletter/subscribe" className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                    📬 Get Notified via Newsletter
+                  </Link>
+                  <Link href="/courses" className="inline-block bg-white border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
+                    Explore Our Free Courses
+                  </Link>
+                </div>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Coming Soon!</h2>
-              <p className="text-gray-600 mb-6">
-                We're working on exciting new blog content. Check back soon for financial tips and insights!
-              </p>
-              <Link href="/courses" className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                Explore Courses Instead
-              </Link>
+
+              {/* Featured topics preview */}
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-xl p-6 shadow-md border border-purple-100">
+                  <div className="text-3xl mb-3">💰</div>
+                  <h3 className="font-bold text-gray-900 mb-2">Budgeting for Real Life</h3>
+                  <p className="text-sm text-gray-600">Practical strategies that work for women at every income level.</p>
+                </div>
+                <div className="bg-white rounded-xl p-6 shadow-md border border-purple-100">
+                  <div className="text-3xl mb-3">📈</div>
+                  <h3 className="font-bold text-gray-900 mb-2">Investing 101</h3>
+                  <p className="text-sm text-gray-600">Demystifying the stock market — no finance degree required.</p>
+                </div>
+                <div className="bg-white rounded-xl p-6 shadow-md border border-purple-100">
+                  <div className="text-3xl mb-3">🏠</div>
+                  <h3 className="font-bold text-gray-900 mb-2">Building Long-Term Wealth</h3>
+                  <p className="text-sm text-gray-600">From retirement accounts to real estate, your wealth-building roadmap.</p>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

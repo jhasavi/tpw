@@ -5,13 +5,16 @@ import DonateButton from '@/components/DonateButton'
 
 export const metadata: Metadata = {
   title: 'About The Purple Wings - 501(c)(3) Nonprofit for Women Financial Literacy | Needham, MA',
-  description: 'The Purple Wings is a 501(c)(3) nonprofit organization founded by Shalini Jha, President and Inspiration, to empower women in Massachusetts through financial literacy education. Featured in Needham Observer, Boston 25 News, and Yahoo News. Serving Greater Boston area including Needham, Newton, Wellesley, and Waltham.',
-  keywords: 'women financial literacy Needham MA, female financial education Boston, 501c3 nonprofit Massachusetts, Shalini Jha President Inspiration, Shalini Jha financial education founder, women empowerment Greater Boston, financial literacy courses Needham, female financial coaches Massachusetts, women money management Greater Boston, Needham Observer financial literacy, Boston financial education for women',
+  description: 'The Purple Wings is a 501(c)(3) nonprofit founded by Shalini Jha in Needham, MA. Empowering women through free financial literacy education. Featured in Needham Observer and Boston 25 News.',
+  keywords: 'women financial literacy Needham MA, female financial education Boston, 501c3 nonprofit Massachusetts, Shalini Jha, women empowerment Greater Boston, financial literacy courses Needham',
   openGraph: {
-    title: 'The Purple Wings - Empowering Women Through Financial Literacy | Needham, MA',
-    description: 'Free and affordable financial literacy education for women in Massachusetts. Learn budgeting, investing, insurance, and more. Featured in local media.',
-    images: ['/images/Shalini.jpg'],
-  }
+    title: 'About The Purple Wings - Empowering Women Through Financial Literacy',
+    description: 'Free financial literacy education for women in Massachusetts. Founded by Shalini Jha. Featured in local media.',
+    images: [{ url: '/images/Shalini.jpg', width: 1200, height: 630, alt: 'Shalini Jha, Founder of The Purple Wings' }],
+  },
+  alternates: {
+    canonical: 'https://www.thepurplewings.org/about',
+  },
 }
 
 export default function AboutPage() {

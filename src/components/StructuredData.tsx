@@ -9,9 +9,12 @@ export default function StructuredData() {
     logo: 'https://www.thepurplewings.org/images/logo-nobg.png',
     founder: {
       '@type': 'Person',
+      '@id': 'https://www.thepurplewings.org/#shalini-jha',
       name: 'Shalini Jha',
-      jobTitle: 'President & Inspiration',
-      description: 'Financial literacy advocate dedicated to empowering women through education',
+      alternateName: 'Shalini',
+      jobTitle: 'Founder & President',
+      description: 'Financial literacy advocate dedicated to empowering women through free education',
+      url: 'https://www.thepurplewings.org/about',
     },
     address: {
       '@type': 'PostalAddress',
@@ -88,6 +91,50 @@ export default function StructuredData() {
     ],
   }
 
+  // Person schema for Shalini Jha — helps Google Knowledge Graph associate
+  // the name "Shalini Jha" (and "Shalini") with The Purple Wings
+  const founderSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': 'https://www.thepurplewings.org/#shalini-jha',
+    name: 'Shalini Jha',
+    alternateName: 'Shalini',
+    jobTitle: 'Founder & President',
+    description: 'Shalini Jha is the founder and president of The Purple Wings, a nonprofit organization dedicated to empowering women through free financial literacy education. Based in Needham, Massachusetts.',
+    url: 'https://www.thepurplewings.org/about',
+    worksFor: {
+      '@type': 'EducationalOrganization',
+      name: 'The Purple Wings',
+      url: 'https://www.thepurplewings.org',
+    },
+    affiliation: {
+      '@type': 'EducationalOrganization',
+      name: 'The Purple Wings',
+      url: 'https://www.thepurplewings.org',
+    },
+    knowsAbout: [
+      'Financial Literacy',
+      'Women Empowerment',
+      'Personal Finance',
+      'Budgeting',
+      'Investing',
+      'Retirement Planning',
+      'Nonprofit Leadership',
+      'Financial Education',
+    ],
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Needham',
+      addressRegion: 'MA',
+      addressCountry: 'US',
+    },
+    sameAs: [
+      'https://www.facebook.com/myPurpleWings/',
+      'https://needhamobserver.com/program-encourages-women-to-spread-financial-literacy-wings/',
+      'https://www.boston25news.com/news/local/she-had-no-clue-how-much-money-she-had-local-group-empowering-women-understand-finances/JBGKMMBLRRHQPLIP564E6NCNUY/',
+    ],
+  }
+
   return (
     <>
       <script
@@ -97,6 +144,10 @@ export default function StructuredData() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(founderSchema) }}
       />
     </>
   )

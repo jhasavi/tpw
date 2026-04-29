@@ -1,5 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Community - Connect with Women on Financial Journeys | The Purple Wings',
+  description: 'Join The Purple Wings community of women building financial confidence together. Discussion forums, mentorship, events, and study groups coming soon.',
+  alternates: {
+    canonical: 'https://www.thepurplewings.org/community',
+  },
+}
 
 export default function CommunityPage() {
   return (
@@ -43,14 +52,28 @@ export default function CommunityPage() {
           </div>
         </div>
 
-        {/* Coming Soon Banner */}
+        {/* Coming Soon Banner with Newsletter CTA */}
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-2xl shadow-lg p-12 mb-12 text-center">
           <div className="text-6xl mb-4">🚀</div>
-          <h2 className="text-3xl font-bold mb-4">Community Features Coming Soon</h2>
+          <h2 className="text-3xl font-bold mb-4">Community Features Launching Soon</h2>
           <p className="text-xl text-purple-100 max-w-2xl mx-auto mb-6">
-            We're building an amazing space for women to connect, share experiences, and support each other. 
-            Our community features will launch soon!
+            We&apos;re building a space where women can connect, share, and support each other on their financial journeys.
+            Be the first to know when we launch!
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/newsletter/subscribe"
+              className="inline-block bg-yellow-400 text-purple-900 hover:bg-yellow-300 px-8 py-3 rounded-lg font-bold transition-colors shadow-md"
+            >
+              📬 Notify Me at Launch
+            </Link>
+            <Link
+              href="/courses"
+              className="inline-block bg-white/20 border-2 border-white text-white hover:bg-white/30 px-8 py-3 rounded-lg font-bold transition-colors"
+            >
+              Explore Our Free Courses
+            </Link>
+          </div>
         </div>
 
         {/* What's Coming */}

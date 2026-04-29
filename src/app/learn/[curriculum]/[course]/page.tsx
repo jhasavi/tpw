@@ -21,9 +21,23 @@ export async function generateMetadata({ params }: CoursePageProps): Promise<Met
     .eq('slug', course)
     .single()
 
+  const title = courseData?.title
+    ? `${courseData.title} | Free Course | The Purple Wings`
+    : 'Free Financial Course | The Purple Wings'
+  const description = courseData?.description ||
+    'Free financial literacy course for women. Learn at your own pace with The Purple Wings.'
+  const canonicalUrl = `https://www.thepurplewings.org/learn/${curriculum}/${course}`
+
   return {
-    title: courseData?.title || 'Course',
-    description: courseData?.description || 'Learn at your own pace',
+    title,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      images: [{ url: 'https://www.thepurplewings.org/images/Women-fin.png' }],
+    },
   }
 }
 
@@ -78,7 +92,34 @@ export default async function CoursePage({ params }: CoursePageProps) {
     isBookmarked = !!bookmark
   }
 
+  const courseSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: courseData.title,
+    description: courseData.description || '',
+    url: `https://www.thepurplewings.org/learn/${curriculum}/${course}`,
+    provider: {
+      '@type': 'EducationalOrganization',
+      name: 'The Purple Wings',
+      url: 'https://www.thepurplewings.org',
+    },
+    educationalLevel: courseData.difficulty_level || 'Beginner',
+    isAccessibleForFree: true,
+    numberOfCredits: lessonsList.length,
+    teaches: courseData.title,
+    author: {
+      '@type': 'Person',
+      name: 'Shalini Jha',
+      url: 'https://www.thepurplewings.org/about',
+    },
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+      />
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       {/* Page-level breadcrumb removed — using global breadcrumb in layout */}
 
@@ -245,5 +286,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
         </div>
       </div>
     </div>
+    </>
   )
 }

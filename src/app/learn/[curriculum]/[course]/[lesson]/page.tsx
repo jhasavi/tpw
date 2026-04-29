@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -13,6 +14,42 @@ interface LessonPageProps {
     course: string
     lesson: string
   }>
+}
+
+export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
+  const { curriculum, course, lesson } = await params
+  const supabase = await createClient()
+
+  const { data: lessonData } = await supabase
+    .from('lessons')
+    .select('title, description')
+    .eq('slug', lesson)
+    .single()
+
+  const { data: courseData } = await supabase
+    .from('courses')
+    .select('title')
+    .eq('slug', course)
+    .single()
+
+  const title = lessonData?.title
+    ? `${lessonData.title} | ${courseData?.title || 'Course'} | The Purple Wings`
+    : 'Lesson | The Purple Wings'
+  const description = lessonData?.description ||
+    'Learn personal finance with The Purple Wings — free financial literacy courses for women.'
+  const canonicalUrl = `https://www.thepurplewings.org/learn/${curriculum}/${course}/${lesson}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      images: [{ url: 'https://www.thepurplewings.org/images/Women-fin.png' }],
+    },
+  }
 }
 
 export default async function LessonPage({ params }: LessonPageProps) {
@@ -165,7 +202,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <nav className="text-sm text-gray-600 mb-6">
           <Link href="/courses" className="hover:text-purple-600">Courses</Link>
           <span className="mx-2">/</span>
-          <Link href={`/courses`} className="hover:text-purple-600">{courseData.title}</Link>
+          <Link href={`/learn/${curriculumSlug}/${courseSlug}`} className="hover:text-purple-600">{courseData.title}</Link>
           <span className="mx-2">/</span>
           <span className="text-gray-900">{lesson.title}</span>
         </nav>

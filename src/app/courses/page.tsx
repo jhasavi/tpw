@@ -4,11 +4,14 @@ import Image from 'next/image'
 import { curricula } from '@/data/curricula'
 
 export const metadata: Metadata = {
-  title: 'Financial Literacy Courses for Women | The Purple Wings',
-  description: 'Explore comprehensive financial courses: budgeting, investing, retirement planning, debt management. Free online learning for women.',
+  title: 'Free Financial Literacy Courses for Women | The Purple Wings',
+  description: 'Explore our comprehensive free financial courses: budgeting, investing, retirement planning, debt management, and more. Two learning paths from beginner to FINRA-aligned professional level.',
   openGraph: {
-    title: 'Financial Literacy Courses for Women',
-    description: 'Free online courses covering budgeting, investing, retirement planning, and more.',
+    title: 'Free Financial Literacy Courses for Women | The Purple Wings',
+    description: 'Two learning paths: Women\'s Financial Literacy (beginner to advanced) and a 40-hour FINRA-aligned professional program. 100% free.',
+  },
+  alternates: {
+    canonical: 'https://www.thepurplewings.org/courses',
   },
 }
 
