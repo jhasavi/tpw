@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { createMember } from '@/lib/janagana'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -50,6 +51,19 @@ export default function SignupPage() {
           setError('An account with this email already exists. Please sign in instead.')
           setLoading(false)
         } else {
+          // Create member in JanaGana CRM
+          try {
+            const nameParts = fullName.split(' ')
+            await createMember({
+              email,
+              firstName: nameParts[0] || '',
+              lastName: nameParts.slice(1).join(' ') || '',
+            })
+          } catch (err) {
+            console.error('Failed to create JanaGana member:', err)
+            // Don't block signup if JanaGana fails
+          }
+
           setMessage('Account created! Check your email to confirm, or you can sign in now.')
           setTimeout(() => router.push('/auth/login'), 3000)
         }

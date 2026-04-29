@@ -2,6 +2,9 @@ const API_URL = process.env.JANAGANA_API_URL || 'http://localhost:3000/api/plugi
 const API_KEY = process.env.JANAGANA_API_KEY
 
 async function janaganaRequest(endpoint: string, options: RequestInit = {}) {
+  if (!API_KEY) {
+    throw new Error('JANAGANA_API_KEY is not configured')
+  }
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
