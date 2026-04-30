@@ -12,16 +12,14 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Debug: Log script loading status
-    console.log('[Debug] Checking for window.Janagana:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
-    console.log('[Debug] Container ref:', containerRef.current)
+    // Wait for DOM to be ready and script to load
+    const initializeWidget = () => {
+      console.log('[Debug] Container ref:', containerRef.current)
+      console.log('[Debug] window.Janagana:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
 
-    // Wait for both Janagana script and container to be ready
-    const checkInterval = setInterval(() => {
-      if (typeof window !== 'undefined' && window.Janagana && containerRef.current) {
-        clearInterval(checkInterval)
+      if (containerRef.current && typeof window !== 'undefined' && window.Janagana) {
         setLoaded(true)
-        console.log('[Debug] Both script and container ready, initializing widget')
+        console.log('[Debug] Initializing widget...')
 
         try {
           window.Janagana.events('janagana-events', {
@@ -31,21 +29,35 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
           console.error('JanaGana Events widget error:', err)
           setError('Failed to load events')
         }
+      } else {
+        console.error('[Debug] Missing container or script')
+        setError('Events widget failed to load')
       }
-    }, 100)
+    }
+
+    // Try immediately first
+    initializeWidget()
+
+    // If not ready, wait and retry
+    const retryInterval = setInterval(() => {
+      if (!loaded) {
+        initializeWidget()
+      } else {
+        clearInterval(retryInterval)
+      }
+    }, 1000)
 
     // Timeout after 10 seconds
     const timeout = setTimeout(() => {
-      clearInterval(checkInterval)
+      clearInterval(retryInterval)
       if (!loaded) {
-        console.error('[Debug] Timeout - Script status:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
-        console.error('[Debug] Container status:', containerRef.current)
+        console.error('[Debug] Timeout reached')
         setError('Events widget failed to load')
       }
     }, 10000)
 
     return () => {
-      clearInterval(checkInterval)
+      clearInterval(retryInterval)
       clearTimeout(timeout)
     }
   }, [title])
@@ -55,7 +67,6 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
       <div className="text-center py-8 text-gray-500">
         <p>{error}</p>
         <p className="text-sm mt-2">Please check browser console for details</p>
-        <p className="text-xs mt-2 text-gray-400">Debug info logged above</p>
       </div>
     )
   }
@@ -64,7 +75,6 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
     return (
       <div className="text-center py-8 text-gray-500">
         <p>Loading events...</p>
-        <p className="text-xs mt-2 text-gray-400">Checking script and container...</p>
       </div>
     )
   }
