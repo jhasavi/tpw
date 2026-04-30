@@ -89,7 +89,7 @@ export default function RootLayout({
           {`
             if (typeof window !== 'undefined' && window.Janagana) {
               Janagana.init({
-                tenantSlug: 'the-purple-wings',
+                tenantSlug: 'purple-wings',
                 apiUrl: 'https://janagana.namasteneedham.com'
               });
             }
