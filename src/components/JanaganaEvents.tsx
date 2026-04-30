@@ -12,11 +12,16 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Debug: Log script loading status
+    console.log('[Debug] Checking for window.Janagana:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
+    console.log('[Debug] Container ref:', containerRef.current)
+
     // Wait for both Janagana script and container to be ready
     const checkInterval = setInterval(() => {
       if (typeof window !== 'undefined' && window.Janagana && containerRef.current) {
         clearInterval(checkInterval)
         setLoaded(true)
+        console.log('[Debug] Both script and container ready, initializing widget')
 
         try {
           window.Janagana.events('janagana-events', {
@@ -29,14 +34,15 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
       }
     }, 100)
 
-    // Timeout after 5 seconds
+    // Timeout after 10 seconds
     const timeout = setTimeout(() => {
       clearInterval(checkInterval)
       if (!loaded) {
-        console.error('JanaGana script failed to load or container not found')
+        console.error('[Debug] Timeout - Script status:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
+        console.error('[Debug] Container status:', containerRef.current)
         setError('Events widget failed to load')
       }
-    }, 5000)
+    }, 10000)
 
     return () => {
       clearInterval(checkInterval)
@@ -49,6 +55,7 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
       <div className="text-center py-8 text-gray-500">
         <p>{error}</p>
         <p className="text-sm mt-2">Please check browser console for details</p>
+        <p className="text-xs mt-2 text-gray-400">Debug info logged above</p>
       </div>
     )
   }
@@ -57,6 +64,7 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
     return (
       <div className="text-center py-8 text-gray-500">
         <p>Loading events...</p>
+        <p className="text-xs mt-2 text-gray-400">Checking script and container...</p>
       </div>
     )
   }
