@@ -28,43 +28,60 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
       }
     } else {
       console.error('[Debug] Missing container or script')
+      if (!container) console.error('[Debug] Container is null/undefined')
+      if (!window.Janagana) console.error('[Debug] Janagana script not loaded')
       setError('Events widget failed to load')
     }
   }, [title])
 
   useEffect(() => {
-    // Wait for DOM to be ready and script to load
-    const checkAndInitialize = () => {
-      const container = document.getElementById('janagana-events')
-      if (container || (typeof window !== 'undefined' && window.Janagana)) {
-        initializeWidget(container)
+    // Wait for component to mount and DOM to be ready
+    const timer = setTimeout(() => {
+      const checkAndInitialize = () => {
+        const container = document.getElementById('janagana-events')
+        console.log('[Debug] Looking for container with ID: janagana-events')
+        console.log('[Debug] Found container:', container)
+        
+        if (container && typeof window !== 'undefined' && window.Janagana) {
+          initializeWidget(container)
+        } else {
+          // Try again if script is loaded but container not found
+          if (typeof window !== 'undefined' && window.Janagana) {
+            console.error('[Debug] Script loaded but container not found, retrying...')
+            setTimeout(checkAndInitialize, 500)
+          }
+        }
       }
-    }
 
-    // Try immediately first
-    checkAndInitialize()
+      // Try immediately first
+      checkAndInitialize()
 
-    // If not ready, wait and retry
-    const retryInterval = setInterval(() => {
-      if (!loaded) {
-        checkAndInitialize()
-      } else {
+      // If not ready, wait and retry
+      const retryInterval = setInterval(() => {
+        if (!loaded) {
+          checkAndInitialize()
+        } else {
+          clearInterval(retryInterval)
+        }
+      }, 1000)
+
+      // Timeout after 10 seconds
+      const timeout = setTimeout(() => {
         clearInterval(retryInterval)
-      }
-    }, 1000)
+        if (!loaded) {
+          console.error('[Debug] Timeout reached')
+          setError('Events widget failed to load')
+        }
+      }, 10000)
 
-    // Timeout after 10 seconds
-    const timeout = setTimeout(() => {
-      clearInterval(retryInterval)
-      if (!loaded) {
-        console.error('[Debug] Timeout reached')
-        setError('Events widget failed to load')
+      return () => {
+        clearInterval(retryInterval)
+        clearTimeout(timeout)
       }
-    }, 10000)
+    }, 100) // Small delay to ensure DOM is ready
 
     return () => {
-      clearInterval(retryInterval)
-      clearTimeout(timeout)
+      clearTimeout(timer)
     }
   }, [title, initializeWidget])
 
