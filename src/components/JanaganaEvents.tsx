@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 interface JanaganaEventsProps {
   title?: string
@@ -9,39 +9,45 @@ interface JanaganaEventsProps {
 export function JanaganaEvents({ title }: JanaganaEventsProps) {
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+
+  const initializeWidget = useCallback((container: HTMLElement | null) => {
+    console.log('[Debug] Container element:', container)
+    console.log('[Debug] window.Janagana:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
+
+    if (container && typeof window !== 'undefined' && window.Janagana) {
+      setLoaded(true)
+      console.log('[Debug] Initializing widget...')
+
+      try {
+        window.Janagana.events('janagana-events', {
+          title: title || 'Upcoming Events'
+        })
+      } catch (err) {
+        console.error('JanaGana Events widget error:', err)
+        setError('Failed to load events')
+      }
+    } else {
+      console.error('[Debug] Missing container or script')
+      setError('Events widget failed to load')
+    }
+  }, [title])
 
   useEffect(() => {
     // Wait for DOM to be ready and script to load
-    const initializeWidget = () => {
-      console.log('[Debug] Container ref:', containerRef.current)
-      console.log('[Debug] window.Janagana:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
-
-      if (containerRef.current && typeof window !== 'undefined' && window.Janagana) {
-        setLoaded(true)
-        console.log('[Debug] Initializing widget...')
-
-        try {
-          window.Janagana.events('janagana-events', {
-            title: title || 'Upcoming Events'
-          })
-        } catch (err) {
-          console.error('JanaGana Events widget error:', err)
-          setError('Failed to load events')
-        }
-      } else {
-        console.error('[Debug] Missing container or script')
-        setError('Events widget failed to load')
+    const checkAndInitialize = () => {
+      const container = document.getElementById('janagana-events')
+      if (container || (typeof window !== 'undefined' && window.Janagana)) {
+        initializeWidget(container)
       }
     }
 
     // Try immediately first
-    initializeWidget()
+    checkAndInitialize()
 
     // If not ready, wait and retry
     const retryInterval = setInterval(() => {
       if (!loaded) {
-        initializeWidget()
+        checkAndInitialize()
       } else {
         clearInterval(retryInterval)
       }
@@ -60,7 +66,7 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
       clearInterval(retryInterval)
       clearTimeout(timeout)
     }
-  }, [title])
+  }, [title, initializeWidget])
 
   if (error) {
     return (
@@ -79,5 +85,5 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
     )
   }
 
-  return <div id="janagana-events" ref={containerRef} />
+  return <div id="janagana-events" />
 }
