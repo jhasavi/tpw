@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface JanaganaEventsProps {
   title?: string
@@ -9,14 +9,15 @@ interface JanaganaEventsProps {
 export function JanaganaEvents({ title }: JanaganaEventsProps) {
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Wait for Janagana script to load
+    // Wait for both Janagana script and container to be ready
     const checkInterval = setInterval(() => {
-      if (typeof window !== 'undefined' && window.Janagana) {
+      if (typeof window !== 'undefined' && window.Janagana && containerRef.current) {
         clearInterval(checkInterval)
         setLoaded(true)
-        
+
         try {
           window.Janagana.events('janagana-events', {
             title: title || 'Upcoming Events'
@@ -32,7 +33,7 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
     const timeout = setTimeout(() => {
       clearInterval(checkInterval)
       if (!loaded) {
-        console.error('JanaGana script failed to load')
+        console.error('JanaGana script failed to load or container not found')
         setError('Events widget failed to load')
       }
     }, 5000)
@@ -60,5 +61,5 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
     )
   }
 
-  return <div id="janagana-events" />
+  return <div id="janagana-events" ref={containerRef} />
 }
