@@ -92,6 +92,12 @@ async function migrateEventRegistrations() {
     .order('registered_at', { ascending: false })
 
   if (error) {
+    if (error.code === 'PGRST205') {
+      console.log('⚠️  event_registrations table does not exist. Skipping event registration migration.')
+      console.log('   If you want to migrate event registrations, create the table first:')
+      console.log('   See src/app/api/events/register/route.ts for the SQL to create it.\n')
+      return
+    }
     console.error('❌ Error fetching registrations:', error)
     process.exit(1)
   }

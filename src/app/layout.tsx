@@ -87,10 +87,12 @@ export default function RootLayout({
         />
         <Script id="janagana-init" strategy="afterInteractive">
           {`
-            Janagana.init({
-              tenantSlug: 'purple-wings',
-              apiUrl: 'https://janagana.namasteneedham.com'
-            });
+            if (typeof window !== 'undefined' && window.Janagana) {
+              Janagana.init({
+                tenantSlug: 'the-purple-wings',
+                apiUrl: 'https://janagana.namasteneedham.com'
+              });
+            }
           `}
         </Script>
       </head>
