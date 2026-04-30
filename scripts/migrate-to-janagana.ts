@@ -105,6 +105,7 @@ async function migrateEventRegistrations() {
   console.log(`📊 Found ${registrations.length} event registrations to migrate\n`)
 
   let successCount = 0
+  let skippedCount = 0
   let errorCount = 0
   const errors: string[] = []
 
@@ -133,15 +134,21 @@ async function migrateEventRegistrations() {
       successCount++
       console.log(`✅ Migrated: ${reg.email} - ${reg.event_title}`)
     } catch (error) {
-      errorCount++
       const errorMsg = error instanceof Error ? error.message : String(error)
-      errors.push(`${reg.email} - ${reg.event_title}: ${errorMsg}`)
-      console.log(`❌ Failed: ${reg.email} - ${reg.event_title}`)
+      if (errorMsg.includes('already exists')) {
+        skippedCount++
+        console.log(`⏭️  Skipped (already exists): ${reg.email} - ${reg.event_title}`)
+      } else {
+        errorCount++
+        errors.push(`${reg.email} - ${reg.event_title}: ${errorMsg}`)
+        console.log(`❌ Failed: ${reg.email} - ${reg.event_title}`)
+      }
     }
   }
 
   console.log('\n📊 Migration Summary:')
   console.log(`✅ Success: ${successCount}`)
+  console.log(`⏭️  Skipped (already exists): ${skippedCount}`)
   console.log(`❌ Errors: ${errorCount}`)
   console.log(`📊 Total: ${registrations.length}`)
 
@@ -170,6 +177,7 @@ async function migrateNewsletterSubscribers() {
   console.log(`📊 Found ${subscribers.length} newsletter subscribers to migrate\n`)
 
   let successCount = 0
+  let skippedCount = 0
   let errorCount = 0
   const errors: string[] = []
 
@@ -190,15 +198,21 @@ async function migrateNewsletterSubscribers() {
       successCount++
       console.log(`✅ Migrated: ${sub.email}`)
     } catch (error) {
-      errorCount++
       const errorMsg = error instanceof Error ? error.message : String(error)
-      errors.push(`${sub.email}: ${errorMsg}`)
-      console.log(`❌ Failed: ${sub.email}`)
+      if (errorMsg.includes('already exists')) {
+        skippedCount++
+        console.log(`⏭️  Skipped (already exists): ${sub.email}`)
+      } else {
+        errorCount++
+        errors.push(`${sub.email}: ${errorMsg}`)
+        console.log(`❌ Failed: ${sub.email}`)
+      }
     }
   }
 
   console.log('\n📊 Newsletter Migration Summary:')
   console.log(`✅ Success: ${successCount}`)
+  console.log(`⏭️  Skipped (already exists): ${skippedCount}`)
   console.log(`❌ Errors: ${errorCount}`)
   console.log(`📊 Total: ${subscribers.length}`)
 
