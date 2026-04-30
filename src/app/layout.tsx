@@ -13,6 +13,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
 
 const inter = Inter({ subsets: ["latin"] });
+const janaganaTenantSlug = process.env.NEXT_PUBLIC_JANAGANA_TENANT_SLUG || 'purple-wings'
+const janaganaApiUrl = process.env.NEXT_PUBLIC_JANAGANA_API_URL || 'https://janagana.namasteneedham.com'
 
 export const metadata: Metadata = {
   title: {
@@ -82,17 +84,33 @@ export default function RootLayout({
         <StructuredData />
         <GoogleAnalytics />
         <Script
-          src="https://janagana.namasteneedham.com/janagana-embed.js"
+          src={`${janaganaApiUrl}/janagana-embed.js`}
           strategy="afterInteractive"
         />
         <Script id="janagana-init" strategy="afterInteractive">
           {`
-            if (typeof window !== 'undefined' && window.Janagana) {
-              Janagana.init({
-                tenantSlug: 'purple-wings',
-                apiUrl: 'https://janagana.namasteneedham.com'
-              });
-            }
+            (function initJanagana() {
+              if (typeof window === 'undefined') return;
+
+              var attempts = 0;
+              var maxAttempts = 20;
+              var tenantSlug = ${JSON.stringify(janaganaTenantSlug)};
+              var apiUrl = ${JSON.stringify(janaganaApiUrl)};
+
+              var tryInit = function() {
+                if (window.Janagana && typeof window.Janagana.init === 'function') {
+                  window.Janagana.init({ tenantSlug: tenantSlug, apiUrl: apiUrl });
+                  return;
+                }
+
+                attempts += 1;
+                if (attempts < maxAttempts) {
+                  window.setTimeout(tryInit, 250);
+                }
+              };
+
+              tryInit();
+            })();
           `}
         </Script>
       </head>

@@ -11,96 +11,71 @@ export function JanaganaEvents({ title }: JanaganaEventsProps) {
   const [error, setError] = useState<string | null>(null)
 
   const initializeWidget = useCallback((container: HTMLElement | null) => {
-    console.log('[Debug] Container element:', container)
-    console.log('[Debug] window.Janagana:', typeof window !== 'undefined' ? window.Janagana : 'window not defined')
+    if (!container || typeof window === 'undefined' || !window.Janagana) {
+      return
+    }
 
-    if (container && typeof window !== 'undefined' && window.Janagana) {
+    try {
+      container.innerHTML = ''
+      window.Janagana.events('janagana-events', {
+        title: title || 'Upcoming Events'
+      })
       setLoaded(true)
-      console.log('[Debug] Initializing widget...')
-
-      try {
-        window.Janagana.events('janagana-events', {
-          title: title || 'Upcoming Events'
-        })
-      } catch (err) {
-        console.error('JanaGana Events widget error:', err)
-        setError('Failed to load events')
-      }
-    } else {
-      console.error('[Debug] Missing container or script')
-      if (!container) console.error('[Debug] Container is null/undefined')
-      if (!window.Janagana) console.error('[Debug] Janagana script not loaded')
-      setError('Events widget failed to load')
+      setError(null)
+    } catch (err) {
+      console.error('JanaGana Events widget error:', err)
+      setError('Failed to load events')
     }
   }, [title])
 
   useEffect(() => {
-    // Wait for component to mount and DOM to be ready
-    const timer = setTimeout(() => {
-      const checkAndInitialize = () => {
-        const container = document.getElementById('janagana-events')
-        console.log('[Debug] Looking for container with ID: janagana-events')
-        console.log('[Debug] Found container:', container)
-        
-        if (container && typeof window !== 'undefined' && window.Janagana) {
-          initializeWidget(container)
-        } else {
-          // Try again if script is loaded but container not found
-          if (typeof window !== 'undefined' && window.Janagana) {
-            console.error('[Debug] Script loaded but container not found, retrying...')
-            setTimeout(checkAndInitialize, 500)
-          }
-        }
+    const checkAndInitialize = () => {
+      const container = document.getElementById('janagana-events')
+      if (container && typeof window !== 'undefined' && window.Janagana) {
+        initializeWidget(container)
+        return true
       }
+      return false
+    }
 
-      // Try immediately first
-      checkAndInitialize()
+    if (checkAndInitialize()) {
+      return
+    }
 
-      // If not ready, wait and retry
-      const retryInterval = setInterval(() => {
-        if (!loaded) {
-          checkAndInitialize()
-        } else {
-          clearInterval(retryInterval)
-        }
-      }, 1000)
-
-      // Timeout after 10 seconds
-      const timeout = setTimeout(() => {
-        clearInterval(retryInterval)
-        if (!loaded) {
-          console.error('[Debug] Timeout reached')
-          setError('Events widget failed to load')
-        }
-      }, 10000)
-
-      return () => {
+    const retryInterval = setInterval(() => {
+      if (checkAndInitialize()) {
         clearInterval(retryInterval)
         clearTimeout(timeout)
       }
-    }, 100) // Small delay to ensure DOM is ready
+    }, 500)
+
+    const timeout = setTimeout(() => {
+      clearInterval(retryInterval)
+      if (!loaded) {
+        setError('Events widget failed to load')
+      }
+    }, 10000)
 
     return () => {
-      clearTimeout(timer)
+      clearInterval(retryInterval)
+      clearTimeout(timeout)
     }
-  }, [title, initializeWidget])
+  }, [title, initializeWidget, loaded])
 
-  if (error) {
-    return (
-      <div className="text-center py-8 text-gray-500">
-        <p>{error}</p>
-        <p className="text-sm mt-2">Please check browser console for details</p>
-      </div>
-    )
-  }
-
-  if (!loaded) {
-    return (
-      <div className="text-center py-8 text-gray-500">
-        <p>Loading events...</p>
-      </div>
-    )
-  }
-
-  return <div id="janagana-events" />
+  return (
+    <div>
+      {!loaded && !error && (
+        <div className="text-center py-8 text-gray-500">
+          <p>Loading events...</p>
+        </div>
+      )}
+      {error && (
+        <div className="text-center py-8 text-gray-500">
+          <p>{error}</p>
+          <p className="text-sm mt-2">Please check browser console for details</p>
+        </div>
+      )}
+      <div id="janagana-events" className={loaded || !error ? '' : 'hidden'} />
+    </div>
+  )
 }
