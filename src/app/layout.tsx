@@ -85,6 +85,14 @@ export default function RootLayout({
           src="https://janagana.namasteneedham.com/janagana-embed.js"
           strategy="afterInteractive"
         />
+        <Script id="janagana-init" strategy="afterInteractive">
+          {`
+            Janagana.init({
+              tenantSlug: 'purple-wings',
+              apiUrl: 'https://janagana.namasteneedham.com'
+            });
+          `}
+        </Script>
       </head>
       <body className={inter.className}>
         <ErrorBoundary>

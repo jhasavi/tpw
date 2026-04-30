@@ -25,6 +25,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { eventRegistrationLimiter, getClientIdentifier } from '@/lib/rate-limiter'
+import { registerForEvent } from '@/lib/janagana'
 
 const adminSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -68,6 +69,19 @@ export async function POST(request: NextRequest) {
       }
       console.error('DB error:', dbError)
       return NextResponse.json({ error: 'Registration failed. Please try again.' }, { status: 500 })
+    }
+
+    // Sync to JanaGana CRM (non-blocking)
+    try {
+      await registerForEvent({
+        eventId: eventSlug,
+        email,
+        firstName: name.split(' ')[0] || '',
+        lastName: name.split(' ').slice(1).join('') || ''
+      })
+    } catch (error) {
+      console.error('JanaGana sync error:', error)
+      // Don't fail the request if JanaGana sync fails
     }
 
     // Notify admin

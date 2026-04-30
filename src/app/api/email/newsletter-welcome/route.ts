@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { sendNewsletterWelcome } from '@/lib/email'
 import { createClient } from '@/lib/supabase/server'
 import { newsletterLimiter, getClientIdentifier } from '@/lib/rate-limiter'
+import { createMember } from '@/lib/janagana'
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,6 +64,18 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to subscribe. Please try again or contact support.' },
         { status: 500 }
       )
+    }
+
+    // Sync to JanaGana CRM (non-blocking)
+    try {
+      await createMember({
+        email,
+        firstName: name?.split(' ')[0] || '',
+        lastName: name?.split(' ').slice(1).join('') || ''
+      })
+    } catch (error) {
+      console.error('JanaGana sync error:', error)
+      // Don't fail the request if JanaGana sync fails
     }
 
     // Send welcome email
