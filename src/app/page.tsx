@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   keywords: 'financial literacy for women, free finance courses for women, budgeting for women, investing for women, retirement planning, women financial empowerment, Needham MA, Massachusetts nonprofit',
   openGraph: {
     title: 'The Purple Wings - Free Financial Education for Women',
-    description: 'Free financial literacy courses helping women build confidence, independence, and security.'
+    description: 'Free financial literacy courses helping women build confidence, independence, and security.',
     images: [{ url: '/images/Women-fin.png', width: 1200, height: 630, alt: 'The Purple Wings - Women\'s Financial Empowerment' }],
     type: 'website',
     siteName: 'The Purple Wings',
