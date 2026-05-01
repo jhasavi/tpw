@@ -226,40 +226,6 @@ export default function RedesignedHero() {
           </div>
         </div>
 
-        {/* Founder Section */}
-        <div className="mt-20 pt-12 border-t border-white/20">
-          <div className="grid md:grid-cols-4 gap-8 items-center">
-            <div className="flex justify-center md:justify-start">
-              <div className="relative">
-                <img
-                  src="/images/founder-photo.jpg"
-                  alt="Shalini Jha, Founder"
-                  className="w-24 h-24 rounded-full border-4 border-white/20"
-                  onError={(e) => {
-                    // Fallback to placeholder if image doesn't exist
-                    e.currentTarget.src = "https://images.unsplash.io/photo-1494790108755-2616b612c631?w=100&h=100&fit=crop&crop=face"
-                  }}
-                />
-                <div className="absolute -bottom-2 -right-2 bg-yellow-400 text-purple-900 rounded-full p-1">
-                  <Star className="w-4 h-4" />
-                </div>
-              </div>
-            </div>
-            <div className="md:col-span-3">
-              <h3 className="text-xl font-bold mb-2">Founded by Shalini Jha</h3>
-              <p className="text-purple-100">
-                "After seeing too many women struggle with financial insecurity, I created The Purple Wings 
-                to provide the education and support every woman deserves. Financial independence isn't a luxury - 
-                it's a necessity."
-              </p>
-              <div className="flex items-center gap-4 mt-3 text-sm text-purple-200">
-                <span>Needham, Massachusetts</span>
-                <span>Since 2020</span>
-                <span>501(c)(3) Non-Profit</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )

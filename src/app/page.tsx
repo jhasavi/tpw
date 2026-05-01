@@ -6,15 +6,16 @@ import ImpactMetrics from '@/components/ImpactMetrics'
 import SuccessStories from '@/components/SuccessStories'
 import QuickWins from '@/components/QuickWins'
 import TrustBar from '@/components/TrustBar'
+import DonateButton from '@/components/DonateButton'
 import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'The Purple Wings - Free Financial Education for Women | Needham, MA',
-  description: 'Free online financial literacy courses for women — budgeting, investing, retirement planning, and wealth building. Founded by Shalini Jha in Needham, MA. Start learning today, no credit card needed.',
-  keywords: 'financial literacy for women, free finance courses for women, budgeting for women, investing for women, retirement planning, women financial empowerment, Shalini Jha, Needham MA, Massachusetts nonprofit',
+  description: 'Free online financial literacy courses for women — budgeting, investing, retirement planning, and wealth building. Start learning today, no credit card needed.',
+  keywords: 'financial literacy for women, free finance courses for women, budgeting for women, investing for women, retirement planning, women financial empowerment, Needham MA, Massachusetts nonprofit',
   openGraph: {
     title: 'The Purple Wings - Free Financial Education for Women',
-    description: 'Free financial literacy courses helping women build confidence, independence, and security. Founded by Shalini Jha in Needham, MA.',
+    description: 'Free financial literacy courses helping women build confidence, independence, and security.'
     images: [{ url: '/images/Women-fin.png', width: 1200, height: 630, alt: 'The Purple Wings - Women\'s Financial Empowerment' }],
     type: 'website',
     siteName: 'The Purple Wings',
@@ -63,6 +64,109 @@ export default function HomePage() {
 
       {/* Trust Signals Bar */}
       <TrustBar />
+
+      {/* Movement Entry Points */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <span className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-semibold text-purple-700">
+              One mission, four ways to help
+            </span>
+            <h2 className="mt-5 text-3xl md:text-4xl font-bold text-gray-900">
+              Join the movement in the way that fits you best
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              The Purple Wings works when women learn, volunteers share their expertise, donors fund free access, and partners extend our reach.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-4 md:grid-cols-2">
+            <div className="rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50 to-white p-8 shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all">
+              <div className="text-4xl mb-5">💜</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Learn For Free</h3>
+              <p className="text-gray-600 mb-6 min-h-[120px]">
+                Start with courses, quizzes, and practical guidance designed around real financial decisions women face.
+              </p>
+              <Link
+                href="/auth/signup"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-purple-600 px-5 py-3 font-semibold text-white hover:bg-purple-700 transition-colors"
+              >
+                Create Free Account
+              </Link>
+            </div>
+
+            <div className="rounded-3xl border border-pink-100 bg-gradient-to-br from-pink-50 to-white p-8 shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all">
+              <div className="text-4xl mb-5">🤝</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Volunteer Your Skills</h3>
+              <p className="text-gray-600 mb-6 min-h-[120px]">
+                Teach a workshop, mentor learners, review content, or help us expand community programming in Massachusetts.
+              </p>
+              <Link
+                href="/contact?subject=volunteer"
+                className="inline-flex w-full items-center justify-center rounded-xl border-2 border-pink-500 px-5 py-3 font-semibold text-pink-700 hover:bg-pink-50 transition-colors"
+              >
+                Become a Volunteer
+              </Link>
+            </div>
+
+            <div className="rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-8 shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all">
+              <div className="text-4xl mb-5">🌱</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Fund Free Access</h3>
+              <p className="text-gray-600 mb-6 min-h-[120px]">
+                Sponsor free lessons, events, and outreach so women can gain practical financial education without cost barriers.
+              </p>
+              <DonateButton
+                className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700"
+                size="md"
+                variant="secondary"
+              />
+            </div>
+
+            <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-8 shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all">
+              <div className="text-4xl mb-5">🏛️</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Partner With Us</h3>
+              <p className="text-gray-600 mb-6 min-h-[120px]">
+                Bring your organization, employer, bank, or nonprofit into an education-first partnership with measurable community impact.
+              </p>
+              <Link
+                href="/partnerships"
+                className="inline-flex w-full items-center justify-center rounded-xl border-2 border-amber-500 px-5 py-3 font-semibold text-amber-800 hover:bg-amber-50 transition-colors"
+              >
+                Explore Partnerships
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 px-8 py-7 text-white shadow-xl">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-purple-200">Why this matters</p>
+                <h3 className="mt-2 text-2xl font-bold">Every action here keeps financial education free for the next woman who needs it.</h3>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/get-involved"
+                  className="inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-slate-950 hover:bg-yellow-300 transition-colors"
+                >
+                  See The Boston Plan
+                </Link>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-semibold text-slate-900 hover:bg-purple-50 transition-colors"
+                >
+                  See Our Mission
+                </Link>
+                <Link
+                  href="/stories"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
+                >
+                  Read Success Stories
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Impact Metrics Section */}
       <ImpactMetrics />

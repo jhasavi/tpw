@@ -4,18 +4,9 @@ export default function StructuredData() {
     '@type': 'EducationalOrganization',
     name: 'The Purple Wings',
     alternateName: 'Purple Wings Financial Literacy',
-    description: 'Free online financial literacy platform for women. Learn budgeting, investing, retirement planning, debt management, and wealth building. Founded by Shalini Jha in Needham, MA.',
+    description: 'Free online financial literacy platform for women. Learn budgeting, investing, retirement planning, debt management, and wealth building. Based in Needham, MA.',
     url: 'https://www.thepurplewings.org',
     logo: 'https://www.thepurplewings.org/images/logo-nobg.png',
-    founder: {
-      '@type': 'Person',
-      '@id': 'https://www.thepurplewings.org/#shalini-jha',
-      name: 'Shalini Jha',
-      alternateName: 'Shalini',
-      jobTitle: 'Founder & President',
-      description: 'Financial literacy advocate dedicated to empowering women through free education',
-      url: 'https://www.thepurplewings.org/about',
-    },
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Needham',
@@ -69,7 +60,7 @@ export default function StructuredData() {
         name: 'What is The Purple Wings?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The Purple Wings is a free online financial literacy platform founded by Shalini Jha in Needham, MA. We provide comprehensive courses for women covering budgeting, investing, retirement planning, and wealth building.',
+          text: 'The Purple Wings is a free online financial literacy platform based in Needham, MA. We provide comprehensive courses for women covering budgeting, investing, retirement planning, and wealth building.',
         },
       },
       {
@@ -91,49 +82,6 @@ export default function StructuredData() {
     ],
   }
 
-  // Person schema for Shalini Jha — helps Google Knowledge Graph associate
-  // the name "Shalini Jha" (and "Shalini") with The Purple Wings
-  const founderSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    '@id': 'https://www.thepurplewings.org/#shalini-jha',
-    name: 'Shalini Jha',
-    alternateName: 'Shalini',
-    jobTitle: 'Founder & President',
-    description: 'Shalini Jha is the founder and president of The Purple Wings, a nonprofit organization dedicated to empowering women through free financial literacy education. Based in Needham, Massachusetts.',
-    url: 'https://www.thepurplewings.org/about',
-    worksFor: {
-      '@type': 'EducationalOrganization',
-      name: 'The Purple Wings',
-      url: 'https://www.thepurplewings.org',
-    },
-    affiliation: {
-      '@type': 'EducationalOrganization',
-      name: 'The Purple Wings',
-      url: 'https://www.thepurplewings.org',
-    },
-    knowsAbout: [
-      'Financial Literacy',
-      'Women Empowerment',
-      'Personal Finance',
-      'Budgeting',
-      'Investing',
-      'Retirement Planning',
-      'Nonprofit Leadership',
-      'Financial Education',
-    ],
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Needham',
-      addressRegion: 'MA',
-      addressCountry: 'US',
-    },
-    sameAs: [
-      'https://www.facebook.com/myPurpleWings/',
-      'https://needhamobserver.com/program-encourages-women-to-spread-financial-literacy-wings/',
-      'https://www.boston25news.com/news/local/she-had-no-clue-how-much-money-she-had-local-group-empowering-women-understand-finances/JBGKMMBLRRHQPLIP564E6NCNUY/',
-    ],
-  }
 
   return (
     <>
@@ -144,10 +92,6 @@ export default function StructuredData() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(founderSchema) }}
       />
     </>
   )

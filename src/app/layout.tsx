@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     default: "The Purple Wings - Women's Financial Empowerment",
     template: "%s | The Purple Wings",
   },
-  description: "Free online financial literacy courses for women. Learn budgeting, investing, retirement planning, and wealth building at your own pace. Founded by Shalini Jha, President and Inspiration, in Needham, MA.",
-  keywords: ["financial literacy", "women empowerment", "finance education", "budgeting", "investing", "retirement planning", "Shalini Jha President Inspiration", "Needham MA", "FINRA"],
+  description: "Free online financial literacy courses for women. Learn budgeting, investing, retirement planning, and wealth building at your own pace. Based in Needham, MA.",
+  keywords: ["financial literacy", "women empowerment", "finance education", "budgeting", "investing", "retirement planning", "Needham MA", "FINRA"],
   icons: {
     icon: '/images/logo-nobg.png',
     shortcut: '/images/logo-nobg.png',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org',
     title: "The Purple Wings - Women's Financial Empowerment",
-    description: 'Free online financial literacy courses for women. Learn budgeting, investing, and wealth building. Founded by Shalini Jha in Needham, MA.',
+    description: 'Free online financial literacy courses for women. Learn budgeting, investing, and wealth building. Based in Needham, MA.',
     siteName: 'The Purple Wings',
     images: [{ 
       url: '/images/Women-fin.png',
@@ -54,12 +54,12 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "The Purple Wings - Women's Financial Empowerment",
-    description: 'Free online financial literacy courses for women. Founded by Shalini Jha in Needham, MA.',
+    description: 'Free online financial literacy courses for women. Based in Needham, MA.',
     images: ['/images/Women-fin.png'],
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'),
-  authors: [{ name: 'Shalini Jha', url: 'https://www.thepurplewings.org/about' }],
-  creator: 'Shalini Jha',
+  authors: [{ name: 'The Purple Wings', url: 'https://www.thepurplewings.org/about' }],
+  creator: 'The Purple Wings',
 };
 
 export const viewport: Viewport = {
@@ -151,6 +151,7 @@ export default function RootLayout({
                 <ul className="space-y-2 text-sm text-gray-400">
                   <li><a href="/blog" className="hover:text-white transition-colors">Blog</a></li>
                   <li><a href="/stories" className="hover:text-white transition-colors">Success Stories</a></li>
+                  <li><a href="/get-involved" className="hover:text-white transition-colors">Get Involved</a></li>
                   <li><a href="/events" className="hover:text-white transition-colors">Events</a></li>
                   <li><a href="/community" className="hover:text-white transition-colors">Community</a></li>
                   <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
@@ -214,7 +215,7 @@ export default function RootLayout({
             <div className="border-t border-gray-800 dark:border-gray-700 pt-8 text-center text-sm text-gray-400">
               <p>&copy; {new Date().getFullYear()} The Purple Wings. All rights reserved. 501(c)(3) Nonprofit Organization.</p>
               <p className="mt-2 text-xs">
-                Founded by <span className="text-purple-400">Shalini Jha</span>, President &amp; Inspiration &mdash; Needham, Massachusetts
+                Based in <span className="text-purple-400">Needham, Massachusetts</span>
               </p>
               <div className="mt-4 text-xs">
                 <a href="/privacy" className="hover:text-white mx-2 transition-colors">Privacy Policy</a>
