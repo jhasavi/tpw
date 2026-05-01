@@ -29,6 +29,13 @@ type EmbedResponse = {
 const API_URL = process.env.NEXT_PUBLIC_JANAGANA_API_URL || 'https://janagana.namasteneedham.com'
 const TENANT_SLUG = process.env.NEXT_PUBLIC_JANAGANA_TENANT_SLUG || 'purple-wings'
 
+function toAbsoluteUrl(url: unknown): string | null {
+  if (typeof url !== 'string' || url.length === 0) return null
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  if (url.startsWith('/')) return `${API_URL}${url}`
+  return null
+}
+
 function ensureArray(value: unknown): Record<string, unknown>[] {
   return Array.isArray(value) ? (value as Record<string, unknown>[]) : []
 }
@@ -51,9 +58,9 @@ function toWebsiteEvent(input: Record<string, unknown>): WebsiteEvent | null {
     priceCents: typeof input.priceCents === 'number' ? input.priceCents : 0,
     format: input.format === 'VIRTUAL' || input.format === 'HYBRID' ? input.format : 'IN_PERSON',
     isVirtual: Boolean(input.isVirtual),
-    detailsUrl: typeof input.detailsUrl === 'string' ? input.detailsUrl : null,
-    registrationUrl: typeof input.registrationUrl === 'string' ? input.registrationUrl : null,
-    portalUrl: typeof input.portalUrl === 'string' ? input.portalUrl : null,
+    detailsUrl: toAbsoluteUrl(input.detailsUrl),
+    registrationUrl: toAbsoluteUrl(input.registrationUrl),
+    portalUrl: toAbsoluteUrl(input.portalUrl),
     status: input.status === 'DRAFT' || input.status === 'CANCELED' || input.status === 'COMPLETED'
       ? input.status
       : 'PUBLISHED',
