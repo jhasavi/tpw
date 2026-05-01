@@ -226,11 +226,19 @@ export default function EventsPage() {
           <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 mb-8">
             <div className="text-center">
               <h3 className="text-lg font-semibold text-yellow-800 mb-2">
-                🔄 Live Event Registration
+                🔄 Live Event Registration (JanaGana CRM)
               </h3>
               <p className="text-sm text-yellow-700 mb-4">
                 Events below are pulled directly from our CRM system
               </p>
+              <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-4 mb-4">
+                <p className="text-yellow-800 text-sm font-medium">
+                  ⚠️ <strong>Status:</strong> Awaiting JanaGana CRM Import
+                </p>
+                <p className="text-yellow-700 text-xs mt-1">
+                  Events will appear here once imported into JanaGana portal
+                </p>
+              </div>
             </div>
             <JanaganaEvents title="Spring 2026 Events" />
           </div>
@@ -357,13 +365,19 @@ export default function EventsPage() {
           <div className="text-center mt-8">
             <div className="bg-purple-100 border-2 border-purple-300 rounded-xl p-6 max-w-2xl mx-auto">
               <h4 className="text-lg font-semibold text-purple-800 mb-3">
-                🔍 About Our Event System
+                🔍 Current Event System Status
               </h4>
               <div className="text-left space-y-2 text-sm text-purple-700">
-                <p>• <strong>Live Events:</strong> Pulled from JanaGana CRM (above widget)</p>
-                <p>• <strong>Fallback Events:</strong> Shown when CRM is empty (blue box)</p>
+                <p>• <strong>JanaGana CRM:</strong> Awaiting manual import of past events</p>
+                <p>• <strong>Live Events:</strong> Widget empty until CRM import complete</p>
+                <p>• <strong>Fallback Events:</strong> Currently showing upcoming events (blue box)</p>
                 <p>• <strong>Past Events:</strong> Hard-coded historical events (below)</p>
-                <p>• <strong>Registration:</strong> Links to JanaGana for official sign-up</p>
+                <p>• <strong>Next Step:</strong> Manual import into JanaGana dashboard</p>
+              </div>
+              <div className="mt-4 p-3 bg-purple-200 rounded-lg">
+                <p className="text-xs text-purple-800 font-medium">
+                  📋 <strong>Action Required:</strong> Import 10 past events into JanaGana CRM using the manual import guide
+                </p>
               </div>
             </div>
           </div>
