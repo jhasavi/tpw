@@ -57,6 +57,26 @@ vercel --prod
 - **Authentication** - Google OAuth and email signup
 - **Responsive Design** - Mobile-first, accessible UI
 
+## JanaGana Integration
+
+Use separate environment variables for browser embed widgets and server-to-server API calls.
+
+Browser embed (public):
+```env
+NEXT_PUBLIC_JANAGANA_TENANT_SLUG=purple-wings
+NEXT_PUBLIC_JANAGANA_API_URL=https://janagana.namasteneedham.com
+```
+
+Server API sync (private):
+```env
+JANAGANA_API_URL=https://janagana.namasteneedham.com/api/plugin
+JANAGANA_API_KEY=your_private_plugin_api_key
+```
+
+Notes:
+- Use `NEXT_PUBLIC_...` vars only for loading `janagana-embed.js` and calling `Janagana.init(...)` in browser code.
+- Use `JANAGANA_API_*` only in server routes/scripts (never expose API keys to client code).
+
 ## 🛠 Tech Stack
 
 - **Framework:** Next.js 15 (App Router)

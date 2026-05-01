@@ -222,7 +222,151 @@ export default function EventsPage() {
             </p>
           </div>
 
-          <JanaganaEvents title="Upcoming Events" />
+          {/* JanaGana Events Widget Integration */}
+          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 mb-8">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+                🔄 Live Event Registration
+              </h3>
+              <p className="text-sm text-yellow-700 mb-4">
+                Events below are pulled directly from our CRM system
+              </p>
+            </div>
+            <JanaganaEvents title="Spring 2026 Events" />
+          </div>
+
+          {/* Fallback Events When Widget is Empty */}
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-blue-800 mb-4 text-center">
+              📅 Currently Scheduled Events
+            </h3>
+            <div className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-bold text-gray-900">Financial Planning Basics</h4>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    April 15, 2026
+                  </span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <span className="mr-2">📍</span>
+                  <span>High Rock School, Needham, MA</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <span className="mr-2">👤</span>
+                  <span>Shalini Jha - Founder</span>
+                </div>
+                <p className="text-gray-700 text-sm mb-4">
+                  Essential financial planning fundamentals for women looking to build wealth and security. 
+                  Perfect for beginners or those needing a refresher.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a 
+                    href="https://janagana.app/purple-wings/events/financial-planning-basics"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center"
+                  >
+                    Register Free
+                  </a>
+                  <a 
+                    href="mailto:info@thepurplewings.org"
+                    className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-center"
+                  >
+                    Learn More
+                  </a>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-bold text-gray-900">Retirement Planning Workshop</h4>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    April 29, 2026
+                  </span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <span className="mr-2">📍</span>
+                  <span>Needham Community Center, Needham, MA</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <span className="mr-2">👤</span>
+                  <span>Guest Speaker - Retirement Specialist</span>
+                </div>
+                <p className="text-gray-700 text-sm mb-4">
+                  Advanced retirement planning strategies for women 50+. Cover Social Security optimization, 
+                  healthcare planning, and income stream development.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a 
+                    href="https://janagana.app/purple-wings/events/retirement-planning"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center"
+                  >
+                    Register Free
+                  </a>
+                  <a 
+                    href="mailto:info@thepurplewings.org"
+                    className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-center"
+                  >
+                    Learn More
+                  </a>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-bold text-gray-900">Investing for Women</h4>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    May 13, 2026
+                  </span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <span className="mr-2">📍</span>
+                  <span>Virtual Event - Online</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <span className="mr-2">👤</span>
+                  <span>Investment Team - Financial Advisors</span>
+                </div>
+                <p className="text-gray-700 text-sm mb-4">
+                  Learn investing fundamentals tailored for women. Cover portfolio building, risk management, 
+                  and long-term wealth creation strategies.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a 
+                    href="https://janagana.app/purple-wings/events/investing-women"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center"
+                  >
+                    Register Free
+                  </a>
+                  <a 
+                    href="mailto:info@thepurplewings.org"
+                    className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-center"
+                  >
+                    Learn More
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <div className="bg-purple-100 border-2 border-purple-300 rounded-xl p-6 max-w-2xl mx-auto">
+              <h4 className="text-lg font-semibold text-purple-800 mb-3">
+                🔍 About Our Event System
+              </h4>
+              <div className="text-left space-y-2 text-sm text-purple-700">
+                <p>• <strong>Live Events:</strong> Pulled from JanaGana CRM (above widget)</p>
+                <p>• <strong>Fallback Events:</strong> Shown when CRM is empty (blue box)</p>
+                <p>• <strong>Past Events:</strong> Hard-coded historical events (below)</p>
+                <p>• <strong>Registration:</strong> Links to JanaGana for official sign-up</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
