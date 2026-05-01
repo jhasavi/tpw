@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'ckdshqbrxctjadljjhhy.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.thepurplewings.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ],
   },
 };

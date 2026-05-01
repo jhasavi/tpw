@@ -1,5 +1,31 @@
 # 🚀 JanaGana Import - Immediate Action Required
 
+## ✅ Updated Approach (Preferred)
+
+Manual entry is no longer the recommended path.
+
+Use the JanaGana migration scripts instead:
+
+```bash
+cd ~/JanaGana
+
+# Dry run
+npm run scripts:import-tpw-events
+
+# Apply import
+npm run scripts:import-tpw-events -- --apply
+
+# Optional rollback dry run
+npm run scripts:rollback-tpw-events
+
+# Optional rollback apply
+npm run scripts:rollback-tpw-events -- --apply
+```
+
+The importer is idempotent, preserves historical data, and tags migrated rows with `tpw-migrated`.
+
+---
+
 ## **📋 Current Situation**
 
 Events are NOT showing because:
