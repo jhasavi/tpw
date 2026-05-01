@@ -16,12 +16,12 @@
 const fs = require('fs');
 const path = require('path');
 
-// Configuration - Update with your JanaGana credentials
+// Configuration - Using existing JanaGana credentials
 const config = {
-  apiUrl: 'https://janagana.app/api/v1',
+  apiUrl: 'https://janagana.namasteneedham.com/api/plugin',
   organizationSlug: 'purple-wings',
-  apiToken: process.env.JANAGANA_API_TOKEN || 'YOUR_API_TOKEN_HERE',
-  baseUrl: 'https://thepurplewings.org'
+  apiKey: 'jg_live_SBTGaXlwlLGks7_MwgHessJFMs2RB0cZ',
+  baseUrl: 'https://www.thepurplewings.org'
 };
 
 // Past events data from the website
@@ -152,7 +152,7 @@ const pastEvents = [
 async function makeRequest(endpoint, options = {}) {
   const url = `${config.apiUrl}/${endpoint}`;
   const headers = {
-    'Authorization': `Bearer ${config.apiToken}`,
+    'X-API-Key': config.apiKey,
     'Content-Type': 'application/json',
     ...options.headers
   };
@@ -192,7 +192,7 @@ async function uploadImage(imageName) {
       method: 'POST',
       body: formData,
       headers: {
-        'Authorization': `Bearer ${config.apiToken}`
+        'X-API-Key': config.apiKey
       }
     });
 
@@ -240,8 +240,8 @@ async function importPastEvents() {
   console.log('🚀 Starting JanaGana CRM import for past events...\n');
 
   // Check configuration
-  if (config.apiToken === 'YOUR_API_TOKEN_HERE') {
-    console.error('❌ Please update the API token in the script configuration');
+  if (!config.apiKey || config.apiKey === 'YOUR_API_KEY_HERE') {
+    console.error('❌ Please update the API key in the script configuration');
     process.exit(1);
   }
 
@@ -284,12 +284,13 @@ async function importPastEvents() {
 async function testConnection() {
   try {
     console.log('🔍 Testing JanaGana API connection...');
-    const response = await makeRequest('organizations/me');
+    const response = await makeRequest('organizations');
     console.log('✅ API connection successful');
+    console.log('📊 Response:', JSON.stringify(response, null, 2));
     return true;
   } catch (error) {
     console.error('❌ API connection failed:', error.message);
-    console.log('💡 Please check your API token and network connection');
+    console.log('💡 Please check your API key and network connection');
     return false;
   }
 }
@@ -315,14 +316,12 @@ Commands:
   node scripts/janagana-import.js help    - Show this help
 
 Setup:
-  1. Set JANAGANA_API_TOKEN environment variable
-  2. Update config.apiUrl if needed
-  3. Ensure images exist in /public/images/
-  4. Run 'test' command first to verify connection
-  5. Run 'import' command to upload events
+  1. Update config.apiKey in the script if needed
+  2. Ensure images exist in /public/images/
+  3. Run 'test' command first to verify connection
+  4. Run 'import' command to upload events
 
 Example:
-  export JANAGANA_API_TOKEN="your_token_here"
   node scripts/janagana-import.js test
   node scripts/janagana-import.js import
       `);
