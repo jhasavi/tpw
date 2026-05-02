@@ -7,16 +7,14 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 import ThemeToggle from './ThemeToggle'
+import { Dropdown } from './ui/Dropdown'
+import { navigationConfig, getUserMenuItems } from '@/lib/navigation-config'
 
 export default function Navigation() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [learnMenuOpen, setLearnMenuOpen] = useState(false)
-  const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false)
-  const [aboutMenuOpen, setAboutMenuOpen] = useState(false)
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -80,145 +78,110 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-1">
-            <Link href="/" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50" aria-label="Home page">
-              Home
-            </Link>
-            <Link href="/stories" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
-              Stories
-            </Link>
-            <Link href="/life-stage/40s" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
-              Life Stages
-            </Link>
-            <Link href="/campaigns/purple-wings-challenge" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
-              Challenge
-            </Link>
-            <Link href="/quiz/retirement-readiness" className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50">
-              Retirement Quiz
-            </Link>
-            
-            {/* Learn Dropdown */}
-            <div className="relative" onMouseEnter={() => setLearnMenuOpen(true)} onMouseLeave={() => setLearnMenuOpen(false)}>
-              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center" aria-label="Learn dropdown menu" aria-expanded={learnMenuOpen}>
-                Learn
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {learnMenuOpen && (
-                <div className="absolute left-0 mt-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    <Link href="/courses" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      📚 All Courses
-                    </Link>
-                    <Link href="/quiz/personality" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      🧠 Personality Quiz
-                    </Link>
-                    <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      📊 My Dashboard
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Resources Dropdown */}
-            <div className="relative" onMouseEnter={() => setResourcesMenuOpen(true)} onMouseLeave={() => setResourcesMenuOpen(false)}>
-              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center" aria-label="Resources dropdown menu" aria-expanded={resourcesMenuOpen}>
-                Resources
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {resourcesMenuOpen && (
-                <div className="absolute left-0 mt-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    <Link href="/blog" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      ✍️ Blog
-                    </Link>
-                    <Link href="/media" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      📰 Media Coverage
-                    </Link>
-                    <Link href="/faq" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      ❓ FAQ
-                    </Link>
-                    <Link href="/newsletter/subscribe" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      📧 Newsletter
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* About Dropdown */}
-            <div className="relative" onMouseEnter={() => setAboutMenuOpen(true)} onMouseLeave={() => setAboutMenuOpen(false)}>
-              <button className="text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 flex items-center">
-                About
-                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {aboutMenuOpen && (
-                <div className="absolute left-0 mt-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    <Link href="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      💜 Our Mission
-                    </Link>
-                    <Link href="/events" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      📅 Events
-                    </Link>
-                    <Link href="/partnerships" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      🤝 Partnerships
-                    </Link>
-                    <Link href="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                      📞 Contact
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
+            {navigationConfig.map((item) => {
+              const isActive = item.isActive ? item.isActive(pathname) : false
+              
+              if (item.dropdown) {
+                return (
+                  <Dropdown
+                    key={item.label}
+                    trigger={
+                      <button
+                        className={`
+                          text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md 
+                          hover:bg-purple-50 flex items-center transition-colors duration-150
+                          ${isActive ? 'text-purple-600 bg-purple-50' : ''}
+                        `}
+                        aria-label={`${item.label} dropdown menu`}
+                      >
+                        {item.label}
+                        <svg 
+                          className="ml-1 h-4 w-4 transition-transform duration-200" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    }
+                    items={item.dropdown}
+                    position="left"
+                  />
+                )
+              }
+              
+              if (item.isCTA) {
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href!}
+                    className={`
+                      bg-purple-600 text-white hover:bg-purple-700 px-6 py-2 text-sm font-medium rounded-md 
+                      transition-colors duration-150 shadow-sm hover:shadow-md
+                      ${isActive ? 'bg-purple-700' : ''}
+                    `}
+                    aria-label={`${item.label} page`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              }
+              
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href!}
+                  className={`
+                    text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md 
+                    hover:bg-purple-50 transition-colors duration-150
+                    ${isActive ? 'text-purple-600 bg-purple-50' : ''}
+                  `}
+                  aria-label={`${item.label} page`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
 
             {/* User Account Menu */}
             <ThemeToggle />
             {user ? (
-              <div className="relative" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
-                <button className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50" aria-label="User account menu" aria-expanded={userMenuOpen}>
-                  <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
-                    {user.email?.[0]?.toUpperCase() || 'U'}
-                  </div>
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                    <div className="py-1">
-                      <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
-                        {user.email}
-                      </div>
-                      <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                        📊 Dashboard
-                      </Link>
-                      <Link href="/dashboard?tab=profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
-                        👤 Profile
-                      </Link>
-                      <button
-                        onClick={handleSignOut}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                      >
-                        🚪 Sign Out
-                      </button>
+              <Dropdown
+                trigger={
+                  <button
+                    className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 
+                             px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 
+                             transition-colors duration-150"
+                    aria-label="User account menu"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
+                      {user.email?.[0]?.toUpperCase() || 'U'}
                     </div>
-                  </div>
-                )}
-              </div>
+                    <svg 
+                      className="h-4 w-4 transition-transform duration-200" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                }
+                items={getUserMenuItems({ user, loading, onSignOut: handleSignOut })}
+                position="right"
+              />
             ) : !loading && (
               <>
-                <Link href="/auth/login" className="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium">
+                <Link 
+                  href="/auth/login" 
+                  className="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium transition-colors duration-150"
+                >
                   Sign In
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-md text-sm font-medium"
+                  className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150"
                 >
                   Get Started
                 </Link>
@@ -250,71 +213,110 @@ export default function Navigation() {
       {menuOpen && (
         <div className="md:hidden border-t border-purple-100">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link href="/" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium">
-              🏠 Home
-            </Link>
-            <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase">Learn</div>
-            <Link href="/courses" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              📚 All Courses
-            </Link>
-            <Link href="/quiz/personality" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              🧠 Personality Quiz
-            </Link>
-            <Link href="/dashboard" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              📊 My Dashboard
-            </Link>
-            <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase">Resources</div>
-            <Link href="/blog" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              ✍️ Blog
-            </Link>
-            <Link href="/media" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              📰 Media Coverage
-            </Link>
-            <Link href="/faq" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              ❓ FAQ
-            </Link>
-            <Link href="/newsletter/subscribe" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              📧 Newsletter
-            </Link>
-            <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase">About</div>
-            <Link href="/about" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              💜 Our Mission
-            </Link>
-            <Link href="/partnerships" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              🤝 Partnerships
-            </Link>
-            <Link href="/contact" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-              📞 Contact
-            </Link>
+            {navigationConfig.map((item) => {
+              const isActive = item.isActive ? item.isActive(pathname) : false
+              
+              if (item.dropdown) {
+                return (
+                  <div key={item.label}>
+                    <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase">
+                      {item.label}
+                    </div>
+                    {item.dropdown.map((subItem) => (
+                      <Link
+                        key={subItem.href || subItem.label}
+                        href={subItem.href!}
+                        className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6 transition-colors duration-150"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {subItem.icon && <span className="mr-3">{subItem.icon}</span>}
+                        {subItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                )
+              }
+              
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href!}
+                  className={`block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ${
+                    isActive ? 'text-purple-600 bg-purple-50' : ''
+                  }`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
             
-            {user ? (
+            {user && (
               <>
-                <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase border-t border-purple-100 mt-2">Account</div>
+                <div className="px-3 py-2 text-xs font-semibold text-purple-600 uppercase border-t border-purple-100 mt-2">
+                  Account
+                </div>
                 <div className="px-3 py-2 text-sm text-gray-500 pl-6">
                   {user.email}
                 </div>
-                <Link href="/dashboard" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-                  📊 Dashboard
-                </Link>
-                <Link href="/dashboard?tab=profile" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6">
-                  👤 Profile
-                </Link>
-                <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6"
-                >
-                  🚪 Sign Out
-                </button>
+                {getUserMenuItems({ user, loading, onSignOut: handleSignOut }).map((item, index) => {
+                  if (item.divider && !item.label) {
+                    return <div key={index} className="border-t border-gray-100 my-1 mx-3" />
+                  }
+                  
+                  if (item.href) {
+                    return (
+                      <Link
+                        key={index}
+                        href={item.href}
+                        className={`block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6 transition-colors duration-150 ${
+                          item.destructive ? 'text-red-600 hover:bg-red-50' : ''
+                        }`}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {item.icon && <span className="mr-3">{item.icon}</span>}
+                        {item.label}
+                      </Link>
+                    )
+                  }
+                  
+                  if (item.onClick) {
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          item.onClick!()
+                          setMenuOpen(false)
+                        }}
+                        className={`block w-full text-left text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium pl-6 transition-colors duration-150 ${
+                          item.destructive ? 'text-red-600 hover:bg-red-50' : ''
+                        }`}
+                      >
+                        {item.icon && <span className="mr-3">{item.icon}</span>}
+                        {item.label}
+                      </button>
+                    )
+                  }
+                  
+                  return null
+                })}
               </>
-            ) : !loading && (
+            )}
+            
+            {!user && !loading && (
               <>
                 <div className="border-t border-purple-100 mt-2"></div>
-                <Link href="/auth/login" className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium">
+                <Link 
+                  href="/auth/login" 
+                  className="block text-gray-700 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-md text-base font-medium transition-colors duration-150"
+                  onClick={() => setMenuOpen(false)}
+                >
                   Sign In
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="block bg-purple-600 text-white hover:bg-purple-700 px-3 py-2 rounded-md text-base font-medium text-center"
+                  className="block bg-purple-600 text-white hover:bg-purple-700 px-3 py-2 rounded-md text-base font-medium text-center transition-colors duration-150"
+                  onClick={() => setMenuOpen(false)}
                 >
                   Get Started
                 </Link>
