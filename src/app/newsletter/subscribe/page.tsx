@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { JanaganaNewsletter } from '@/components/JanaganaNewsletter'
+import { NewsletterForm } from '@/components/NewsletterForm'
 
 export default function NewsletterSubscribePage() {
   return (
@@ -106,7 +106,7 @@ export default function NewsletterSubscribePage() {
                 </p>
               </div>
 
-              <JanaganaNewsletter 
+              <NewsletterForm 
                 title="Subscribe to Our Newsletter"
                 description="Get weekly financial tips, course updates, and exclusive content"
               />

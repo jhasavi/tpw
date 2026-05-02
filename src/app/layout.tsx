@@ -11,6 +11,7 @@ import StructuredData from "@/components/StructuredData";
 import FloatingQuizCTA from "@/components/FloatingQuizCTA";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 const janaganaTenantSlug = process.env.NEXT_PUBLIC_JANAGANA_TENANT_SLUG || 'purple-wings'
@@ -229,6 +230,7 @@ export default function RootLayout({
         </footer>
         <FloatingQuizCTA />
         <CookieConsent />
+        <Toaster />
         </ThemeProvider>
         </ErrorBoundary>
       </body>
