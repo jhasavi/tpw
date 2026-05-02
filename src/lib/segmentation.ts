@@ -298,7 +298,7 @@ export class SegmentationEngine {
       const allContacts = data.contacts || []
 
       // Filter contacts based on segment criteria
-      const matchingContacts = allContacts.filter(contact => 
+      const matchingContacts = allContacts.filter((contact: any) => 
         this.matchContact(contact, segment.criteria)
       )
 
