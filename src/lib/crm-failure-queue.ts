@@ -153,6 +153,16 @@ export class CRMFailureQueue {
    */
   async getStats(): Promise<FailureQueueStats> {
     try {
+      // Skip during static generation (no request context)
+      if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL) {
+        return {
+          totalFailed: 0,
+          pendingRetries: 0,
+          oldestFailure: null,
+          recentFailures: []
+        }
+      }
+      
       const supabase = await createClient()
       
       // Get total count

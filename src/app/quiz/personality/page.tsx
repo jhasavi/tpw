@@ -262,10 +262,10 @@ export default function PersonalityQuizPage() {
 
   const getRecommendedCourses = (type: string): string[] => {
     const recommendations = {
-      'cautious_planner': ['Budgeting Basics', 'Emergency Fund Planning', 'Debt Management', 'Risk Assessment'],
-      'growth_seeker': ['Investment Fundamentals', 'Retirement Planning', 'Wealth Building Strategies', 'Advanced Investing'],
-      'practical_manager': ['Money Management 101', 'Smart Shopping', 'Side Hustle Ideas', 'Quick Wins'],
-      'community_builder': ['Group Financial Planning', 'Family Finance', 'Community Resources', 'Teaching Others'],
+      'cautious_planner': ['Budgeting Basics', 'Emergency Fund Building', 'Risk Management'],
+      'growth_seeker': ['Investment Fundamentals', 'Portfolio Management', 'Advanced Investing'],
+      'practical_manager': ['Money Management', 'Financial Planning', 'Investment Strategies'],
+      'community_builder': ['Financial Basics', 'Group Financial Planning', 'Community Investing'],
     }
     return recommendations[type as keyof typeof recommendations] || []
   }
