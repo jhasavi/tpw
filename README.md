@@ -41,10 +41,12 @@ vercel --prod
 
 ## 📚 Documentation
 
-- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Complete deployment instructions
-- **[VERCEL_ENV_SETUP.md](VERCEL_ENV_SETUP.md)** - Environment variables guide
-- **[FINAL_COMPLETION_SUMMARY.md](FINAL_COMPLETION_SUMMARY.md)** - Project status
-- **[WORK_COMPLETED.md](WORK_COMPLETED.md)** - Features delivered
+### Essential Documents
+- **[ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md)** - Complete system architecture and technical overview
+- **[COURSE_GUIDE.md](COURSE_GUIDE.md)** - Course structure, learning paths, and educational features
+- **[USER_GUIDE.md](USER_GUIDE.md)** - User onboarding, navigation, and platform features
+- **[CRM_INTEGRATION_GUIDE.md](CRM_INTEGRATION_GUIDE.md)** - CRM integration, events, and maintenance
+- **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** - Development setup, coding standards, and deployment
 
 ## ✨ Features
 

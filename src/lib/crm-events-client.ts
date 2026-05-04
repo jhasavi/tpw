@@ -197,6 +197,16 @@ export const logQuizCompleted = (userId: string, email: string, quizType: string
   })
 }
 
+export const logRetirementQuizCompleted = (userId: string, email: string, score?: number, context?: Record<string, any>) => {
+  return crmEventLoggerClient.logEvent({
+    eventType: EventType.RETIREMENT_QUIZ_COMPLETED,
+    userId,
+    email,
+    context: { score, ...context },
+    reporting: { score: score?.toString() }
+  })
+}
+
 export const logPersonalityResult = (userId: string, email: string, personalityType: string, context?: Record<string, any>) => {
   return crmEventLoggerClient.logEvent({
     eventType: EventType.PERSONALITY_RESULT_GENERATED,

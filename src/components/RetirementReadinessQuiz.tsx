@@ -196,7 +196,7 @@ export default function RetirementReadinessQuiz() {
       
       if (user) {
         const scoreDetails = getScoreDetails()
-        const { logRetirementQuizCompleted } = await import('@/lib/crm-events')
+        const { logRetirementQuizCompleted } = await import('@/lib/crm-events-client')
         
         await logRetirementQuizCompleted(
           user.id,
