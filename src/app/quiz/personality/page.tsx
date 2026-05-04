@@ -30,10 +30,12 @@ export default function PersonalityQuizPage() {
 
   // Log quiz start on first render
   useEffect(() => {
-    if (!quizStartTime) {
-      setQuizStartTime(Date.now())
-      logPersonalityQuizStart()
+    const startQuiz = async () => {
+      const startTime = Date.now()
+      setQuizStartTime(startTime)
+      await logPersonalityQuizStart()
     }
+    startQuiz()
   }, [])
 
   const logPersonalityQuizStart = async () => {
@@ -42,10 +44,10 @@ export default function PersonalityQuizPage() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       
-      if (user) {
+      if (user && user.email) {
         await logQuizStarted(
           user.id,
-          user.email!,
+          user.email,
           'financial_personality',
           {
             quizType: 'financial_personality',
@@ -272,7 +274,7 @@ export default function PersonalityQuizPage() {
 
   // Calculate derived state before return
   const currentQ = questions[currentQuestion]
-  const progress = ((currentQuestion + 1) / questions.length) * 100
+  const progress = questions.length > 0 ? ((currentQuestion + 1) / questions.length) * 100 : 0
   const isAnswered = answers[currentQ?.id]
 
   if (isCompleted && result) {

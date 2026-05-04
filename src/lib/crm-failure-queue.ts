@@ -42,13 +42,17 @@ interface FailureQueueStats {
  * Replaces localStorage-based persistence for durable server-side operations
  */
 export class CRMFailureQueue {
-  private static instance: CRMFailureQueue
+  private static instance: CRMFailureQueue | null = null
 
   static getInstance(): CRMFailureQueue {
     if (!CRMFailureQueue.instance) {
       CRMFailureQueue.instance = new CRMFailureQueue()
     }
     return CRMFailureQueue.instance
+  }
+
+  static cleanup(): void {
+    CRMFailureQueue.instance = null
   }
 
   /**
@@ -196,7 +200,7 @@ export class CRMFailureQueue {
         .select('created_at')
         .order('created_at', { ascending: true })
         .limit(1)
-        .single()
+        .maybeSingle()
 
       // Get recent failures
       const { data: recent, error: recentError } = await supabase
@@ -270,11 +274,19 @@ export class CRMFailureQueue {
     const delay = this.calculateRetryDelay(failedRequest.retryCount)
     await new Promise(resolve => setTimeout(resolve, delay))
 
-    const response = await fetch(`${(globalThis as any).process?.env?.JANAGANA_API_URL || ''}${failedRequest.endpoint}`, {
+    // Validate environment variables
+    const apiUrl = (globalThis as any).process?.env?.JANAGANA_API_URL
+    const apiKey = (globalThis as any).process?.env?.JANAGANA_API_KEY
+
+    if (!apiUrl || !apiKey) {
+      throw new Error('Missing required environment variables: JANAGANA_API_URL and JANAGANA_API_KEY')
+    }
+
+    const response = await fetch(`${apiUrl}${failedRequest.endpoint}`, {
       method: failedRequest.method,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${(globalThis as any).process?.env?.JANAGANA_API_KEY || ''}`,
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify(failedRequest.payload)
     })
