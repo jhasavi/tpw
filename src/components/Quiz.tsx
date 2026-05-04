@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { logQuizStarted, logQuizCompleted } from '@/lib/crm-events'
+import { STANDARD_VALUES } from '@/lib/crm-fields'
 
 interface QuizQuestion {
   id: string
@@ -33,6 +35,38 @@ export default function Quiz({ lessonId, lessonTitle, onComplete }: QuizProps) {
   useEffect(() => {
     loadQuestions()
   }, [lessonId])
+
+  // Log quiz start when questions are loaded
+  useEffect(() => {
+    if (questions.length > 0 && !quizCompleted) {
+      // Record quiz start time
+      ;(window as any).quizStartTime = Date.now()
+      logQuizStartEvent()
+    }
+  }, [questions.length, quizCompleted])
+
+  const logQuizStartEvent = async () => {
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        await logQuizStarted(
+          user.id,
+          user.email!,
+          'lesson_quiz',
+          {
+            lessonId,
+            lessonTitle,
+            questionCount: questions.length,
+            route: window.location.pathname
+          }
+        )
+      }
+    } catch (error) {
+      console.error('Failed to log quiz start:', error)
+    }
+  }
 
   const loadQuestions = async () => {
     try {
@@ -135,6 +169,28 @@ export default function Quiz({ lessonId, lessonTitle, onComplete }: QuizProps) {
 
       const finalScore = score + (isCorrect ? 1 : 0)
       const percentage = Math.round((finalScore / questions.length) * 100)
+
+      // Log quiz completion to CRM
+      try {
+        await logQuizCompleted(
+          user.id,
+          user.email!,
+          'lesson_quiz',
+          finalScore,
+          {
+            lessonId,
+            lessonTitle,
+            totalQuestions: questions.length,
+            score: finalScore,
+            percentage,
+            route: window.location.pathname,
+            timeSpent: Date.now() - (window as any).quizStartTime
+          }
+        )
+      } catch (crmError) {
+        console.error('Failed to log quiz completion to CRM:', crmError)
+        // Don't throw - quiz completion is more important than CRM logging
+      }
 
       // Save quiz attempt
       const { error } = await supabase

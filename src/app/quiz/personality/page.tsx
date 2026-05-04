@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { SmartLeadCapture } from '@/components/SmartLeadCapture'
+import { logQuizStarted, logQuizCompleted, logPersonalityResult } from '@/lib/crm-events'
+import { STANDARD_VALUES } from '@/lib/crm-fields'
 
 interface Question {
   id: string
@@ -22,6 +25,39 @@ export default function PersonalityQuizPage() {
   const [answers, setAnswers] = useState<{ [key: string]: string }>({})
   const [isCompleted, setIsCompleted] = useState(false)
   const [result, setResult] = useState<AssessmentResult | null>(null)
+  const [leadCaptured, setLeadCaptured] = useState(false)
+  const [quizStartTime, setQuizStartTime] = useState<number | null>(null)
+
+  // Log quiz start on first render
+  useState(() => {
+    if (!quizStartTime) {
+      setQuizStartTime(Date.now())
+      logPersonalityQuizStart()
+    }
+  })
+
+  const logPersonalityQuizStart = async () => {
+    try {
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        await logQuizStarted(
+          user.id,
+          user.email!,
+          'financial_personality',
+          {
+            quizType: 'financial_personality',
+            route: '/quiz/personality',
+            questionCount: questions.length
+          }
+        )
+      }
+    } catch (error) {
+      console.error('Failed to log personality quiz start:', error)
+    }
+  }
 
   const questions: Question[] = [
     {
@@ -162,10 +198,46 @@ export default function PersonalityQuizPage() {
     }
   }
 
-  const completeAssessment = () => {
+  const completeAssessment = async () => {
     const assessmentResult = calculatePersonality()
     setResult(assessmentResult)
     setIsCompleted(true)
+    
+    // Log personality result to CRM
+    try {
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        await logPersonalityResult(
+          user.id,
+          user.email!,
+          assessmentResult.personalityType,
+          {
+            personalityType: assessmentResult.personalityType,
+            confidence: assessmentResult.confidence,
+            traits: assessmentResult.traits,
+            strengths: assessmentResult.strengths,
+            learningStyle: assessmentResult.learningStyle,
+            recommendedCourses: getRecommendedCourses(assessmentResult.personalityType),
+            timeSpent: quizStartTime ? Date.now() - quizStartTime : undefined,
+            route: '/quiz/personality',
+            answers: answers
+          }
+        )
+      }
+    } catch (error) {
+      console.error('Failed to log personality result to CRM:', error)
+      // Don't throw - quiz completion is more important than CRM logging
+    }
+    
+    // Trigger smart lead capture after results are shown
+    setTimeout(() => {
+      if (!leadCaptured) {
+        setLeadCaptured(true)
+      }
+    }, 2000)
   }
 
   const getPersonalityName = (type: string): string => {
@@ -290,6 +362,20 @@ export default function PersonalityQuizPage() {
             </button>
           </div>
         </div>
+
+        {/* Smart Lead Capture */}
+        <SmartLeadCapture
+          trigger="personality_results"
+          value="personality-quiz"
+          context={{
+            personalityType: result.personalityType,
+            confidence: result.confidence,
+            traits: result.traits,
+            learningStyle: result.learningStyle,
+            recommendedCourses: getRecommendedCourses(result.personalityType)
+          }}
+          onComplete={() => setLeadCaptured(true)}
+        />
       </div>
     )
   }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendContactEmail } from '@/lib/email'
 import { contactFormLimiter, getClientIdentifier } from '@/lib/rate-limiter'
+import { crmEventLogger, EventType } from '@/lib/crm-events'
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,6 +38,30 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to send email' },
         { status: 500 }
       )
+    }
+
+    // Log contact request to CRM
+    try {
+      await crmEventLogger.logEvent({
+        eventType: EventType.CONTACT_REQUEST_SUBMITTED,
+        userId: 'anonymous', // Contact form can be submitted without login
+        email,
+        route: '/api/email/contact',
+        context: {
+          name,
+          subject,
+          messageLength: message.length,
+          hasMessage: !!message,
+          timestamp: new Date().toISOString()
+        },
+        reporting: {
+          lead_type: 'contact_request',
+          source: 'website_contact_form'
+        }
+      })
+    } catch (crmError) {
+      console.error('Failed to log contact request to CRM:', crmError)
+      // Don't fail the contact request for CRM logging errors
     }
 
     return NextResponse.json(

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { celebrateLessonComplete, checkMilestones } from '@/lib/celebrations'
+import CourseProgressTracker from '@/components/CourseProgressTracker'
 
 interface ProgressTrackerProps {
   lessonId: string
@@ -213,6 +214,56 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
 
       setStatus('completed')
       
+      // Trigger CRM event for lesson completion using CourseProgressTracker
+      try {
+        // Create a temporary CourseProgressTracker instance for lesson completion
+        const eventKey = `lesson_completed_${user.id}_${lessonId}_${courseId}`
+        
+        // Check if already tracked (idempotency)
+        const { data: existingEvent } = await supabase
+          .from('crm_events_tracked')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('event_key', eventKey)
+          .maybeSingle()
+
+        if (!existingEvent) {
+          // Not tracked yet, send CRM event
+          const response = await fetch('/api/crm/course-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              eventType: 'lesson_completed',
+              courseId,
+              courseSlug,
+              courseTitle,
+              curriculumTitle,
+              lessonId,
+              lessonTitle: 'Current Lesson' // Will be updated with actual title
+            })
+          })
+          
+          if (response.ok) {
+            // Mark as tracked
+            await supabase
+              .from('crm_events_tracked')
+              .upsert({
+                user_id: user.id,
+                event_key: eventKey,
+                event_type: 'lesson_completed',
+                tracked_at: new Date().toISOString()
+              }, {
+                onConflict: 'user_id,event_key'
+              })
+          } else {
+            console.error('Failed to log lesson completion to CRM')
+          }
+        }
+      } catch (crmErr) {
+        console.error('CRM lesson completion error:', crmErr)
+        // Continue anyway - CRM tracking shouldn't break user experience
+      }
+      
       // Trigger celebration with error handling
       try {
         await celebrateLessonComplete(user.id, 'this lesson', 1)
@@ -234,6 +285,54 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
           if (data.complete) {
             setCourseComplete(true)
             if (data.certificateUrl) setCertUrl(data.certificateUrl)
+            
+            // Trigger CRM event for course completion with proper idempotency
+            try {
+              const eventKey = `course_completed_${user.id}_${courseId}`
+              
+              // Check if already tracked (idempotency)
+              const { data: existingEvent } = await supabase
+                .from('crm_events_tracked')
+                .select('id')
+                .eq('user_id', user.id)
+                .eq('event_key', eventKey)
+                .maybeSingle()
+
+              if (!existingEvent) {
+                // Not tracked yet, send CRM event
+                const crmResponse = await fetch('/api/crm/course-progress', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    eventType: 'course_completed',
+                    courseId,
+                    courseSlug,
+                    courseTitle,
+                    curriculumTitle
+                  })
+                })
+                
+                if (crmResponse.ok) {
+                  // Mark as tracked
+                  await supabase
+                    .from('crm_events_tracked')
+                    .upsert({
+                      user_id: user.id,
+                      event_key: eventKey,
+                      event_type: 'course_completed',
+                      tracked_at: new Date().toISOString()
+                    }, {
+                      onConflict: 'user_id,event_key'
+                    })
+                } else {
+                  console.error('Failed to log course completion to CRM')
+                }
+              }
+            } catch (crmErr) {
+              console.error('CRM course completion error:', crmErr)
+              // Continue anyway - CRM tracking shouldn't break user experience
+            }
+            
             // Don't show the generic alert below — the UI will update
             router.refresh()
             return

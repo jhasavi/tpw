@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { 
+  determineLifecycleStage, 
+  mapToCRMContact, 
+  mapConsentFromForm, 
+  CRMError,
+  type CRMContact,
+  type LifecycleStage 
+} from '@/lib/crm-utils'
+import { crmClient } from '@/lib/crm-retry-server'
+import { crmEventLogger, EventType } from '@/lib/crm-events'
+import { CRMFieldMapper } from '@/lib/crm-fields'
 
 // Schema for newsletter subscription
 const newsletterSchema = z.object({
@@ -9,19 +20,20 @@ const newsletterSchema = z.object({
   phone: z.string().optional(),
   source: z.string().default('website'),
   tags: z.array(z.string()).default(['newsletter-subscriber']),
+  marketingConsent: z.boolean().optional(), // Explicit consent checkbox
 })
-
-// JanaGana CRM API configuration
-const JANAGANA_API_URL = process.env.JANAGANA_API_URL || 'https://janagana.namasteneedham.com/api'
-const JANAGANA_API_KEY = process.env.JANAGANA_API_KEY
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const validatedData = newsletterSchema.parse(body)
 
-    // Create contact in JanaGana CRM
-    const contactData = {
+    // Determine lifecycle stage and consent
+    const lifecycleStage = determineLifecycleStage('newsletter')
+    const consent = mapConsentFromForm(validatedData.marketingConsent)
+
+    // Create contact in JanaGana CRM with new utilities
+    const contactData = mapToCRMContact({
       firstName: validatedData.firstName || 'Newsletter',
       lastName: validatedData.lastName || 'Subscriber',
       email: validatedData.email,
@@ -29,71 +41,77 @@ export async function POST(request: NextRequest) {
       source: validatedData.source,
       tags: validatedData.tags,
       notes: `Subscribed to newsletter on ${new Date().toISOString()}. Source: The Purple Wings website.`,
+    }, lifecycleStage, consent)
+
+    const response = await crmClient.post('/plugin/crm/contacts', contactData)
+
+    // Log newsletter subscription event
+    try {
+      await crmEventLogger.logEvent({
+        eventType: EventType.NEWSLETTER_SUBSCRIBED,
+        userId: 'anonymous', // Newsletter can be submitted without login
+        email: validatedData.email,
+        route: '/api/newsletter/subscribe',
+        context: {
+          source: validatedData.source,
+          tags: validatedData.tags,
+          hasFirstName: !!validatedData.firstName,
+          hasLastName: !!validatedData.lastName,
+          hasPhone: !!validatedData.phone,
+          marketingConsent: validatedData.marketingConsent
+        },
+        reporting: CRMFieldMapper.mergeReportingFields(
+          CRMFieldMapper.mapFormSubmission('newsletter'),
+          { source: validatedData.source || 'website' }
+        )
+      })
+    } catch (eventError) {
+      console.error('Failed to log newsletter subscription event:', eventError)
+      // Don't fail the subscription for event logging errors
     }
 
-    const response = await fetch(`${JANAGANA_API_URL}/plugin/crm/contacts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${JANAGANA_API_KEY}`,
-      },
-      body: JSON.stringify(contactData),
-    })
-
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      console.error('JanaGana CRM error:', errorData)
-      
       // If contact already exists, try to update
-      if (response.status === 409) {
-        const updateResponse = await fetch(`${JANAGANA_API_URL}/plugin/crm/contacts?search=${validatedData.email}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${JANAGANA_API_KEY}`,
-          },
-        })
-
-        if (updateResponse.ok) {
-          const existingContacts = await updateResponse.json()
+      if (response.statusCode === 409) {
+        try {
+          const existingContacts = await crmClient.get(`/plugin/crm/contacts?search=${validatedData.email}`)
           const existingContact = existingContacts.contacts[0]
 
           if (existingContact) {
-            // Update existing contact with newsletter tag
+            // Determine new lifecycle stage based on existing stage
+            const newLifecycleStage = determineLifecycleStage('newsletter', existingContact.lifecycleStage as LifecycleStage)
+            
+            // Update existing contact with newsletter tag and new lifecycle stage
             const updatedTags = [...new Set([...(existingContact.tags || []), ...validatedData.tags])]
-            const updateData = {
+            const updateData = mapToCRMContact({
               tags: updatedTags,
               notes: existingContact.notes 
                 ? `${existingContact.notes}\n\nRe-subscribed to newsletter on ${new Date().toISOString()}.`
                 : `Re-subscribed to newsletter on ${new Date().toISOString()}.`,
-            }
+            }, newLifecycleStage, consent)
 
-            const patchResponse = await fetch(`${JANAGANA_API_URL}/plugin/crm/contacts/${existingContact.id}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${JANAGANA_API_KEY}`,
-              },
-              body: JSON.stringify(updateData),
+            const patchResponse = await crmClient.patch(`/plugin/crm/contacts/${existingContact.id}`, updateData)
+            
+            return NextResponse.json({
+              success: true,
+              message: 'Newsletter subscription updated in CRM',
+              contact: patchResponse,
             })
-
-            if (patchResponse.ok) {
-              return NextResponse.json({
-                success: true,
-                message: 'Newsletter subscription updated in CRM',
-                contact: await patchResponse.json(),
-              })
-            }
           }
+        } catch (updateError) {
+          console.error('Failed to update existing contact:', updateError)
         }
       }
 
-      return NextResponse.json(
-        { error: 'Failed to create contact in CRM', details: errorData },
-        { status: 500 }
-      )
+      // Return success response even if CRM fails after retries
+      return NextResponse.json({
+        success: true,
+        message: 'Newsletter subscription received. CRM sync may be delayed.',
+        warning: 'CRM update failed, request queued for retry',
+      })
     }
 
-    const contact = await response.json()
+    const contact = response
 
     // Optionally create a Deal for lead nurturing
     if (process.env.AUTO_CREATE_DEALS === 'true') {
@@ -108,17 +126,10 @@ export async function POST(request: NextRequest) {
           valueCents: 0, // Newsletter leads have no immediate value
         }
 
-        await fetch(`${JANAGANA_API_URL}/plugin/crm/deals`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${JANAGANA_API_KEY}`,
-          },
-          body: JSON.stringify(dealData),
-        })
+        await crmClient.post('/plugin/crm/deals', dealData)
       } catch (dealError) {
         console.warn('Failed to create deal:', dealError)
-        // Don't fail the subscription if deal creation fails
+        // Don't fail subscription if deal creation fails
       }
     }
 
@@ -126,10 +137,22 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Newsletter subscription successful',
       contact,
+      lifecycleStage,
+      consentStatus: consent.marketingConsent,
     })
 
   } catch (error) {
     console.error('Newsletter subscription error:', error)
+    
+    // Return user-friendly response even if CRM fails
+    if (error instanceof CRMError) {
+      return NextResponse.json({
+        success: true,
+        message: 'Newsletter subscription received. We'll process it shortly.',
+        warning: 'CRM temporarily unavailable, request queued for retry',
+      })
+    }
+    
     return NextResponse.json(
       { error: 'Failed to process newsletter subscription' },
       { status: 500 }

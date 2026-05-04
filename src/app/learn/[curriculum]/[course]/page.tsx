@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import BookmarkButton from '@/components/BookmarkButton'
+import CourseViewTracker from '@/components/CourseViewTracker'
 
 interface CoursePageProps {
   params: Promise<{
@@ -119,6 +120,11 @@ export default async function CoursePage({ params }: CoursePageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+      />
+      <CourseViewTracker 
+        courseSlug={course}
+        courseName={courseData.title}
+        curriculumSlug={curriculum}
       />
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       {/* Page-level breadcrumb removed — using global breadcrumb in layout */}

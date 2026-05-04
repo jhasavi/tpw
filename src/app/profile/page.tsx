@@ -141,6 +141,34 @@ export default function ProfilePage() {
 
       if (error) throw error
 
+      // Trigger CRM event for profile update
+      try {
+        const response = await fetch('/api/crm/profile-update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            profileData: {
+              full_name: profile.full_name,
+              location: profile.location,
+              bio: profile.bio,
+              financial_goals: profile.financial_goals,
+              interests: profile.interests,
+              experience_level: profile.experience_level,
+              occupation: profile.occupation,
+              industry: profile.industry,
+              preferred_learning_style: profile.preferred_learning_style
+            }
+          })
+        })
+        
+        if (!response.ok) {
+          console.error('Failed to log profile update to CRM')
+        }
+      } catch (crmErr) {
+        console.error('CRM profile update error:', crmErr)
+        // Continue anyway - CRM tracking shouldn't break user experience
+      }
+
       // Reload to get updated profile_completeness
       await loadProfile()
       

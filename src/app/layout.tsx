@@ -12,6 +12,7 @@ import FloatingQuizCTA from "@/components/FloatingQuizCTA";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
 import { Toaster } from "sonner";
+import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 
 const inter = Inter({ subsets: ["latin"] });
 const janaganaTenantSlug = process.env.NEXT_PUBLIC_JANAGANA_TENANT_SLUG || 'purple-wings'
@@ -231,6 +232,7 @@ export default function RootLayout({
         <FloatingQuizCTA />
         <CookieConsent />
         <Toaster />
+        <ExitIntentPopup />
         </ThemeProvider>
         </ErrorBoundary>
       </body>

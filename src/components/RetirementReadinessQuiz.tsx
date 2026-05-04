@@ -179,10 +179,46 @@ export default function RetirementReadinessQuiz() {
     setIsCalculating(true)
     
     // Simulate calculation delay
-    setTimeout(() => {
+    setTimeout(async () => {
       setShowResults(true)
       setIsCalculating(false)
+      
+      // Log retirement quiz completion to CRM
+      await logRetirementQuizCompletion()
     }, 1500)
+  }
+
+  const logRetirementQuizCompletion = async () => {
+    try {
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        const scoreDetails = getScoreDetails()
+        const { logRetirementQuizCompleted } = await import('@/lib/crm-events')
+        
+        await logRetirementQuizCompleted(
+          user.id,
+          user.email!,
+          scoreDetails.overallPercentage,
+          {
+            totalScore: scoreDetails.totalScore,
+            maxScore: scoreDetails.maxScore,
+            categoryScores: scoreDetails.categoryPercentages,
+            readinessLevel: getReadinessLevel(scoreDetails.overallPercentage).level,
+            route: '/quiz/retirement-readiness',
+            answers: answers,
+            weakAreas: scoreDetails.categoryPercentages
+              .filter(cat => cat.percentage < 60)
+              .map(cat => cat.label)
+          }
+        )
+      }
+    } catch (error) {
+      console.error('Failed to log retirement quiz completion:', error)
+      // Don't throw - quiz completion is more important than CRM logging
+    }
   }
 
   const getScoreDetails = () => {

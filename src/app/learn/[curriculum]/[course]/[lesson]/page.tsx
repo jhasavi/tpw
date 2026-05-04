@@ -7,6 +7,7 @@ import QuizSection from '@/components/QuizSection'
 import ProgressTracker from '@/components/ProgressTracker'
 import ProgressPersistence from '@/components/ProgressPersistence'
 import BookmarkButton from '@/components/BookmarkButton'
+import CourseProgressTracker from '@/components/CourseProgressTracker'
 
 interface LessonPageProps {
   params: Promise<{
@@ -499,6 +500,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
         {/* Quiz Section - placed below navigation and sized consistently */}
         <QuizSection lessonId={lessonData.id} lessonTitle={lesson.title} />
+
+        {/* CRM Progress Tracking */}
+        <CourseProgressTracker
+          courseId={courseData.id}
+          courseSlug={courseSlug}
+          courseTitle={courseData.title}
+          curriculumTitle={curriculaData.title}
+          lessonId={lessonData.id}
+          lessonTitle={lesson.title}
+          eventType="course_started"
+        />
 
         {/* Progress Tracker */}
         <ProgressTracker

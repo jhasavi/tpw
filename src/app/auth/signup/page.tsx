@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { createMember } from '@/lib/janagana'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -51,17 +50,23 @@ export default function SignupPage() {
           setError('An account with this email already exists. Please sign in instead.')
           setLoading(false)
         } else {
-          // Create member in JanaGana CRM
+          // Trigger unified CRM reconciliation (non-blocking)
           try {
-            const nameParts = fullName.split(' ')
-            await createMember({
-              email,
-              firstName: nameParts[0] || '',
-              lastName: nameParts.slice(1).join(' ') || '',
+            fetch('/api/auth/reconcile', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email,
+                fullName,
+                authSource: 'email'
+              })
+            }).catch(err => {
+              console.warn('CRM reconciliation failed (signup):', err)
+              // Don't block signup
             })
           } catch (err) {
-            console.error('Failed to create JanaGana member:', err)
-            // Don't block signup if JanaGana fails
+            console.warn('CRM reconciliation error (signup):', err)
+            // Don't block signup
           }
 
           setMessage('Account created! Check your email to confirm, or you can sign in now.')

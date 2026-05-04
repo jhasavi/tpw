@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { createMember } from '@/lib/janagana'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -12,25 +11,27 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     await supabase.auth.exchangeCodeForSession(code)
 
-    // If this is a brand-new Google OAuth account, add them to Jana Gana CRM
+    // Reconcile user with CRM (non-blocking)
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const createdAt = new Date(user.created_at).getTime()
-        const isNewUser = Date.now() - createdAt < 30_000 // within 30 seconds
-        if (isNewUser) {
-          const fullName: string = user.user_metadata?.full_name || user.user_metadata?.name || ''
-          const nameParts = fullName.split(' ')
-          await createMember({
-            email: user.email!,
-            firstName: nameParts[0] || '',
-            lastName: nameParts.slice(1).join(' ') || '',
+        // Trigger unified CRM reconciliation via API route
+        const reconcileResponse = await fetch(`${origin}/api/auth/reconcile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.id,
+            authSource: 'google'
           })
+        })
+        
+        if (!reconcileResponse.ok) {
+          console.warn('CRM reconciliation API call failed:', reconcileResponse.status)
         }
       }
     } catch (err) {
-      console.error('Failed to create JanaGana member (OAuth):', err)
-      // Don't block login if JanaGana fails
+      console.error('CRM reconciliation failed (OAuth):', err)
+      // Don't block login if CRM fails
     }
   }
 

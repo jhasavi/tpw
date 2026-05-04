@@ -27,6 +27,24 @@ export default function LoginPage() {
       setError(error.message)
       setLoading(false)
     } else {
+      // Trigger CRM reconciliation (non-blocking)
+      try {
+        fetch('/api/auth/reconcile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            authSource: 'email'
+          })
+        }).catch(err => {
+          console.warn('CRM reconciliation failed (login):', err)
+          // Don't block login
+        })
+      } catch (err) {
+        console.warn('CRM reconciliation error (login):', err)
+        // Don't block login
+      }
+
       router.push('/dashboard')
       router.refresh()
     }
