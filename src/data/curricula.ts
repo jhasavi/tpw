@@ -29,7 +29,92 @@ export const curricula: Curriculum[] = [
         estimatedHours: 3,
         displayOrder: 1,
         icon: '📚',
-        lessons: []
+        lessons: [
+          {
+            id: 'financial-literacy-intro',
+            courseId: 'financial-literacy-basics',
+            slug: 'financial-literacy-intro',
+            title: 'Introduction to Financial Literacy',
+            description: 'Discover what financial literacy means and why it\'s crucial for women\'s empowerment and independence.',
+            content: {
+              introduction: "Financial literacy is the foundation of economic independence. For women, understanding money management isn't just about numbers—it's about creating safety, freedom, and the ability to make choices that align with your values and goals.",
+              sections: [
+                {
+                  title: "What Financial Literacy Means for Women",
+                  content: "Financial literacy empowers women to take control of their economic future. It's not just about managing money—it's about creating opportunities, building security, and having the confidence to make informed decisions that affect every aspect of life.",
+                  examples: [
+                    "Negotiating salary and benefits based on market value",
+                    "Making investment decisions that align with personal values",
+                    "Planning for career interruptions without financial stress",
+                    "Building wealth that provides genuine freedom and options"
+                  ],
+                  tips: [
+                    "Start with small, achievable financial goals",
+                    "Find a financial community or mentor for support",
+                    "Celebrate financial wins, no matter how small",
+                    "Remember that financial literacy is a journey, not a destination"
+                  ]
+                },
+                {
+                  title: "Why Financial Education Matters Especially for Women",
+                  content: "Women face unique financial challenges that make financial education particularly crucial. Understanding these challenges helps you prepare strategically and build resilience.",
+                  examples: [
+                    "Women live an average of 5-7 years longer than men",
+                    "Career interruptions for caregiving can reduce lifetime earnings by $1 million+",
+                    "The gender pay gap means women earn approximately 82 cents for every dollar earned by men",
+                    "Women are more likely to be single parents or primary caregivers"
+                  ],
+                  tips: [
+                    "Plan for longevity by saving more aggressively for retirement",
+                    "Build skills that maintain earning potential during career breaks",
+                    "Develop multiple income streams to offset pay disparities",
+                    "Create financial plans that account for caregiving responsibilities"
+                  ]
+                }
+              ],
+              keyTakeaways: [
+                "Financial literacy is about empowerment, not just numbers",
+                "Women face unique financial challenges that require strategic planning",
+                "Small, consistent steps lead to significant financial growth",
+                "Financial education creates safety, freedom, and choice"
+              ],
+              actionItems: [
+                "Identify your current financial strengths and challenges",
+                "Set one small, achievable financial goal for this month",
+                "Find a financial role model or mentor",
+                "Schedule regular money check-ins (weekly or monthly)"
+              ],
+              resources: [
+                { 
+                  title: 'Financial Literacy Basics', 
+                  type: 'article',
+                  description: 'Khan Academy comprehensive financial literacy course',
+                  url: 'https://www.khanacademy.org/college-careers-more/financial-literacy' 
+                },
+                { 
+                  title: 'Women and Money Statistics', 
+                  type: 'article',
+                  description: 'Federal Reserve research on women in the labor force',
+                  url: 'https://www.federalreserve.gov/econres/notes/feds-notes/2021/women-in-the-labor-force.htm' 
+                }
+              ]
+            },
+            objectives: [
+              "Understand what financial literacy means for women",
+              "Recognize unique financial challenges women face",
+              "Identify personal financial goals and motivations",
+              "Create a foundation for continued financial learning"
+            ],
+            keyConcepts: [
+              "Financial empowerment",
+              "Economic independence",
+              "Gender-specific financial planning",
+              "Long-term wealth building"
+            ],
+            durationMinutes: 45,
+            displayOrder: 1
+          }
+        ]
       },
       {
         id: 'budgeting-basics',
@@ -41,7 +126,192 @@ export const curricula: Curriculum[] = [
         estimatedHours: 4,
         displayOrder: 2,
         icon: '💰',
-        lessons: []
+        lessons: [
+          {
+            id: 'budgeting-fundamentals',
+            courseId: 'budgeting-basics',
+            slug: 'budgeting-fundamentals',
+            title: 'Budgeting Fundamentals',
+            description: 'Master the core principles of budgeting and create a system that works for your unique financial situation.',
+            content: {
+              introduction: "Budgeting isn't about restriction—it's about intention. A good budget gives you the freedom to spend on what matters most while building security for your future.",
+              sections: [
+                {
+                  title: "Understanding Different Budgeting Methods",
+                  content: "There's no one-size-fits-all approach to budgeting. The key is finding a method that aligns with your personality, income pattern, and financial goals.",
+                  examples: [
+                    "50/30/20 Rule: 50% needs, 30% wants, 20% savings",
+                    "Zero-Based Budget: Every dollar has a purpose",
+                    "Envelope System: Cash-based spending control",
+                    "Pay Yourself First: Savings before spending"
+                  ],
+                  tips: [
+                    "Try different methods for 2-3 months each to see what works",
+                    "Combine methods to create your personalized approach",
+                    "Use apps and tools that make tracking effortless",
+                    "Review and adjust your budget monthly, especially at first"
+                  ]
+                },
+                {
+                  title: "Budgeting for Irregular Income",
+                  content: "Many women have variable income from freelancing, commissions, seasonal work, or family businesses. This requires a flexible but disciplined approach.",
+                  examples: [
+                    "Freelance writers with project-based payments",
+                    "Sales professionals with commission income",
+                    "Small business owners with fluctuating revenue",
+                    "Caregivers with part-time or seasonal work"
+                  ],
+                  tips: [
+                    "Build a baseline budget from your lowest-earning months",
+                    "Create separate accounts for taxes and irregular expenses",
+                    "Use a 'priority pyramid' for variable income allocation",
+                    "Maintain a larger emergency fund (6+ months)"
+                  ]
+                },
+                {
+                  title: "Family and Household Budgeting",
+                  content: "Managing money for a household involves coordinating multiple needs, wants, and priorities. Clear communication and shared goals are essential.",
+                  examples: [
+                    "Single parents managing all household expenses",
+                    "Couples combining finances with different spending habits",
+                    "Multi-generational households with shared costs",
+                    "Blended families with child support and alimony"
+                  ],
+                  tips: [
+                    "Schedule regular money meetings with family members",
+                    "Create shared goals that motivate everyone",
+                    "Be transparent about financial constraints and priorities",
+                    "Teach children about budgeting through age-appropriate activities"
+                  ]
+                }
+              ],
+              keyTakeaways: [
+                "Budgeting is a tool for freedom, not restriction",
+                "The best budget method is the one you'll actually use",
+                "Irregular income requires flexible but disciplined planning",
+                "Family budgeting succeeds through communication and shared goals"
+              ],
+              actionItems: [
+                "Track all income and expenses for one month",
+                "Choose one budgeting method to try for the next 30 days",
+                "Create a budget that accounts for your specific income pattern",
+                "Set up a weekly money check-in routine"
+              ],
+              resources: [
+                { 
+                  title: 'Budgeting Methods Guide', 
+                  type: 'article',
+                  description: 'Comprehensive guide to different budgeting approaches',
+                  url: 'https://www.consumerfinance.gov/about-us/blog/4-simple-ways-to-budget-more-effectively/' 
+                },
+                { 
+                  title: 'Irregular Income Budgeting', 
+                  type: 'worksheet',
+                  description: 'Printable worksheet for variable income planning',
+                  url: 'https://www.practicalmoneyskills.com/resources/tools/budgeting/' 
+                }
+              ]
+            },
+            objectives: [
+              "Understand different budgeting methodologies",
+              "Create a budget that works with irregular income patterns",
+              "Develop family budgeting strategies",
+              "Build sustainable budgeting habits"
+            ],
+            keyConcepts: [
+              "Budgeting methods",
+              "Variable income management",
+              "Family financial planning",
+              "Sustainable money habits"
+            ],
+            durationMinutes: 60,
+            displayOrder: 1
+          },
+          {
+            id: 'expense-tracking',
+            courseId: 'budgeting-basics',
+            slug: 'expense-tracking',
+            title: 'Smart Expense Tracking',
+            description: 'Learn to track expenses efficiently and use the insights to optimize your spending.',
+            content: {
+              introduction: "Knowing where your money goes is the first step to directing it where you want it to go. Effective expense tracking reveals patterns and opportunities for improvement.",
+              sections: [
+                {
+                  title: "Choosing Your Tracking Method",
+                  content: "The best tracking system is one you'll consistently use. Consider your lifestyle, tech comfort, and what motivates you.",
+                  examples: [
+                    "Mobile apps that automatically categorize spending",
+                    "Spreadsheet systems for manual tracking",
+                    "Notebook or journal methods",
+                    "Bank statement reviews and categorization"
+                  ],
+                  tips: [
+                    "Start simple and add complexity as needed",
+                    "Use automatic tracking when possible to reduce friction",
+                    "Set up mobile banking alerts for real-time awareness",
+                    "Choose a method that aligns with your natural habits"
+                  ]
+                },
+                {
+                  title: "Categorizing and Analyzing Spending",
+                  content: "Once you track expenses, categorizing them helps you understand patterns and make informed decisions about where to optimize.",
+                  examples: [
+                    "Fixed expenses: Rent, insurance, loan payments",
+                    "Variable necessities: Groceries, utilities, gas",
+                    "Discretionary spending: Entertainment, dining out",
+                    "Savings and investments: Emergency fund, retirement"
+                  ],
+                  tips: [
+                    "Create categories that make sense for your lifestyle",
+                    "Review categories quarterly and adjust as needed",
+                    "Look for trends rather than focusing on individual purchases",
+                    "Use the 80/20 rule: focus on the biggest spending categories"
+                  ]
+                }
+              ],
+              keyTakeaways: [
+                "Consistent tracking is more important than perfect tracking",
+                "Choose methods that reduce friction and increase motivation",
+                "Categorization reveals patterns and optimization opportunities",
+                "Regular review leads to continuous improvement"
+              ],
+              actionItems: [
+                "Select and set up your preferred tracking method",
+                "Track all expenses for 30 days without judgment",
+                "Categorize your spending into meaningful groups",
+                "Identify your top 3 spending categories for optimization"
+              ],
+              resources: [
+                { 
+                  title: 'Expense Tracking Apps', 
+                  type: 'tool',
+                  description: 'Comparison of popular expense tracking applications',
+                  url: 'https://www.investopedia.com/personal-finance/best-expense-tracking-apps/' 
+                },
+                { 
+                  title: 'Spending Analysis Worksheet', 
+                  type: 'worksheet',
+                  description: 'Printable worksheet for spending categorization',
+                  url: 'https://www.practicalmoneyskills.com/resources/tools/spending-analyzer/' 
+                }
+              ]
+            },
+            objectives: [
+              "Select appropriate expense tracking methods",
+              "Categorize and analyze spending patterns",
+              "Identify optimization opportunities",
+              "Build sustainable tracking habits"
+            ],
+            keyConcepts: [
+              "Expense tracking systems",
+              "Spending categorization",
+              "Financial pattern analysis",
+              "Optimization strategies"
+            ],
+            durationMinutes: 45,
+            displayOrder: 2
+          }
+        ]
       },
       {
         id: 'emergency-planning',
@@ -53,7 +323,224 @@ export const curricula: Curriculum[] = [
         estimatedHours: 4,
         displayOrder: 3,
         icon: '🛡️',
-        lessons: []
+        lessons: [
+          {
+            id: 'emergency-fund-basics',
+            courseId: 'emergency-planning',
+            slug: 'emergency-fund-basics',
+            title: 'Building Your Emergency Fund',
+            description: 'Create a financial safety net that provides security and peace of mind during unexpected challenges.',
+            content: {
+              introduction: "An emergency fund is your financial foundation. It's not just money—it's freedom from panic during unexpected events and the ability to make decisions from strength rather than fear.",
+              sections: [
+                {
+                  title: "Why Emergency Funds Matter Especially for Women",
+                  content: "Women often face unique financial vulnerabilities that make emergency funds particularly crucial. Understanding these risks helps motivate consistent saving.",
+                  examples: [
+                    "Higher likelihood of career interruptions for caregiving",
+                    "Greater risk of single parenthood and sole financial responsibility",
+                    "Longer life expectancy requiring more financial security",
+                    "Gender pay gaps affecting emergency fund accumulation speed"
+                  ],
+                  tips: [
+                    "Aim for 6-12 months of expenses rather than the standard 3-6 months",
+                    "Consider additional funds for dependents' emergency needs",
+                    "Factor in potential career interruptions when calculating needs",
+                    "Build separate emergency funds for different types of emergencies"
+                  ]
+                },
+                {
+                  title: "Calculating Your Emergency Fund Target",
+                  content: "Your emergency fund should be personalized to your specific situation, risks, and responsibilities. One size doesn't fit all.",
+                  examples: [
+                    "Single parent: 8-12 months of expenses",
+                    "Dual-income couple: 3-6 months of expenses",
+                    "Freelancer/variable income: 6-12 months of expenses",
+                    "Caregiver for aging parents: 6-9 months plus additional buffer"
+                  ],
+                  tips: [
+                    "Include all essential expenses: housing, food, insurance, debt payments",
+                    "Add buffers for irregular expenses (car repairs, medical costs)",
+                    "Consider your support system and family help availability",
+                    "Review and adjust targets annually as circumstances change"
+                  ]
+                },
+                {
+                  title: "Smart Emergency Fund Strategies",
+                  content: "Building an emergency fund requires strategy, discipline, and sometimes creative approaches to accelerate savings.",
+                  examples: [
+                    "Automate transfers from every paycheck to a separate account",
+                    "Use windfalls (tax refunds, bonuses) exclusively for emergency savings",
+                    "Start with a starter fund of $500-$1,000, then build to full target",
+                    "Keep emergency funds in high-yield savings for better returns"
+                  ],
+                  tips: [
+                    "Keep emergency funds separate from daily spending accounts",
+                    "Choose accounts with easy access but not too easy (no debit cards)",
+                    "Label accounts clearly to prevent accidental spending",
+                    "Celebrate milestones but don't pause contributions"
+                  ]
+                }
+              ],
+              keyTakeaways: [
+                "Emergency funds provide freedom from financial panic",
+                "Women often need larger emergency funds due to unique risks",
+                "Calculate your target based on personal circumstances",
+                "Automate and separate funds to protect them from daily spending"
+              ],
+              actionItems: [
+                "Calculate your personalized emergency fund target",
+                "Open a separate high-yield savings account for emergency funds",
+                "Set up automatic transfers from each paycheck",
+                "Create a plan to reach your target within 12-18 months"
+              ],
+              resources: [
+                { 
+                  title: 'Emergency Fund Calculator', 
+                  type: 'calculator',
+                  description: 'Interactive tool to calculate your emergency fund needs',
+                  url: 'https://www.calculators.org/savings/emergency-fund.php' 
+                },
+                { 
+                  title: 'High-Yield Savings Accounts', 
+                  type: 'article',
+                  description: 'Guide to choosing the best account for emergency funds',
+                  url: 'https://www.nerdwallet.com/article/banking/high-yield-savings-accounts' 
+                }
+              ]
+            },
+            objectives: [
+              "Understand why emergency funds are crucial for women",
+              "Calculate personalized emergency fund targets",
+              "Implement smart saving strategies",
+              "Set up automated emergency fund building systems"
+            ],
+            keyConcepts: [
+              "Emergency fund planning",
+              "Risk assessment for women",
+              "Automated savings systems",
+              "Financial safety nets"
+            ],
+            durationMinutes: 60,
+            displayOrder: 1
+          },
+          {
+            id: 'emergency-types-preparation',
+            courseId: 'emergency-planning',
+            slug: 'emergency-types-preparation',
+            title: 'Preparing for Different Emergency Types',
+            description: 'Plan for various emergency scenarios with specific strategies for each type of financial challenge.',
+            content: {
+              introduction: "Different emergencies require different responses. Planning for specific scenarios helps you respond quickly and effectively when challenges arise.",
+              sections: [
+                {
+                  title: "Career and Income Emergencies",
+                  content: "Job loss, reduced hours, or business setbacks can devastate finances without proper planning. These are particularly common for women in certain industries and life stages.",
+                  examples: [
+                    "Unexpected job loss or company downsizing",
+                    "Reduced hours or pay cuts",
+                    "Business revenue decline",
+                    "Industry-specific disruptions"
+                  ],
+                  tips: [
+                    "Maintain updated resume and professional network",
+                    "Develop multiple income streams when possible",
+                    "Keep skills current with ongoing education",
+                    "Research unemployment benefits and eligibility requirements"
+                  ]
+                },
+                {
+                  title: "Health and Medical Emergencies",
+                  content: "Medical emergencies can strike suddenly and create significant financial stress, especially with high deductibles and uncovered expenses.",
+                  examples: [
+                    "Unexpected illness or injury",
+                    "Chronic condition diagnosis",
+                    "Dental emergencies",
+                    "Mental health treatment needs"
+                  ],
+                  tips: [
+                    "Understand your health insurance coverage thoroughly",
+                    "Research payment plans and medical financial assistance",
+                    "Maintain a separate medical emergency fund if possible",
+                    "Know your rights under medical billing laws"
+                  ]
+                },
+                {
+                  title: "Family and Caregiving Emergencies",
+                  content: "Women often bear primary responsibility for family emergencies, requiring both financial and emotional preparation.",
+                  examples: [
+                    "Parent or family member illness requiring care",
+                    "Child care disruptions",
+                    "Pet medical emergencies",
+                    "Family member financial crises"
+                  ],
+                  tips: [
+                    "Research family leave policies and benefits",
+                    "Build backup childcare arrangements",
+                    "Understand family medical leave rights",
+                    "Create family emergency communication plans"
+                  ]
+                },
+                {
+                  title: "Housing and Transportation Emergencies",
+                  content: "Essential needs like housing and transportation can create immediate financial crises when problems arise.",
+                  examples: [
+                    "Major home repairs (HVAC, roof, plumbing)",
+                    "Car breakdowns or accidents",
+                    "Appliance failures",
+                    "Natural disasters affecting property"
+                  ],
+                  tips: [
+                    "Maintain home warranty or repair fund",
+                    "Keep vehicles well-maintained to prevent breakdowns",
+                    "Research emergency repair services in advance",
+                    "Review insurance coverage for various scenarios"
+                  ]
+                }
+              ],
+              keyTakeaways: [
+                "Different emergencies require different preparation strategies",
+                "Career emergencies are common and require proactive planning",
+                "Health emergencies need both insurance and financial preparation",
+                "Family emergencies often fall to women to manage"
+              ],
+              actionItems: [
+                "Identify your top 3 most likely emergency scenarios",
+                "Create specific response plans for each scenario",
+                "Research and document emergency resources and contacts",
+                "Practice your emergency plans through scenario reviews"
+              ],
+              resources: [
+                { 
+                  title: 'Emergency Preparedness Guide', 
+                  type: 'article',
+                  description: 'Comprehensive guide to financial emergency planning',
+                  url: 'https://www.ready.gov/financial-preparedness' 
+                },
+                { 
+                  title: 'Emergency Response Templates', 
+                  type: 'worksheet',
+                  description: 'Printable templates for emergency planning',
+                  url: 'https://www.consumerfinance.gov/consumer-tools/emergency-savings-planner/' 
+                }
+              ]
+            },
+            objectives: [
+              "Identify different types of financial emergencies",
+              "Create specific preparation strategies for each scenario",
+              "Develop emergency response plans",
+              "Build comprehensive emergency resource networks"
+            ],
+            keyConcepts: [
+              "Emergency scenario planning",
+              "Risk mitigation strategies",
+              "Emergency response systems",
+              "Resource network development"
+            ],
+            durationMinutes: 75,
+            displayOrder: 2
+          }
+        ]
       },
       {
         id: 'credit-management',
@@ -65,7 +552,93 @@ export const curricula: Curriculum[] = [
         estimatedHours: 5,
         displayOrder: 4,
         icon: '💳',
-        lessons: []
+        lessons: [
+          {
+            id: 'credit-fundamentals',
+            courseId: 'credit-management',
+            slug: 'credit-fundamentals',
+            title: 'Understanding Credit Fundamentals',
+            description: 'Master the basics of credit scores, reports, and how credit impacts your financial future.',
+            content: {
+              introduction: "Credit is a powerful financial tool that can open doors or create barriers. Understanding how it works empowers you to use it strategically rather than being controlled by it.",
+              sections: [
+                {
+                  title: "Credit Scores and How They Work",
+                  content: "Your credit score is a numerical representation of your creditworthiness. Understanding the factors that influence it helps you make strategic decisions.",
+                  examples: [
+                    "Payment history (35%): On-time payments are crucial",
+                    "Credit utilization (30%): Keep balances below 30% of limits",
+                    "Credit length (15%): Longer history helps scores",
+                    "Credit mix (10%): Different types of credit show responsibility",
+                    "New credit (10%): Too many applications hurt scores"
+                  ],
+                  tips: [
+                    "Check your credit reports from all three bureaus annually",
+                    "Set up payment reminders to ensure on-time payments",
+                    "Keep old credit cards open even if unused",
+                    "Space out credit applications by at least 6 months"
+                  ]
+                },
+                {
+                  title: "Credit Reports and Disputes",
+                  content: "Your credit report contains your credit history and is used to calculate your score. Errors can significantly impact your financial opportunities.",
+                  examples: [
+                    "Identity theft or fraudulent accounts",
+                    "Incorrect payment status or dates",
+                    "Duplicate accounts or entries",
+                    "Outdated negative information"
+                  ],
+                  tips: [
+                    "Review your credit reports quarterly for errors",
+                    "Dispute inaccuracies immediately in writing",
+                    "Keep documentation of all dispute communications",
+                    "Follow up on disputes until resolved"
+                  ]
+                }
+              ],
+              keyTakeaways: [
+                "Credit scores impact loan rates, insurance, and employment opportunities",
+                "Payment history is the most important credit factor",
+                "Regular credit monitoring helps catch errors early",
+                "Understanding credit fundamentals empowers strategic financial decisions"
+              ],
+              actionItems: [
+                "Check your credit reports from all three bureaus",
+                "Set up automatic payments to ensure on-time payments",
+                "Review your credit utilization and create reduction plan",
+                "Create a calendar for quarterly credit report reviews"
+              ],
+              resources: [
+                { 
+                  title: 'Free Credit Reports', 
+                  type: 'tool',
+                  description: 'Official site for free annual credit reports',
+                  url: 'https://www.annualcreditreport.com' 
+                },
+                { 
+                  title: 'Credit Score Guide', 
+                  type: 'article',
+                  description: 'Comprehensive guide to understanding credit scores',
+                  url: 'https://www.consumerfinance.gov/learn-about-credit/' 
+                }
+              ]
+            },
+            objectives: [
+              "Understand credit score components and calculation",
+              "Learn to read and interpret credit reports",
+              "Develop strategies for maintaining good credit",
+              "Create systems for credit monitoring and maintenance"
+            ],
+            keyConcepts: [
+              "Credit scoring models",
+              "Credit report analysis",
+              "Credit building strategies",
+              "Credit monitoring systems"
+            ],
+            durationMinutes: 60,
+            displayOrder: 1
+          }
+        ]
       },
       // INTERMEDIATE LEVEL (8 courses)
       {
