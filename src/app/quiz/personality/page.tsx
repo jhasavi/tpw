@@ -270,6 +270,7 @@ export default function PersonalityQuizPage() {
     return recommendations[type as keyof typeof recommendations] || []
   }
 
+  // Calculate derived state before return
   const currentQ = questions[currentQuestion]
   const progress = ((currentQuestion + 1) / questions.length) * 100
   const isAnswered = answers[currentQ?.id]

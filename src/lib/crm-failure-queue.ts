@@ -3,6 +3,31 @@
 
 import { createClient } from '@/lib/supabase/server'
 
+declare global {
+  var process: {
+    env: {
+      JANAGANA_API_URL: string
+      JANAGANA_API_KEY: string
+      NODE_ENV: string
+      VERCEL_URL?: string
+    }
+  }
+}
+
+interface DatabaseRow {
+  id: string
+  timestamp: string
+  endpoint: string
+  method: string
+  payload: any
+  error: string
+  status_code?: number
+  retry_count: number
+  user_id?: string
+  email?: string
+  created_at?: string
+}
+
 interface FailedCRMRequest {
   id: string
   timestamp: string
@@ -87,7 +112,7 @@ export class CRMFailureQueue {
         return []
       }
 
-      return data?.map(row => ({
+      return data?.map((row: DatabaseRow) => ({
         id: row.id,
         timestamp: row.timestamp,
         endpoint: row.endpoint,
@@ -153,16 +178,6 @@ export class CRMFailureQueue {
    */
   async getStats(): Promise<FailureQueueStats> {
     try {
-      // Skip during static generation (no request context)
-      if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL) {
-        return {
-          totalFailed: 0,
-          pendingRetries: 0,
-          oldestFailure: null,
-          recentFailures: []
-        }
-      }
-      
       const supabase = await createClient()
       
       // Get total count
@@ -199,7 +214,7 @@ export class CRMFailureQueue {
         totalFailed: totalFailed || 0,
         pendingRetries: pendingRetries || 0,
         oldestFailure: oldest?.created_at || null,
-        recentFailures: recent?.map(row => ({
+        recentFailures: recent?.map((row: DatabaseRow) => ({
           id: row.id,
           timestamp: row.timestamp,
           endpoint: row.endpoint,
@@ -213,6 +228,16 @@ export class CRMFailureQueue {
         })) || []
       }
     } catch (error) {
+      // Handle cookies error during static generation
+      if (error instanceof Error && error.message.includes('cookies')) {
+        return {
+          totalFailed: 0,
+          pendingRetries: 0,
+          oldestFailure: null,
+          recentFailures: []
+        }
+      }
+      
       console.error('CRM failure queue stats error:', error)
       return {
         totalFailed: 0,
