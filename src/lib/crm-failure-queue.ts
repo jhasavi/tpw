@@ -172,7 +172,12 @@ export class CRMFailureQueue {
   async getStats(): Promise<FailureQueueStats> {
     try {
       // Check if we're in static generation context
-      if (typeof window === 'undefined' && !(globalThis as any).requestId) {
+      const isStaticGeneration = typeof window === 'undefined' && 
+        typeof globalThis !== 'undefined' && 
+        !(globalThis as any).requestId && 
+        !(globalThis as any).fetch
+
+      if (isStaticGeneration) {
         return {
           totalFailed: 0,
           pendingRetries: 0,
@@ -183,18 +188,16 @@ export class CRMFailureQueue {
       
       const supabase = await createClient()
       
-      // Get total count
+      // Get all stats in separate queries for reliability
       const { count: totalFailed, error: countError } = await supabase
         .from('crm_failed_requests')
         .select('*', { count: 'exact', head: true })
 
-      // Get pending retries
       const { count: pendingRetries, error: pendingError } = await supabase
         .from('crm_failed_requests')
         .select('*', { count: 'exact', head: true })
         .lt('retry_count', 3)
 
-      // Get oldest failure
       const { data: oldest, error: oldestError } = await supabase
         .from('crm_failed_requests')
         .select('created_at')
@@ -202,7 +205,6 @@ export class CRMFailureQueue {
         .limit(1)
         .maybeSingle()
 
-      // Get recent failures
       const { data: recent, error: recentError } = await supabase
         .from('crm_failed_requests')
         .select('*')
@@ -282,13 +284,23 @@ export class CRMFailureQueue {
       throw new Error('Missing required environment variables: JANAGANA_API_URL and JANAGANA_API_KEY')
     }
 
+    // Validate payload before JSON.stringify
+    if (!failedRequest.payload || typeof failedRequest.payload !== 'object') {
+      throw new Error('Invalid payload: must be a non-null object')
+    }
+
+    const serializedPayload = JSON.stringify(failedRequest.payload)
+    if (serializedPayload.length > 10000) {
+      throw new Error('Payload too large for retry (max 10KB)')
+    }
+
     const response = await fetch(`${apiUrl}${failedRequest.endpoint}`, {
       method: failedRequest.method,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
-      body: JSON.stringify(failedRequest.payload)
+      body: serializedPayload
     })
 
     if (!response.ok) {
