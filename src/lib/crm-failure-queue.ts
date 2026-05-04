@@ -3,17 +3,6 @@
 
 import { createClient } from '@/lib/supabase/server'
 
-declare global {
-  var process: {
-    env: {
-      JANAGANA_API_URL: string
-      JANAGANA_API_KEY: string
-      NODE_ENV: string
-      VERCEL_URL?: string
-    }
-  }
-}
-
 interface DatabaseRow {
   id: string
   timestamp: string
@@ -178,6 +167,16 @@ export class CRMFailureQueue {
    */
   async getStats(): Promise<FailureQueueStats> {
     try {
+      // Check if we're in static generation context
+      if (typeof window === 'undefined' && !(globalThis as any).requestId) {
+        return {
+          totalFailed: 0,
+          pendingRetries: 0,
+          oldestFailure: null,
+          recentFailures: []
+        }
+      }
+      
       const supabase = await createClient()
       
       // Get total count
@@ -271,11 +270,11 @@ export class CRMFailureQueue {
     const delay = this.calculateRetryDelay(failedRequest.retryCount)
     await new Promise(resolve => setTimeout(resolve, delay))
 
-    const response = await fetch(`${process.env.JANAGANA_API_URL}${failedRequest.endpoint}`, {
+    const response = await fetch(`${(globalThis as any).process?.env?.JANAGANA_API_URL || ''}${failedRequest.endpoint}`, {
       method: failedRequest.method,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.JANAGANA_API_KEY}`,
+        'Authorization': `Bearer ${(globalThis as any).process?.env?.JANAGANA_API_KEY || ''}`,
       },
       body: JSON.stringify(failedRequest.payload)
     })

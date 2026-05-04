@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { SmartLeadCapture } from '@/components/SmartLeadCapture'
 import { logQuizStarted, logQuizCompleted, logPersonalityResult } from '@/lib/crm-events-client'
@@ -29,12 +29,12 @@ export default function PersonalityQuizPage() {
   const [quizStartTime, setQuizStartTime] = useState<number | null>(null)
 
   // Log quiz start on first render
-  useState(() => {
+  useEffect(() => {
     if (!quizStartTime) {
       setQuizStartTime(Date.now())
       logPersonalityQuizStart()
     }
-  })
+  }, [])
 
   const logPersonalityQuizStart = async () => {
     try {
