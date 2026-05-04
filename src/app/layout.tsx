@@ -20,11 +20,11 @@ const janaganaApiUrl = process.env.NEXT_PUBLIC_JANAGANA_API_URL || 'https://jana
 
 export const metadata: Metadata = {
   title: {
-    default: "The Purple Wings - Women's Financial Empowerment",
+    default: "The Purple Wings - Shalini Jha | Women's Financial Empowerment in Needham",
     template: "%s | The Purple Wings",
   },
-  description: "Free online financial literacy courses for women. Learn budgeting, investing, retirement planning, and wealth building at your own pace. Based in Needham, MA.",
-  keywords: ["financial literacy", "women empowerment", "finance education", "budgeting", "investing", "retirement planning", "Needham MA", "FINRA"],
+  description: "Shalini Jha's The Purple Wings offers free financial education for women and girls in Needham. Achieve financial independence and self-empowerment through our comprehensive courses on budgeting, investing, and wealth building.",
+  keywords: ["Shalini Jha", "women empowerment", "financial education", "Needham", "girl empowerment", "financial independence", "self-independent women", "women financial literacy", "budgeting courses", "investing education", "retirement planning", "wealth building", "financial empowerment"],
   icons: {
     icon: '/images/logo-nobg.png',
     shortcut: '/images/logo-nobg.png',
@@ -43,20 +43,20 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org',
-    title: "The Purple Wings - Women's Financial Empowerment",
-    description: 'Free online financial literacy courses for women. Learn budgeting, investing, and wealth building. Based in Needham, MA.',
+    title: "The Purple Wings - Shalini Jha | Women's Financial Empowerment in Needham",
+    description: 'Shalini Jha provides free financial education for women and girls in Needham. Achieve financial independence and self-empowerment through comprehensive courses.',
     siteName: 'The Purple Wings',
     images: [{ 
       url: '/images/Women-fin.png',
       width: 1200,
       height: 630,
-      alt: 'The Purple Wings - Free Financial Education for Women',
+      alt: 'Shalini Jha - The Purple Wings - Free Financial Education for Women',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "The Purple Wings - Women's Financial Empowerment",
-    description: 'Free online financial literacy courses for women. Based in Needham, MA.',
+    title: "The Purple Wings - Shalini Jha | Women's Financial Empowerment",
+    description: 'Shalini Jha offers free financial education for women and girls in Needham. Achieve financial independence and self-empowerment.',
     images: ['/images/Women-fin.png'],
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'),
@@ -83,6 +83,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://db.ckdshqbrxctjadljjhhy.supabase.co" />
         <link rel="preconnect" href="https://db.ckdshqbrxctjadljjhhy.supabase.co" />
+        <meta name="theme-color" content="#9333ea" />
+        <meta name="author" content="Shalini Jha" />
+        <meta name="robots" content="index, follow" />
         <StructuredData />
         <GoogleAnalytics />
         <Script

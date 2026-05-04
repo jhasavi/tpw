@@ -1,7 +1,7 @@
 // Server-side durable failure handling for CRM operations
 // Replaces localStorage-based persistence with server-side storage
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient, SupabaseClient } from '@supabase/supabase-js'
 
 interface DatabaseRow {
   id: string
@@ -43,6 +43,29 @@ interface FailureQueueStats {
  */
 export class CRMFailureQueue {
   private static instance: CRMFailureQueue | null = null
+  private adminClient: SupabaseClient | null = null
+
+  private getAdminClient(): SupabaseClient {
+    if (this.adminClient) {
+      return this.adminClient
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (!supabaseUrl || !serviceRoleKey) {
+      throw new Error('Missing required Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY')
+    }
+
+    this.adminClient = createSupabaseClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
+
+    return this.adminClient
+  }
 
   static getInstance(): CRMFailureQueue {
     if (!CRMFailureQueue.instance) {
@@ -60,7 +83,7 @@ export class CRMFailureQueue {
    */
   async addFailedRequest(request: FailedCRMRequest): Promise<void> {
     try {
-      const supabase = await createClient()
+      const supabase = this.getAdminClient()
       
       const { error } = await supabase
         .from('crm_failed_requests')
@@ -91,7 +114,7 @@ export class CRMFailureQueue {
    */
   async getFailedRequests(maxRetries: number = 3): Promise<FailedCRMRequest[]> {
     try {
-      const supabase = await createClient()
+      const supabase = this.getAdminClient()
       
       const { data, error } = await supabase
         .from('crm_failed_requests')
@@ -128,7 +151,7 @@ export class CRMFailureQueue {
    */
   async removeFailedRequest(requestId: string): Promise<void> {
     try {
-      const supabase = await createClient()
+      const supabase = this.getAdminClient()
       
       const { error } = await supabase
         .from('crm_failed_requests')
@@ -148,7 +171,7 @@ export class CRMFailureQueue {
    */
   async updateRetryCount(requestId: string, retryCount: number): Promise<void> {
     try {
-      const supabase = await createClient()
+      const supabase = this.getAdminClient()
       
       const { error } = await supabase
         .from('crm_failed_requests')
@@ -171,22 +194,7 @@ export class CRMFailureQueue {
    */
   async getStats(): Promise<FailureQueueStats> {
     try {
-      // Check if we're in static generation context
-      const isStaticGeneration = typeof window === 'undefined' && 
-        typeof globalThis !== 'undefined' && 
-        !(globalThis as any).requestId && 
-        !(globalThis as any).fetch
-
-      if (isStaticGeneration) {
-        return {
-          totalFailed: 0,
-          pendingRetries: 0,
-          oldestFailure: null,
-          recentFailures: []
-        }
-      }
-      
-      const supabase = await createClient()
+      const supabase = this.getAdminClient()
       
       // Get all stats in separate queries for reliability
       const { count: totalFailed, error: countError } = await supabase
@@ -233,16 +241,6 @@ export class CRMFailureQueue {
         })) || []
       }
     } catch (error) {
-      // Handle cookies error during static generation
-      if (error instanceof Error && error.message.includes('cookies')) {
-        return {
-          totalFailed: 0,
-          pendingRetries: 0,
-          oldestFailure: null,
-          recentFailures: []
-        }
-      }
-      
       console.error('CRM failure queue stats error:', error)
       return {
         totalFailed: 0,
@@ -322,7 +320,7 @@ export class CRMFailureQueue {
    */
   async cleanupOldFailures(): Promise<void> {
     try {
-      const supabase = await createClient()
+      const supabase = this.getAdminClient()
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
       
       const { error } = await supabase

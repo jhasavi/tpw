@@ -10,9 +10,9 @@ import DonateButton from '@/components/DonateButton'
 import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'The Purple Wings - Free Financial Education for Women | Needham, MA',
-  description: 'Free online financial literacy courses for women — budgeting, investing, retirement planning, and wealth building. Start learning today, no credit card needed.',
-  keywords: 'financial literacy for women, free finance courses for women, budgeting for women, investing for women, retirement planning, women financial empowerment, Needham MA, Massachusetts nonprofit',
+  title: 'The Purple Wings - Shalini Jha | Free Financial Education for Women | Needham, MA',
+  description: 'Shalini Jha offers free financial education for women and girls in Needham. Achieve financial independence and self-empowerment through comprehensive courses on budgeting, investing, and wealth building.',
+  keywords: 'Shalini Jha, women empowerment, financial education, Needham, girl empowerment, financial independence, self-independent women, women financial literacy, budgeting courses, investing education, retirement planning, wealth building, financial empowerment',
   openGraph: {
     title: 'The Purple Wings - Free Financial Education for Women',
     description: 'Free financial literacy courses helping women build confidence, independence, and security.',

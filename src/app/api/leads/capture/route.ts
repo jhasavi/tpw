@@ -14,7 +14,7 @@ import { crmClient } from '@/lib/crm-retry-server'
 const smartLeadSchema = z.object({
   email: z.string().email(),
   firstName: z.string().min(1),
-  trigger: z.enum(['quiz_completion', 'personality_results', 'course_recommendation', 'progress_milestone']),
+  trigger: z.enum(['quiz_completion', 'personality_results', 'course_recommendation', 'progress_milestone', 'exit_intent']),
   value: z.string().optional(),
   context: z.any().optional(),
   source: z.string().default('smart-capture'),

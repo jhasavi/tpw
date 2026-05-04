@@ -26,7 +26,7 @@ interface FailedRequest {
 
 // JanaGana API Configuration
 export const CRM_CONFIG = {
-  API_URL: process.env.JANAGANA_API_URL || 'https://janagana.namasteneedham.com/api',
+  API_URL: process.env.JANAGANA_API_URL,
   API_KEY: process.env.JANAGANA_API_KEY,
   RETRY_CONFIG: {
     maxRetries: 3,
@@ -115,18 +115,25 @@ export class CRMClient {
     return CRMClient.instance
   }
 
-  constructor() {
-    // Process retry queue on initialization
-    this.failureQueue.processRetryQueue()
+  private getRequiredConfig(): { apiUrl: string; apiKey: string } {
+    const apiUrl = CRM_CONFIG.API_URL
+    const apiKey = CRM_CONFIG.API_KEY
+
+    if (!apiUrl || !apiKey) {
+      throw new Error('Missing required environment variables: JANAGANA_API_URL and JANAGANA_API_KEY')
+    }
+
+    return { apiUrl, apiKey }
   }
 
   async post(endpoint: string, payload: any, context?: { userId?: string; email?: string }): Promise<any> {
     return this.withRetryTracking('POST', endpoint, payload, async () => {
-      const response = await fetch(`${CRM_CONFIG.API_URL}${endpoint}`, {
+      const { apiUrl, apiKey } = this.getRequiredConfig()
+      const response = await fetch(`${apiUrl}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${CRM_CONFIG.API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify(payload)
       })
@@ -145,10 +152,11 @@ export class CRMClient {
 
   async get(endpoint: string, context?: { userId?: string; email?: string }): Promise<any> {
     return this.withRetryTracking('GET', endpoint, null, async () => {
-      const response = await fetch(`${CRM_CONFIG.API_URL}${endpoint}`, {
+      const { apiUrl, apiKey } = this.getRequiredConfig()
+      const response = await fetch(`${apiUrl}${endpoint}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${CRM_CONFIG.API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         }
       })
 
@@ -166,11 +174,12 @@ export class CRMClient {
 
   async patch(endpoint: string, payload: any, context?: { userId?: string; email?: string }): Promise<any> {
     return this.withRetryTracking('PATCH', endpoint, payload, async () => {
-      const response = await fetch(`${CRM_CONFIG.API_URL}${endpoint}`, {
+      const { apiUrl, apiKey } = this.getRequiredConfig()
+      const response = await fetch(`${apiUrl}${endpoint}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${CRM_CONFIG.API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify(payload)
       })
