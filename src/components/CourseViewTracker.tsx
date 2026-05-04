@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { logCourseViewed } from '@/lib/crm-events'
+import { logCourseViewed } from '@/lib/crm-events-client'
 
 interface CourseViewTrackerProps {
   courseSlug: string

@@ -3,11 +3,11 @@ import { z } from 'zod'
 import { 
   determineLifecycleStage, 
   mapToCRMContact, 
-  crmClient, 
   CRMError,
   type CRMContact,
   type LifecycleStage 
 } from '@/lib/crm-utils'
+import { crmClient } from '@/lib/crm-retry-server'
 
 // Schema for profile update
 const profileSchema = z.object({
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof CRMError) {
       return NextResponse.json({
         success: true,
-        message: 'Profile update received. We'll process it shortly.',
+        message: 'Profile update received. We\'ll process it shortly.',
         warning: 'CRM temporarily unavailable, request queued for retry',
       })
     }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { crmEventLogger, EventType } from '@/lib/crm-events'
+import { crmEventLoggerClient, EventType } from '@/lib/crm-events-client'
 import { CRMFieldMapper } from '@/lib/crm-fields'
 
 interface ExitIntentPopupProps {
@@ -102,7 +102,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
       if (response.ok) {
         // Log exit-intent submission to CRM
         try {
-          await crmEventLogger.logEvent({
+          await crmEventLoggerClient.logEvent({
             eventType: EventType.EXIT_INTENT_SUBMITTED,
             userId: userId || 'anonymous',
             email: userEmail || email,

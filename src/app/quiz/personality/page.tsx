@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { SmartLeadCapture } from '@/components/SmartLeadCapture'
-import { logQuizStarted, logQuizCompleted, logPersonalityResult } from '@/lib/crm-events'
+import { logQuizStarted, logQuizCompleted, logPersonalityResult } from '@/lib/crm-events-client'
 import { STANDARD_VALUES } from '@/lib/crm-fields'
 
 interface Question {

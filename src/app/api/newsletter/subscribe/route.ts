@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof CRMError) {
       return NextResponse.json({
         success: true,
-        message: 'Newsletter subscription received. We'll process it shortly.',
+        message: 'Newsletter subscription received. We\'ll process it shortly.',
         warning: 'CRM temporarily unavailable, request queued for retry',
       })
     }

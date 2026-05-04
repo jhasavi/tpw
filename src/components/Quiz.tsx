@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { logQuizStarted, logQuizCompleted } from '@/lib/crm-events'
+import { logQuizStarted, logQuizCompleted } from '@/lib/crm-events-client'
 import { STANDARD_VALUES } from '@/lib/crm-fields'
 
 interface QuizQuestion {

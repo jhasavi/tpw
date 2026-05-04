@@ -8,7 +8,7 @@ import {
   type CRMContact,
   type LifecycleStage 
 } from '@/lib/crm-utils'
-import { crmClient } from '@/lib/crm-retry'
+import { crmClient } from '@/lib/crm-retry-server'
 
 // Schema for smart lead capture
 const smartLeadSchema = z.object({
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof CRMError) {
       return NextResponse.json({
         success: true,
-        message: 'Smart lead capture received. We'll process it shortly.',
+        message: 'Smart lead capture received. We\'ll process it shortly.',
         warning: 'CRM temporarily unavailable, request queued for retry',
       })
     }
