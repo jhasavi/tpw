@@ -162,7 +162,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
           <div className="text-center mb-6">
             <div className="text-4xl mb-3">🎁</div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Before You Go...</h3>
-            <p className="text-gray-600 text-sm">Get our free financial planning guide!</p>
+            <p className="text-gray-700 text-sm">Get our free financial planning guide!</p>
           </div>
 
           {/* Value Proposition */}
@@ -198,7 +198,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
                 onChange={(e) => setMarketingConsent(e.target.checked)}
                 className="mt-1 h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
               />
-              <label htmlFor="marketing-consent" className="text-sm text-gray-600">
+              <label htmlFor="marketing-consent" className="text-sm text-gray-700">
                 I'd like to receive financial tips and resources via email
               </label>
             </div>
