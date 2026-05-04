@@ -49,6 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/get-involved`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/contact`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,

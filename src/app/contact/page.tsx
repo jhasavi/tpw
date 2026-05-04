@@ -1,11 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 
 // Note: Metadata must be added in a parent layout or via dynamic routes for client components
 
+const SUBJECT_OPTIONS = new Set(['general', 'partnership', 'volunteer', 'donation', 'technical', 'feedback', 'other'])
+
 export default function ContactPage() {
+  const searchParams = useSearchParams()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,6 +18,25 @@ export default function ContactPage() {
   })
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    const requestedSubject = searchParams.get('subject')?.toLowerCase()
+
+    if (!requestedSubject || !SUBJECT_OPTIONS.has(requestedSubject)) {
+      return
+    }
+
+    setFormData((current) => {
+      if (current.subject === requestedSubject) {
+        return current
+      }
+
+      return {
+        ...current,
+        subject: requestedSubject,
+      }
+    })
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -251,6 +274,7 @@ export default function ContactPage() {
                     <option value="general">General Inquiry</option>
                     <option value="partnership">Partnership Opportunity</option>
                     <option value="volunteer">Volunteer/Teach</option>
+                    <option value="donation">Donation Support</option>
                     <option value="technical">Technical Support</option>
                     <option value="feedback">Feedback</option>
                     <option value="other">Other</option>

@@ -29,18 +29,20 @@ export default function DonateButton({
     lg: "px-8 py-4 text-lg"
   }
 
-  // PayPal donation link - replace with your actual PayPal link
-  const paypalLink = "https://www.paypal.com/donate/?hosted_button_id=YOUR_BUTTON_ID"
+  const donationUrl = process.env.NEXT_PUBLIC_PAYPAL_DONATION_URL?.trim()
+  const hasLiveDonationUrl = Boolean(donationUrl)
+  const href = hasLiveDonationUrl ? donationUrl : '/contact?subject=donation'
+  const label = hasLiveDonationUrl ? 'Donate Now' : 'Contact Us to Donate'
 
   return (
-    <a
-      href={paypalLink}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      href={href}
+      target={hasLiveDonationUrl ? '_blank' : undefined}
+      rel={hasLiveDonationUrl ? 'noopener noreferrer' : undefined}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
     >
       {showIcon && <span className="mr-2">💜</span>}
-      Donate via PayPal
-    </a>
+      {label}
+    </Link>
   )
 }

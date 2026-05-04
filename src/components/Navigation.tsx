@@ -78,7 +78,7 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-1">
-            {navigationConfig.map((item) => {
+{navigationConfig.map((item) => {
               const isActive = item.isActive ? item.isActive(pathname) : false
               
               if (item.dropdown) {
@@ -213,7 +213,7 @@ export default function Navigation() {
       {menuOpen && (
         <div className="md:hidden border-t border-purple-100">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navigationConfig.map((item) => {
+{navigationConfig.map((item) => {
               const isActive = item.isActive ? item.isActive(pathname) : false
               
               if (item.dropdown) {
