@@ -123,7 +123,7 @@ export default function PersonalityQuizPage() {
   ]
 
   const handleAnswer = (questionId: string, answer: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: answer }))
+    setAnswers((prev: { [key: string]: string }) => ({ ...prev, [questionId]: answer }))
   }
 
   const calculatePersonality = (): AssessmentResult => {
@@ -305,10 +305,10 @@ export default function PersonalityQuizPage() {
           <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Your Strengths</h3>
             <div className="grid md:grid-cols-2 gap-4">
-              {result.strengths.map((strength, index) => (
+              {result.strengths.map((strengthItem: string, index: number) => (
                 <div key={index} className="flex items-center space-x-3 bg-green-50 rounded-lg p-4">
                   <span className="text-2xl">✅</span>
-                  <span className="text-gray-800 font-medium">{strength}</span>
+                  <span className="text-gray-800 font-medium">{strengthItem}</span>
                 </div>
               ))}
             </div>
@@ -318,7 +318,7 @@ export default function PersonalityQuizPage() {
           <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Recommended Courses for You</h3>
             <div className="grid md:grid-cols-2 gap-4">
-              {getRecommendedCourses(result.personalityType).map((course, index) => (
+              {getRecommendedCourses(result.personalityType).map((course: string, index: number) => (
                 <div key={index} className="flex items-center space-x-3 bg-purple-50 rounded-lg p-4">
                   <span className="text-2xl">📚</span>
                   <span className="text-gray-800 font-medium">{course}</span>
