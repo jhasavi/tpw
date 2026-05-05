@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { NewsletterForm } from '@/components/NewsletterForm'
+import { EnhancedNewsletterForm } from '@/components/EnhancedNewsletterForm'
 
 export default function NewsletterSubscribePage() {
   return (
@@ -20,105 +20,124 @@ export default function NewsletterSubscribePage() {
             <div className="text-center text-white px-4">
               <div className="text-6xl mb-4">📨</div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">Weekly Financial Wisdom</h1>
-              <p className="text-xl text-purple-100">Join thousands of women building financial confidence</p>
+              <p className="text-xl text-purple-100">Join 500+ women building financial confidence</p>
             </div>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Benefits Section */}
+          {/* Enhanced Benefits Section */}
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Subscribe?</h2>
-            
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">📚</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Weekly Financial Tips</h3>
-                  <p className="text-gray-600 text-sm">
-                    Get practical, actionable advice on budgeting, investing, and building wealth — delivered every week.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">🎓</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Exclusive Course Updates</h3>
-                  <p className="text-gray-600 text-sm">
-                    Be the first to know about new lessons, workshops, and events happening in our community.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">👩‍👩‍👧‍👧</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Success Stories</h3>
-                  <p className="text-gray-600 text-sm">
-                    Read inspiring stories from women who transformed their financial lives through education.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">🎯</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Free Resources</h3>
-                  <p className="text-gray-600 text-sm">
-                    Access to exclusive downloadable guides, templates, and financial planning tools.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
-              <p className="text-center text-gray-700">
-                <strong className="text-purple-700">Join 500+ women</strong> who receive our weekly newsletter!
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl p-6">
+              <h2 className="text-3xl font-bold mb-4">Why Subscribe?</h2>
+              <p className="text-purple-100">
+                Join thousands of women transforming their financial lives, one email at a time.
               </p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">📚</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Weekly Financial Tips</h3>
+                    <p className="text-gray-600 text-sm">
+                      Practical, actionable advice on budgeting, investing, and building wealth — delivered every week.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">🎓</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Exclusive Course Updates</h3>
+                    <p className="text-gray-600 text-sm">
+                      Be the first to know about new lessons, workshops, and events in our community.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">👩‍👩‍👧‍👧</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Success Stories</h3>
+                    <p className="text-gray-600 text-sm">
+                      Inspiring stories from women who transformed their financial lives through education.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-pink-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">🎯</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Free Resources</h3>
+                    <p className="text-gray-600 text-sm">
+                      Exclusive downloadable guides, templates, and financial planning tools.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border-2 border-purple-200">
+              <div className="flex items-center justify-center gap-3">
+                <div className="text-2xl">⭐</div>
+                <p className="text-center text-gray-700 font-medium">
+                  <strong className="text-purple-700">500+ women</strong> already subscribed!
+                </p>
+                <div className="text-2xl">⭐</div>
+              </div>
             </div>
           </div>
 
-          {/* Newsletter Widget */}
+          {/* Enhanced Newsletter Widget */}
           <div>
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-purple-100">
               <div className="text-center mb-8">
                 <div className="text-6xl mb-4">📬</div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  Subscribe to Our Newsletter
+                  Get Weekly Financial Wisdom
                 </h1>
                 <p className="text-gray-600">
-                  Get weekly financial tips, course updates, and exclusive content delivered to your inbox.
+                  Join our community of empowered women building financial confidence
                 </p>
               </div>
 
-              <NewsletterForm 
-                title="Subscribe to Our Newsletter"
-                description="Get weekly financial tips, course updates, and exclusive content"
+              <EnhancedNewsletterForm 
+                title="Start Your Financial Journey"
+                description="Get practical tips and exclusive content every week"
+                variant="full"
+                showBenefits={false}
+                source="newsletter-page"
+                onSuccess={() => {
+                  // Optional: Track conversion or redirect
+                  console.log('Newsletter subscription successful')
+                }}
               />
 
-              <p className="text-xs text-gray-500 text-center mt-4">
-                By subscribing, you agree to receive emails from The Purple Wings. 
-                You can unsubscribe at any time.
-              </p>
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-600 text-center">
+                  <strong>Privacy Promise:</strong> We respect your inbox. No spam, unsubscribe anytime.
+                </p>
+              </div>
             </div>
 
             <div className="mt-6 text-center">
-              <Link href="/" className="text-purple-600 hover:text-purple-700 text-sm font-medium">
+              <Link href="/" className="text-purple-600 hover:text-purple-700 text-sm font-medium flex items-center gap-2 justify-center">
                 ← Back to Home
               </Link>
             </div>

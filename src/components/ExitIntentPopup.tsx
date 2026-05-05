@@ -83,19 +83,21 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!email || !marketingConsent) return
 
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/leads/capture', {
+      // Use newsletter API for consistency
+      const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          firstName: 'Friend', // Generic since we don't have name
-          trigger: 'exit_intent',
+          firstName: 'Friend',
+          lastName: 'Visitor',
           source: 'exit-popup',
-          marketingConsent: marketingConsent // Pass consent state
+          tags: ['newsletter-subscriber', 'exit-intent-capture'],
+          marketingConsent: marketingConsent
         })
       })
 
@@ -127,8 +129,16 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
         setIsVisible(false)
         // Show success message
         setTimeout(() => {
-          alert('Thanks! Check your email for your free guide.')
+          alert('🎉 Thanks! Check your email for your free financial planning guide.')
         }, 300)
+      } else {
+        const result = await response.json()
+        if (result.error?.includes('already subscribed')) {
+          setIsVisible(false)
+          setTimeout(() => {
+            alert('📬 You\'re already subscribed! Check your email for our latest newsletter.')
+          }, 300)
+        }
       }
     } catch (error) {
       console.error('Exit intent capture error:', error)
