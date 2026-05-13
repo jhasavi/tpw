@@ -2,14 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,19 +16,21 @@ export default function ForgotPasswordPage() {
     setError('')
 
     try {
-      const redirectTo = typeof window !== 'undefined'
-        ? `${window.location.origin}/auth/login`
-        : `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'}/auth/login`
-
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo,
+      const response = await fetch('/api/auth/forgot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
       })
 
-      if (error) {
-        setError(error.message || 'Unable to send password reset link.')
+      const result = await response.json()
+      if (!response.ok) {
+        setError(result.error || 'Unable to send password reset link.')
+        if (result.hint) {
+          setError(`${result.error} ${result.hint}`)
+        }
         setStatus('error')
       } else {
-        setMessage('If that email exists, we sent a password reset link to your inbox.')
+        setMessage(result.message || 'If that email exists, we sent a password reset link to your inbox.')
         setStatus('success')
       }
     } catch (err) {
