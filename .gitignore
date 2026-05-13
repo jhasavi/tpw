@@ -91,3 +91,6 @@ convert_backup_*
 courses_backup_*
 
 /purple-wings-tools
+
+# Supabase CLI temporary files
+supabase/.temp
