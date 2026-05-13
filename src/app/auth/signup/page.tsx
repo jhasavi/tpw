@@ -22,58 +22,24 @@ export default function SignupPage() {
     setMessage(null)
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: typeof window !== 'undefined' 
-            ? `${window.location.origin}/auth/callback`
-            : `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'}/auth/callback`,
-          data: {
-            full_name: fullName,
-          },
-        },
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName }),
       })
+      const result = await response.json()
 
-      if (error) {
-        console.error('Signup error:', error)
-        if (error.status === 429 || error.message.includes('rate limit') || error.message.includes('Too many')) {
-          setError('Rate limit reached. Please wait 5-10 minutes and try again, or use Google Sign In instead. Your interest has been noted!')
-        } else if (error.message.includes('already registered') || error.message.includes('already exists')) {
-          setError('An account with this email already exists. Please sign in instead.')
-        } else {
-          setError(error.message || 'An error occurred during signup. Please try again.')
-        }
+      if (!response.ok || result.error) {
+        const errorMessage = result.error || 'An error occurred during signup. Please try again.'
+        console.error('Signup error:', errorMessage)
+        setError(errorMessage)
         setLoading(false)
       } else {
-        if (data.user && !data.user.identities?.length) {
-          setError('An account with this email already exists. Please sign in instead.')
-          setLoading(false)
-        } else {
-          // Trigger unified CRM reconciliation (non-blocking)
-          try {
-            fetch('/api/auth/reconcile', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                email,
-                fullName,
-                authSource: 'email'
-              })
-            }).catch(err => {
-              console.warn('CRM reconciliation failed (signup):', err)
-              // Don't block signup
-            })
-          } catch (err) {
-            console.warn('CRM reconciliation error (signup):', err)
-            // Don't block signup
-          }
-
-          setMessage('Account created! Check your email to confirm, or you can sign in now.')
-          setTimeout(() => router.push('/auth/login'), 3000)
-        }
+        setMessage(result.message || 'Account created! You can sign in now.')
+        setTimeout(() => router.push('/auth/login'), 3000)
       }
     } catch (err) {
+      console.error('Signup request failed:', err)
       setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }

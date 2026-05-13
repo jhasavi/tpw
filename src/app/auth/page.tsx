@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { createMember } from '@/lib/janagana'
 
 function AuthContent() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
@@ -63,44 +62,27 @@ function AuthContent() {
     setLoading(true)
     setError(null)
     setMessage(null)
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: { full_name: fullName }
-      }
-    })
-    if (error) {
-      if (error.message.includes('already')) {
-        setError('Account exists. Please sign in.')
-        setMode('login')
-      } else {
-        setError(error.message)
-      }
-      setLoading(false)
-    } else {
-      if (data.user && !data.user.identities?.length) {
-        setError('Account exists. Please sign in.')
-        setMode('login')
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName }),
+      })
+      const result = await response.json()
+
+      if (!response.ok || result.error) {
+        const errorMessage = result.error || 'An error occurred during signup. Please try again.'
+        setError(errorMessage)
         setLoading(false)
       } else {
-        // Create member in JanaGana CRM
-        try {
-          const nameParts = fullName.split(' ')
-          await createMember({
-            email,
-            firstName: nameParts[0] || '',
-            lastName: nameParts.slice(1).join(' ') || '',
-          })
-        } catch (err) {
-          console.error('Failed to create JanaGana member:', err)
-          // Don't block signup if JanaGana fails
-        }
-        
-        setMessage('Account created! Check email to confirm, or sign in now.')
+        setMessage(result.message || 'Account created! You can sign in now.')
         setTimeout(() => setMode('login'), 2000)
       }
+    } catch (err) {
+      console.error('Signup request failed:', err)
+      setError('An unexpected error occurred. Please try again.')
+      setLoading(false)
     }
   }
 
