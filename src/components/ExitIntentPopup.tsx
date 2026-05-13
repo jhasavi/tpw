@@ -12,30 +12,64 @@ interface ExitIntentPopupProps {
 export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [marketingConsent, setMarketingConsent] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  // null = unknown, true = subscribed, false = not subscribed
+  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null)
 
-  // Get current user info
+  // Get current user info and check subscription status
   useEffect(() => {
-    const getCurrentUser = async () => {
+    const initUser = async () => {
       try {
         const { createClient } = await import('@/lib/supabase/client')
         const supabase = createClient()
         const { data: { user } } = await supabase.auth.getUser()
         if (user) {
           setUserId(user.id)
-          setUserEmail(user.email!)
+          setUserEmail(user.email ?? null)
+          // Pre-fill email field for logged-in users
+          setEmail(user.email ?? '')
+
+          // Derive first name from user metadata or email prefix
+          const metaName: string =
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            user.user_metadata?.first_name ||
+            ''
+          const derivedFirst = metaName.split(' ')[0] || user.email?.split('@')[0] || ''
+          setFirstName(derivedFirst)
+
+          // Check if already subscribed — if so, suppress the popup entirely
+          try {
+            const res = await fetch('/api/newsletter/check-status', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: user.email }),
+            })
+            const data = await res.json()
+            setIsSubscribed(data.isSubscribed === true)
+          } catch {
+            setIsSubscribed(false)
+          }
+        } else {
+          setIsSubscribed(false)
         }
       } catch (error) {
         console.error('Failed to get current user:', error)
+        setIsSubscribed(false)
       }
     }
-    getCurrentUser()
+    initUser()
   }, [])
 
   useEffect(() => {
+    // Don't attach listeners until subscription status is resolved
+    if (isSubscribed === null) return
+    // Already subscribed — never show
+    if (isSubscribed) return
     // Check if already shown this session
     if (showOnce && sessionStorage.getItem('exitIntentShown')) {
       return
@@ -79,7 +113,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
       clearTimeout(mouseLeaveTimer)
       clearTimeout(showTimer)
     }
-  }, [delay, showOnce])
+  }, [delay, showOnce, isSubscribed])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -93,8 +127,8 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          firstName: 'Friend',
-          lastName: 'Visitor',
+          firstName: firstName || 'Friend',
+          lastName: '',
           source: 'exit-popup',
           tags: ['newsletter-subscriber', 'exit-intent-capture'],
           marketingConsent: marketingConsent
@@ -171,7 +205,9 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
           {/* Icon and Title */}
           <div className="text-center mb-6">
             <div className="text-4xl mb-3">🎁</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Before You Go...</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              {firstName ? `${firstName}, before you go…` : 'Before You Go...'}
+            </h3>
             <p className="text-gray-700 text-sm">Get our free financial planning guide!</p>
           </div>
 

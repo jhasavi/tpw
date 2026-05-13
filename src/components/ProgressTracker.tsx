@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { celebrateLessonComplete, checkMilestones } from '@/lib/celebrations'
 import CourseProgressTracker from '@/components/CourseProgressTracker'
+import { toast } from 'sonner'
 
 interface ProgressTrackerProps {
   lessonId: string
@@ -343,14 +344,14 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
       }
       
       // Show success message
-      alert('🎉 Lesson completed! Great job!')
+      toast.success('Lesson completed! Great job! 🎉')
       
       // Refresh to show updated progress
       router.refresh()
     } catch (err) {
       console.error('Exception marking as completed:', err)
       setLoading(false)
-      alert('An unexpected error occurred. Please try again.')
+      toast.error('An unexpected error occurred. Please try again.')
     }
   }
 

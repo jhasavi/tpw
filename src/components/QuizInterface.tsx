@@ -383,6 +383,14 @@ export default function QuizInterface({
                       </p>
                     </div>
                   )}
+                  {!isCorrect && (
+                    <a
+                      href="/learn/womens-financial-literacy"
+                      className="inline-block mt-3 text-sm text-purple-600 hover:text-purple-800 font-medium underline underline-offset-2"
+                    >
+                      📚 Review lessons on {categoryName} →
+                    </a>
+                  )}
                 </div>
               );
             })}
@@ -468,6 +476,14 @@ export default function QuizInterface({
               {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
             </p>
             <p className="text-gray-700 mb-3">{currentQuestion.explanation}</p>
+            {!isCorrect && (
+              <a
+                href="/learn/womens-financial-literacy"
+                className="inline-block text-sm text-purple-700 font-medium hover:underline"
+              >
+                📚 Review lessons on {categoryName} →
+              </a>
+            )}
             {countdownToNext > 0 && (
               <p className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <Clock className="w-4 h-4" />

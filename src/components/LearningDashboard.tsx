@@ -146,7 +146,13 @@ export default function LearningDashboard() {
       }
     }
 
-    // Fetch recent courses
+    // Fetch recent courses with lesson counts and per-course progress
+    const { data: curriculumRow } = await supabase
+      .from('curricula')
+      .select('id')
+      .eq('slug', 'womens-financial-literacy')
+      .single()
+
     const { data: coursesData } = await supabase
       .from('courses')
       .select(`
@@ -156,16 +162,29 @@ export default function LearningDashboard() {
         description,
         curricula (
           slug
+        ),
+        lessons (
+          id
         )
       `)
-      .eq('curriculum_id', (await supabase
-        .from('curricula')
-        .select('id')
-        .eq('slug', 'womens-financial-literacy')
-        .single()).data?.id)
+      .eq('curriculum_id', curriculumRow?.id)
       .limit(3)
 
-    setRecentCourses(coursesData || [])
+    // Annotate each course with completed/total lesson counts
+    const completedLessonIds = new Set(
+      progressData?.filter(p => p.status === 'completed').map(p => p.lesson_id)
+    )
+    const enrichedCourses = (coursesData || []).map((course: any) => {
+      const lessonIds: string[] = (course.lessons || []).map((l: any) => l.id)
+      const completedInCourse = lessonIds.filter(id => completedLessonIds.has(id)).length
+      return {
+        ...course,
+        totalLessons: lessonIds.length,
+        completedLessons: completedInCourse,
+      }
+    })
+
+    setRecentCourses(enrichedCourses)
     setLoading(false)
   }
 
@@ -261,12 +280,26 @@ export default function LearningDashboard() {
             <Link
               key={course.id}
               href={`/learn/${(course.curricula as any)?.slug}/${course.slug}`}
-              className="border-2 border-gray-200 rounded-lg p-6 hover:border-purple-300 hover:shadow-md transition-all"
+              className="border-2 border-gray-200 rounded-lg p-6 hover:border-purple-300 hover:shadow-md transition-all flex flex-col"
             >
               <h3 className="font-bold text-gray-900 mb-2">{course.title}</h3>
-              <p className="text-sm text-gray-600 mb-4 line-clamp-2">{course.description}</p>
+              <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">{course.description}</p>
+              {course.totalLessons > 0 && (
+                <div className="mb-3">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <span>{course.completedLessons} / {course.totalLessons} lessons</span>
+                    <span>{Math.round((course.completedLessons / course.totalLessons) * 100)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-purple-500 h-2 rounded-full transition-all"
+                      style={{ width: `${Math.round((course.completedLessons / course.totalLessons) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               <span className="text-purple-600 text-sm font-medium">
-                View Course →
+                {course.completedLessons > 0 ? 'Continue →' : 'Start Course →'}
               </span>
             </Link>
           ))}
