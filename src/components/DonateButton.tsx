@@ -31,7 +31,7 @@ export default function DonateButton({
 
   const donationUrl = process.env.NEXT_PUBLIC_PAYPAL_DONATION_URL?.trim()
   const hasLiveDonationUrl = Boolean(donationUrl)
-  const href = hasLiveDonationUrl ? donationUrl : '/contact?subject=donation'
+  const href = donationUrl || '/contact?subject=donation'
   const label = hasLiveDonationUrl ? 'Donate Now' : 'Contact Us to Donate'
 
   return (

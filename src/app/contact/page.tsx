@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
 
 // Note: Metadata must be added in a parent layout or via dynamic routes for client components
 
 const SUBJECT_OPTIONS = new Set(['general', 'partnership', 'volunteer', 'donation', 'technical', 'feedback', 'other'])
 
 export default function ContactPage() {
-  const searchParams = useSearchParams()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,6 +18,9 @@ export default function ContactPage() {
   const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const searchParams = new URLSearchParams(window.location.search)
     const requestedSubject = searchParams.get('subject')?.toLowerCase()
 
     if (!requestedSubject || !SUBJECT_OPTIONS.has(requestedSubject)) {
@@ -36,7 +37,7 @@ export default function ContactPage() {
         subject: requestedSubject,
       }
     })
-  }, [searchParams])
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
