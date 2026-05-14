@@ -64,4 +64,10 @@ test.describe('Auth and Dashboard E2E', () => {
       expect(deleteError).toBeNull()
     }
   })
+
+  test('auth callback route redirects safely when no OAuth code is present', async ({ page }) => {
+    await page.goto('/auth/callback?returnTo=/auth/login')
+    await page.waitForURL('**/auth/login', { timeout: 15000 })
+    await expect(page.getByRole('heading', { name: /welcome back|sign in/i })).toBeVisible()
+  })
 })
