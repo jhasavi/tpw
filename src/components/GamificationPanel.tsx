@@ -45,9 +45,9 @@ export default function GamificationPanel({ user, className = '' }: Gamification
         .eq('user_id', user.id)
 
       const { data: streakData } = await supabase
-        .from('profiles')
+        .from('learning_streaks')
         .select('current_streak, longest_streak')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .single()
 
       // Calculate points (10 per lesson, 25 per quiz, 5 per day streak)
