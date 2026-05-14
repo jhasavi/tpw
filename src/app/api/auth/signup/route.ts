@@ -45,17 +45,19 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = data?.user?.id
+    let crmSync = undefined
+
     if (userId) {
-      try {
-        await handleCRMReconciliation(userId, 'email')
-      } catch (reconcileError) {
-        console.warn('CRM reconciliation failed after signup:', reconcileError)
+      crmSync = await handleCRMReconciliation(userId, 'email')
+      if (crmSync && crmSync.success === false) {
+        console.warn('CRM reconciliation failed after signup:', crmSync.warning || crmSync.message)
       }
     }
 
     return NextResponse.json({
       success: true,
       message: 'Account created successfully. You can sign in now.',
+      crmSync,
     })
   } catch (error) {
     console.error('Signup route exception:', error)

@@ -1,9 +1,10 @@
 // Shared CRM activity/event logging layer for Phase 2
 // Handles structured event logging to JanaGana CRM with standardized fields
 
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { crmClient } from '@/lib/crm-retry-server'
 import { crmFailureQueue } from '@/lib/crm-failure-queue'
+import { handleCRMReconciliation } from '@/lib/crm-reconciliation'
 
 // Standardized event types
 export enum EventType {
@@ -129,10 +130,16 @@ export class CRMEventLogger {
       }
 
       // Get user's CRM contact ID
-      const contactId = await this.getCRMContactId(event.userId, event.email)
+      let contactId = await this.getCRMContactId(event.userId, event.email)
       
       if (!contactId) {
-        console.warn(`No CRM contact found for user ${event.userId}, skipping event logging`)
+        console.warn(`No CRM contact found for user ${event.userId}, attempting CRM reconciliation before event logging`)
+        await handleCRMReconciliation(event.userId, 'other')
+        contactId = await this.getCRMContactId(event.userId, event.email)
+      }
+
+      if (!contactId) {
+        console.warn(`No CRM contact found for user ${event.userId} after reconciliation. Skipping event logging.`)
         return
       }
 
@@ -211,8 +218,11 @@ export class CRMEventLogger {
    */
   private async getCRMContactId(userId: string, email: string): Promise<string | null> {
     try {
-      const supabase = await createClient()
-      const { data: { user } } = await supabase.auth.admin.getUserById(userId)
+      const supabase = createAdminClient()
+      const { data: { user }, error } = await supabase.auth.admin.getUserById(userId)
+      if (error) {
+        console.warn('CRM event contact lookup failed via admin user fetch:', error.message)
+      }
       
       // Check app_metadata first (server-controlled)
       let contactId = user?.app_metadata?.janagana_contact_id
@@ -221,9 +231,9 @@ export class CRMEventLogger {
         return contactId
       }
 
-      // Fallback to email search
+      // Fallback to email search if contact ID is missing or user fetch failed
       const searchResponse = await crmClient.get(`/plugin/crm/contacts?search=${encodeURIComponent(email)}`)
-      if (searchResponse.contacts && searchResponse.contacts.length > 0) {
+      if (searchResponse?.contacts && searchResponse.contacts.length > 0) {
         return searchResponse.contacts[0].id
       }
 

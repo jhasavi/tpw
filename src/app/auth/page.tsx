@@ -12,6 +12,7 @@ function AuthContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
+  const [crmWarning, setCrmWarning] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnTo = searchParams.get('returnTo') || '/dashboard'
@@ -77,6 +78,11 @@ function AuthContent() {
         setLoading(false)
       } else {
         setMessage(result.message || 'Account created! You can sign in now.')
+        setCrmWarning(
+          result.crmSync?.success === false
+            ? result.crmSync.warning || result.crmSync.message || 'CRM sync did not complete.'
+            : null
+        )
         setTimeout(() => setMode('login'), 2000)
       }
     } catch (err) {
@@ -122,6 +128,11 @@ function AuthContent() {
         {message && (
           <div className="rounded-md bg-green-50 border border-green-200 p-4">
             <p className="text-sm text-green-600">{message}</p>
+          </div>
+        )}
+        {crmWarning && (
+          <div className="rounded-md bg-yellow-50 border border-yellow-200 p-4">
+            <p className="text-sm text-yellow-700">CRM warning: {crmWarning}</p>
           </div>
         )}
 
