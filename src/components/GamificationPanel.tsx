@@ -48,7 +48,7 @@ export default function GamificationPanel({ user, className = '' }: Gamification
         .from('learning_streaks')
         .select('current_streak, longest_streak')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
 
       // Calculate points (10 per lesson, 25 per quiz, 5 per day streak)
       const lessonsCompleted = progressData?.length || 0

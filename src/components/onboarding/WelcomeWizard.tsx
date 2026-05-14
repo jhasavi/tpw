@@ -228,7 +228,7 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
         user_id: user.id,
         current_step: step,
         completed_steps: completedSteps
-      })
+      }, { onConflict: 'user_id' })
   }
 
   const completeOnboarding = async () => {
@@ -242,7 +242,7 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
           completed_steps: WIZARD_STEPS.map(s => s.id),
           is_complete: true,
           completed_at: new Date().toISOString()
-        })
+        }, { onConflict: 'user_id' })
 
       onComplete?.()
       router.push('/dashboard')
@@ -268,6 +268,39 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
         : [...prev, goal]
     )
   }
+
+  useEffect(() => {
+    if (currentStep !== 3 || isLoading || recommendations.length === 0) {
+      return
+    }
+
+    const trackRecommendations = async () => {
+      try {
+        for (const rec of recommendations) {
+          await fetch('/api/crm/recommendation-shown', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              recommendedCourse: rec.courses?.title || rec.id,
+              courseSlug: rec.courses?.slug,
+              priority: rec.priority,
+              reason: rec.reason,
+              assessmentData: {
+                skillLevel,
+                topics,
+                goals,
+                timeCommitment
+              }
+            })
+          })
+        }
+      } catch (error) {
+        console.error('Failed to track recommendations:', error)
+      }
+    }
+
+    trackRecommendations()
+  }, [currentStep, recommendations, isLoading, skillLevel, topics, goals, timeCommitment])
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -413,39 +446,6 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
         )
 
       case 3: // Recommendations
-        // Track recommendation_shown event when this step is viewed
-        useEffect(() => {
-          if (recommendations.length > 0 && !isLoading) {
-            const trackRecommendations = async () => {
-              try {
-                // Track each recommendation shown
-                for (const rec of recommendations) {
-                  await fetch('/api/crm/recommendation-shown', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      recommendedCourse: rec.courses?.title || rec.id,
-                      courseSlug: rec.courses?.slug,
-                      priority: rec.priority,
-                      reason: rec.reason,
-                      assessmentData: {
-                        skillLevel,
-                        topics,
-                        goals,
-                        timeCommitment
-                      }
-                    })
-                  })
-                }
-              } catch (error) {
-                console.error('Failed to track recommendations:', error)
-              }
-            }
-            
-            trackRecommendations()
-          }
-        }, [recommendations, isLoading, skillLevel, topics, goals, timeCommitment])
-
         return (
           <div className="space-y-6">
             <div className="text-center">

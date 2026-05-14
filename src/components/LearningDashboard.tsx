@@ -68,7 +68,7 @@ export default function LearningDashboard() {
       .from('onboarding_progress')
       .select('is_complete')
       .eq('user_id', currentUser.id)
-      .single()
+      .maybeSingle()
 
     // Show wizard if user hasn't completed onboarding
     if (!onboarding || !onboarding.is_complete) {
