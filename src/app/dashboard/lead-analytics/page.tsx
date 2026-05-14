@@ -21,6 +21,13 @@ interface LeadMetrics {
     websiteVisitRate: number
     quizCompletionRate: number
   }
+  winBackMetrics: {
+    sent: number
+    opened: number
+    clicked: number
+    openRate: number
+    clickRate: number
+  }
 }
 
 export default function LeadAnalyticsDashboard() {
@@ -211,6 +218,38 @@ export default function LeadAnalyticsDashboard() {
                 </div>
               </div>
             ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Win-back Performance */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Win-back Campaign Performance</CardTitle>
+          <CardDescription>Open and click performance for 7/14/30-day inactivity emails</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <p className="text-sm text-gray-600">Sent</p>
+              <p className="text-2xl font-bold text-purple-700">{metrics.winBackMetrics.sent}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Opened</p>
+              <p className="text-2xl font-bold text-blue-700">{metrics.winBackMetrics.opened}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Clicked</p>
+              <p className="text-2xl font-bold text-green-700">{metrics.winBackMetrics.clicked}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Open Rate</p>
+              <p className="text-2xl font-bold text-indigo-700">{(metrics.winBackMetrics.openRate * 100).toFixed(1)}%</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Click Rate</p>
+              <p className="text-2xl font-bold text-emerald-700">{(metrics.winBackMetrics.clickRate * 100).toFixed(1)}%</p>
+            </div>
           </div>
         </CardContent>
       </Card>

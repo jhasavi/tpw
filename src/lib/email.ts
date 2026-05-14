@@ -20,6 +20,45 @@ interface NewsletterSubscriber {
 interface UserWelcomeData {
   email: string
   name: string
+  userId?: string
+}
+
+function getSiteBaseUrl() {
+  return process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'
+}
+
+function trackedLink(
+  campaignId: string,
+  targetUrl: string,
+  email: string,
+  userId?: string
+) {
+  const baseUrl = getSiteBaseUrl()
+  const params = new URLSearchParams({
+    c: campaignId,
+    u: encodeURIComponent(targetUrl),
+    e: email,
+  })
+
+  if (userId) {
+    params.set('uid', userId)
+  }
+
+  return `${baseUrl}/api/email/track/click?${params.toString()}`
+}
+
+function openTrackingPixel(campaignId: string, email: string, userId?: string) {
+  const baseUrl = getSiteBaseUrl()
+  const params = new URLSearchParams({
+    c: campaignId,
+    e: email,
+  })
+
+  if (userId) {
+    params.set('uid', userId)
+  }
+
+  return `${baseUrl}/api/email/track/open?${params.toString()}`
 }
 
 export async function sendContactEmail(data: ContactFormData) {
@@ -508,6 +547,153 @@ export async function sendDripDay14(user: UserWelcomeData) {
     return { success: true, data }
   } catch (error) {
     console.error('Error sending day-14 drip:', error)
+    return { success: false, error }
+  }
+}
+
+export async function sendWinBackDay7(user: UserWelcomeData) {
+  const campaignId = 'winback_7d'
+  const firstName = user.name.split(' ')[0]
+
+  try {
+    const dashboardLink = trackedLink(campaignId, `${getSiteBaseUrl()}/dashboard`, user.email, user.userId)
+    const quickQuizLink = trackedLink(campaignId, `${getSiteBaseUrl()}/quiz/personality`, user.email, user.userId)
+    const pixel = openTrackingPixel(campaignId, user.email, user.userId)
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: user.email,
+      subject: `${firstName}, your dashboard is waiting for you` ,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); padding: 36px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: #fff; margin: 0; font-size: 28px;">Come Back In 5 Minutes</h1>
+            <p style="color: #e9d5ff; margin-top: 8px;">A quick win today keeps your momentum alive.</p>
+          </div>
+          <div style="background: #fff; padding: 32px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p>Hi ${firstName},</p>
+            <p>You registered recently and we do not want your progress to stall. Pick one action now:</p>
+            <ol>
+              <li>Resume your last lesson in the dashboard</li>
+              <li>Take a 5-minute quiz check-in</li>
+              <li>Choose your next weekly action plan</li>
+            </ol>
+            <div style="margin: 24px 0; text-align: center;">
+              <a href="${dashboardLink}" style="display: inline-block; background: #7c3aed; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 4px;">
+                Resume Learning
+              </a>
+              <a href="${quickQuizLink}" style="display: inline-block; background: #fff; border: 1px solid #7c3aed; color: #7c3aed; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 4px;">
+                Take 5-Min Quiz
+              </a>
+            </div>
+            <p style="color: #6b7280; font-size: 13px; margin-top: 28px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+              You are receiving this reminder because you created an account at The Purple Wings.
+            </p>
+            <img src="${pixel}" alt="" width="1" height="1" style="display:none;" />
+          </div>
+        </div>
+      `,
+    })
+
+    if (error) return { success: false, error }
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error sending win-back day 7 email:', error)
+    return { success: false, error }
+  }
+}
+
+export async function sendWinBackDay14(user: UserWelcomeData) {
+  const campaignId = 'winback_14d'
+  const firstName = user.name.split(' ')[0]
+
+  try {
+    const challengeLink = trackedLink(campaignId, `${getSiteBaseUrl()}/campaigns/purple-wings-challenge`, user.email, user.userId)
+    const toolsLink = trackedLink(campaignId, `${getSiteBaseUrl()}/tools`, user.email, user.userId)
+    const pixel = openTrackingPixel(campaignId, user.email, user.userId)
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: user.email,
+      subject: `${firstName}, ready for your 14-day comeback challenge?`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #6d28d9 0%, #3730a3 100%); padding: 36px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: #fff; margin: 0; font-size: 28px;">Two Weeks Away Is Fixable</h1>
+            <p style="color: #ddd6fe; margin-top: 8px;">Rebuild momentum with one focused financial action.</p>
+          </div>
+          <div style="background: #fff; padding: 32px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p>Hi ${firstName},</p>
+            <p>Most people pause. The ones who improve come back with structure.</p>
+            <p>Try this quick restart:</p>
+            <ul>
+              <li>Join this month's challenge</li>
+              <li>Use one practical financial tool</li>
+            </ul>
+            <div style="margin: 24px 0; text-align: center;">
+              <a href="${challengeLink}" style="display: inline-block; background: #7c3aed; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 4px;">
+                Join Challenge
+              </a>
+              <a href="${toolsLink}" style="display: inline-block; background: #4f46e5; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 4px;">
+                Open Tools
+              </a>
+            </div>
+            <img src="${pixel}" alt="" width="1" height="1" style="display:none;" />
+          </div>
+        </div>
+      `,
+    })
+
+    if (error) return { success: false, error }
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error sending win-back day 14 email:', error)
+    return { success: false, error }
+  }
+}
+
+export async function sendWinBackDay30(user: UserWelcomeData) {
+  const campaignId = 'winback_30d'
+  const firstName = user.name.split(' ')[0]
+
+  try {
+    const comebackPlanLink = trackedLink(campaignId, `${getSiteBaseUrl()}/come-back`, user.email, user.userId)
+    const eventsLink = trackedLink(campaignId, `${getSiteBaseUrl()}/events`, user.email, user.userId)
+    const pixel = openTrackingPixel(campaignId, user.email, user.userId)
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: user.email,
+      subject: `${firstName}, we built a 10-step comeback plan for you`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #7c3aed 0%, #1e1b4b 100%); padding: 36px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: #fff; margin: 0; font-size: 28px;">Your Financial Comeback Plan</h1>
+            <p style="color: #e9d5ff; margin-top: 8px;">No overwhelm. Just 10 clear actions.</p>
+          </div>
+          <div style="background: #fff; padding: 32px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p>Hi ${firstName},</p>
+            <p>It has been about a month since your last activity. We prepared a direct return path so you can restart confidently.</p>
+            <p>Start with either option:</p>
+            <div style="margin: 24px 0; text-align: center;">
+              <a href="${comebackPlanLink}" style="display: inline-block; background: #7c3aed; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 4px;">
+                Open 10-Step Plan
+              </a>
+              <a href="${eventsLink}" style="display: inline-block; background: #fff; border: 1px solid #7c3aed; color: #7c3aed; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 4px;">
+                See Upcoming Events
+              </a>
+            </div>
+            <p style="font-size: 14px; color: #6b7280;">You can return anytime with just 5 minutes per day.</p>
+            <img src="${pixel}" alt="" width="1" height="1" style="display:none;" />
+          </div>
+        </div>
+      `,
+    })
+
+    if (error) return { success: false, error }
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error sending win-back day 30 email:', error)
     return { success: false, error }
   }
 }

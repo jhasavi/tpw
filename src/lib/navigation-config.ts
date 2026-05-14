@@ -56,6 +56,16 @@ export const navigationConfig: NavItem[] = [
     label: 'Resources',
     dropdown: [
       {
+        label: 'Financial Tools',
+        href: '/tools',
+        icon: '🛠️'
+      },
+      {
+        label: 'Life Events Guide',
+        href: '/life-events',
+        icon: '🌟'
+      },
+      {
         label: 'Blog',
         href: '/blog',
         icon: '✍️'
@@ -74,9 +84,14 @@ export const navigationConfig: NavItem[] = [
         label: 'Newsletter',
         href: '/newsletter/subscribe',
         icon: '📧'
+      },
+      {
+        label: 'Comeback Plan',
+        href: '/come-back',
+        icon: '🔁'
       }
     ],
-    isActive: (pathname) => ['/blog', '/media', '/faq', '/newsletter'].some(path => pathname.startsWith(path))
+    isActive: (pathname) => ['/blog', '/media', '/faq', '/newsletter', '/tools', '/life-events', '/come-back'].some(path => pathname.startsWith(path))
   },
   {
     label: 'About',
@@ -85,6 +100,11 @@ export const navigationConfig: NavItem[] = [
         label: 'Our Mission',
         href: '/about',
         icon: '💜'
+      },
+      {
+        label: 'Impact Report',
+        href: '/impact',
+        icon: '📊'
       },
       {
         label: 'Events',
@@ -97,9 +117,24 @@ export const navigationConfig: NavItem[] = [
         icon: '🏆'
       },
       {
+        label: 'Ambassador Program',
+        href: '/ambassador',
+        icon: '🦋'
+      },
+      {
+        label: 'Press Kit',
+        href: '/press',
+        icon: '📰'
+      },
+      {
         label: 'Partnerships',
         href: '/partnerships',
         icon: '🤝'
+      },
+      {
+        label: 'Corporate Sponsors',
+        href: '/corporate-sponsors',
+        icon: '🏦'
       },
       {
         label: 'Contact',
@@ -107,7 +142,7 @@ export const navigationConfig: NavItem[] = [
         icon: '📞'
       }
     ],
-    isActive: (pathname) => ['/about', '/events', '/campaigns', '/partnerships', '/contact'].some(path => pathname.startsWith(path))
+    isActive: (pathname) => ['/about', '/events', '/campaigns', '/partnerships', '/contact', '/impact', '/ambassador', '/press', '/corporate-sponsors'].some(path => pathname.startsWith(path))
   },
   {
     label: 'Start Assessment',

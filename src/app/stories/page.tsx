@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ const STORIES = [
   {
     id: 1,
     name: "Sarah M., 52",
-    avatar: "https://images.unsplash.io/photo-1494790108755-2616b612c631?w=100&h=100&fit=crop&crop=face",
+    avatar: "SM",
     age: "52",
     profession: "Marketing Manager",
     location: "Needham, MA",
@@ -26,7 +25,7 @@ const STORIES = [
   {
     id: 2,
     name: "Maria R., 47",
-    avatar: "https://images.unsplash.io/photo-1558769132-cb1aea45c1e5?w=100&h=100&fit=crop&crop=face",
+    avatar: "MR",
     age: "47",
     profession: "Teacher",
     location: "Boston, MA",
@@ -41,7 +40,7 @@ const STORIES = [
   {
     id: 3,
     name: "Linda T., 61",
-    avatar: "https://images.unsplash.io/photo-1554151228-0bf1b2b5d1f5?w=100&h=100&fit=crop&crop=face",
+    avatar: "LT",
     age: "61",
     profession: "Recently Retired",
     location: "Newton, MA",
@@ -56,7 +55,7 @@ const STORIES = [
   {
     id: 4,
     name: "Jennifer K., 43",
-    avatar: "https://images.unsplash.io/photo-1558769132-cb1aea45c1e5?w=100&h=100&fit=crop&crop=face",
+    avatar: "JK",
     age: "43",
     profession: "Healthcare Worker",
     location: "Wellesley, MA",
@@ -71,7 +70,7 @@ const STORIES = [
   {
     id: 5,
     name: "Patricia S., 58",
-    avatar: "https://images.unsplash.io/photo-1558769132-cb1aea45c1e5?w=100&h=100&fit=crop&crop=face",
+    avatar: "PS",
     age: "58",
     profession: "Small Business Owner",
     location: "Cambridge, MA",
@@ -129,14 +128,8 @@ export default function StoriesPage() {
               <div key={story.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 <div className="p-6">
                   <div className="flex items-center mb-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
-                      <Image
-                        src={story.avatar}
-                        alt={story.name}
-                        width={64}
-                        height={64}
-                        className="object-cover"
-                      />
+                    <div className="w-16 h-16 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center mr-4 font-bold text-lg">
+                      {story.avatar}
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900">{story.name}</h3>
@@ -206,14 +199,8 @@ export default function StoriesPage() {
             {allStories.filter(s => !s.featured).map((story) => (
               <div key={story.id} className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden mr-3">
-                    <Image
-                      src={story.avatar}
-                      alt={story.name}
-                      width={48}
-                      height={48}
-                      className="object-cover"
-                    />
+                  <div className="w-12 h-12 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center mr-3 font-bold">
+                    {story.avatar}
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900">{story.name}</h3>

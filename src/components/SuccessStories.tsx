@@ -134,6 +134,16 @@ export default function SuccessStories() {
 
   const categories = Array.from(new Set(SUCCESS_STORIES.map(story => story.category)))
 
+  const getInitials = (name: string) =>
+    name
+      .split(',')[0]
+      .split(' ')
+      .filter(Boolean)
+      .map((segment) => segment[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase()
+
   return (
     <section className="py-16 bg-gradient-to-br from-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -185,11 +195,9 @@ export default function SuccessStories() {
               {/* Story Header */}
               <div className="p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <img
-                    src={story.image}
-                    alt={story.name}
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
+                  <div className="w-16 h-16 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-lg">
+                    {getInitials(story.name)}
+                  </div>
                   <div>
                     <h3 className="font-bold text-gray-900">{story.name}</h3>
                     <p className="text-sm text-gray-600">{story.age}, {story.location}</p>

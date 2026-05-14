@@ -7,6 +7,8 @@ import SuccessStories from '@/components/SuccessStories'
 import QuickWins from '@/components/QuickWins'
 import TrustBar from '@/components/TrustBar'
 import DonateButton from '@/components/DonateButton'
+import ReturningVisitorNudge from '@/components/ReturningVisitorNudge'
+import RevisitActionHub from '@/components/RevisitActionHub'
 import { generateOrganizationSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -64,6 +66,13 @@ export default function HomePage() {
 
       {/* Trust Signals Bar */}
       <TrustBar />
+
+      {/* Returning Visitor Nudge */}
+      <section className="py-6 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ReturningVisitorNudge />
+        </div>
+      </section>
 
       {/* Movement Entry Points */}
       <section className="py-16 bg-white">
@@ -177,6 +186,13 @@ export default function HomePage() {
       {/* Quick Wins Section */}
       <section className="py-16 bg-white">
         <QuickWins />
+      </section>
+
+      {/* Revisit Action Hub */}
+      <section className="py-16 bg-gradient-to-br from-purple-50 via-white to-purple-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <RevisitActionHub />
+        </div>
       </section>
 
       {/* Why This Matters Section - Enhanced with Purple Theme */}

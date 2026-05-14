@@ -69,18 +69,24 @@ function toWebsiteEvent(input: Record<string, unknown>): WebsiteEvent | null {
 
 async function fetchEventSet(endpoint: 'events' | 'past-events', maxItems: number): Promise<WebsiteEvent[]> {
   const url = `${API_URL}/api/embed/${endpoint}?tenantSlug=${encodeURIComponent(TENANT_SLUG)}&maxItems=${maxItems}`
-  const response = await fetch(url, {
-    next: { revalidate: 300 },
-  })
 
-  if (!response.ok) return []
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: 300 },
+    })
 
-  const json = (await response.json()) as EmbedResponse
-  if (!json.success) return []
+    if (!response.ok) return []
 
-  return ensureArray(json.data)
-    .map(toWebsiteEvent)
-    .filter((event): event is WebsiteEvent => event !== null)
+    const json = (await response.json()) as EmbedResponse
+    if (!json.success) return []
+
+    return ensureArray(json.data)
+      .map(toWebsiteEvent)
+      .filter((event): event is WebsiteEvent => event !== null)
+  } catch (error) {
+    console.warn('Failed to fetch website events:', error)
+    return []
+  }
 }
 
 function mapLegacyPastEvents(): WebsiteEvent[] {

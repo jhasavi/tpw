@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Play, Users, Target, ArrowRight, Star, CheckCircle } from 'lucide-react'
 
 export default function RedesignedHero() {
@@ -13,6 +12,16 @@ export default function RedesignedHero() {
     coursesCompleted: 0,
     communitiesBuilt: 0
   })
+
+  const getInitials = (name: string) =>
+    name
+      .split(',')[0]
+      .split(' ')
+      .filter(Boolean)
+      .map((segment) => segment[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase()
 
   const testimonials = [
     {
@@ -192,11 +201,9 @@ export default function RedesignedHero() {
               {/* Floating Testimonial */}
               <div className="absolute -bottom-6 -right-6 bg-white text-gray-900 rounded-xl p-4 shadow-xl max-w-xs">
                 <div className="flex items-center gap-3 mb-2">
-                  <img
-                    src={testimonials[currentTestimonial].image}
-                    alt={testimonials[currentTestimonial].name}
-                    className="w-10 h-10 rounded-full"
-                  />
+                  <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+                    {getInitials(testimonials[currentTestimonial].name)}
+                  </div>
                   <div>
                     <div className="font-semibold text-sm">{testimonials[currentTestimonial].name}</div>
                     <div className="text-xs text-gray-600">{testimonials[currentTestimonial].age}, {testimonials[currentTestimonial].location}</div>

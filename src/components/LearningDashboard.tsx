@@ -8,6 +8,8 @@ import ProgressDashboard from './ProgressDashboard'
 import WelcomeWizard from './onboarding/WelcomeWizard'
 import GamificationPanel from './GamificationPanel'
 import ProminentQuizCard from './ProminentQuizCard'
+import ReturningVisitorNudge from './ReturningVisitorNudge'
+import RevisitActionHub from './RevisitActionHub'
 
 interface DashboardStats {
   totalLessons: number
@@ -208,6 +210,8 @@ export default function LearningDashboard() {
         />
       )}
       <div className="space-y-6">
+      <ReturningVisitorNudge />
+
       {/* Welcome & Stats */}
       <div className="bg-gradient-to-br from-purple-600 to-purple-700 text-white rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold mb-2">Welcome Back!</h1>
@@ -393,6 +397,11 @@ export default function LearningDashboard() {
           </Link>
         </div>
       </div>
+
+      <RevisitActionHub
+        title="Your Personal Return Plan"
+        description="Use these 10 quick actions to stay consistent and compound your progress each week."
+      />
     </div>
     </>
   )

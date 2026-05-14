@@ -86,6 +86,18 @@ export default function LoginPage() {
           </p>
         </div>
 
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
+          <p className="text-sm font-semibold text-purple-800">Return in 5 minutes and keep momentum:</p>
+          <div className="mt-2 grid grid-cols-1 gap-2 text-sm text-purple-900">
+            <p>1. Resume your last lesson and protect your streak.</p>
+            <p>2. Take one quick quiz to measure progress.</p>
+            <p>3. Pick your next weekly action from the comeback plan.</p>
+          </div>
+          <Link href="/come-back" className="mt-3 inline-block text-sm font-semibold text-purple-700 hover:text-purple-800">
+            See all 10 comeback actions →
+          </Link>
+        </div>
+
         <div className="mt-8 space-y-6">
           {error && (
             <div className="rounded-md bg-red-50 border border-red-200 p-4">

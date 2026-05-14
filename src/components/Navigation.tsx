@@ -149,10 +149,11 @@ export default function Navigation() {
             {user ? (
               <Dropdown
                 trigger={
-                  <button
+                  <span
                     className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 
                              px-4 py-2 text-sm font-medium rounded-md hover:bg-purple-50 
                              transition-colors duration-150"
+                    role="button"
                     aria-label="User account menu"
                   >
                     <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
@@ -166,7 +167,7 @@ export default function Navigation() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
-                  </button>
+                  </span>
                 }
                 items={getUserMenuItems({ user, loading, onSignOut: handleSignOut })}
                 position="right"

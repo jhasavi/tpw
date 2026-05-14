@@ -86,7 +86,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#9333ea" />
         <meta name="author" content="Shalini Jha" />
         <meta name="robots" content="index, follow" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <link rel="preload" href="/images/logo-nobg.png" as="image" />
         <StructuredData />
         <GoogleAnalytics />
