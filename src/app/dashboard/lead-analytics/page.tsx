@@ -21,6 +21,14 @@ interface LeadMetrics {
     websiteVisitRate: number
     quizCompletionRate: number
   }
+  retentionMetrics: {
+    sevenDayReturnRate: number
+    thirtyDayReturnRate: number
+    activeUsers7d: number
+    activeUsers30d: number
+    eligibleUsers7d: number
+    eligibleUsers30d: number
+  }
   winBackMetrics: {
     sent: number
     opened: number
@@ -211,6 +219,33 @@ export default function LeadAnalyticsDashboard() {
                 <div className="text-sm text-gray-600 mb-1">Monthly Progress</div>
                 <Progress value={(metrics.newLeadsThisMonth / 100) * 100} className="h-2" />
                 <div className="text-xs text-gray-500 mt-1">Target: 100 leads/month</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Retention KPIs</CardTitle>
+            <CardDescription>Returning users after signup</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">7-Day Return Rate</span>
+                <Badge variant="secondary">{metrics.retentionMetrics.sevenDayReturnRate.toFixed(1)}%</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">30-Day Return Rate</span>
+                <Badge variant="secondary">{metrics.retentionMetrics.thirtyDayReturnRate.toFixed(1)}%</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Active Users (7d)</span>
+                <span className="font-semibold">{metrics.retentionMetrics.activeUsers7d}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Active Users (30d)</span>
+                <span className="font-semibold">{metrics.retentionMetrics.activeUsers30d}</span>
               </div>
             </div>
           </CardContent>

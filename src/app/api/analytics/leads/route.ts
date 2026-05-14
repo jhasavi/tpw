@@ -28,6 +28,8 @@ export async function GET(request: NextRequest) {
   const timeRange = (request.nextUrl.searchParams.get('timeRange') || '30d') as TimeRange
   const cutoff = getDateCutoff(timeRange)
   const now = new Date()
+  const cutoff7dIso = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString()
+  const cutoff30dIso = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString()
 
   try {
     const [
@@ -44,6 +46,10 @@ export async function GET(request: NextRequest) {
       clickRowsRes,
       campaignEventRowsRes,
       winBackFailureRowsRes,
+      allProfilesRes,
+      lessonActivityRes,
+      quizActivityRes,
+      streakActivityRes,
     ] = await Promise.all([
       adminSupabase.from('profiles').select('id', { count: 'exact', head: true }),
       adminSupabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()),
@@ -68,6 +74,21 @@ export async function GET(request: NextRequest) {
         .gte('sent_at', cutoff.toISOString())
         .order('sent_at', { ascending: false })
         .limit(20),
+      adminSupabase
+        .from('profiles')
+        .select('id, created_at'),
+      adminSupabase
+        .from('lesson_progress')
+        .select('user_id, updated_at')
+        .gte('updated_at', cutoff30dIso),
+      adminSupabase
+        .from('quiz_attempts')
+        .select('user_id, created_at')
+        .gte('created_at', cutoff30dIso),
+      adminSupabase
+        .from('learning_streaks')
+        .select('user_id, updated_at')
+        .gte('updated_at', cutoff30dIso),
     ])
 
     const totalLeads = totalLeadsRes.count || 0
@@ -156,6 +177,52 @@ export async function GET(request: NextRequest) {
       .sort((a, b) => b.clicks - a.clicks)
       .slice(0, 5)
 
+    const profilesAll = allProfilesRes.data || []
+    const eligible7dIds = new Set(
+      profilesAll
+        .filter((row: any) => row.created_at && row.created_at < cutoff7dIso)
+        .map((row: any) => row.id)
+    )
+    const eligible30dIds = new Set(
+      profilesAll
+        .filter((row: any) => row.created_at && row.created_at < cutoff30dIso)
+        .map((row: any) => row.id)
+    )
+
+    const active7dIds = new Set<string>()
+    const active30dIds = new Set<string>()
+
+    for (const row of lessonActivityRes.data || []) {
+      if (row.user_id) {
+        active30dIds.add(row.user_id)
+        if (row.updated_at && row.updated_at >= cutoff7dIso) active7dIds.add(row.user_id)
+      }
+    }
+
+    for (const row of quizActivityRes.data || []) {
+      if (row.user_id) {
+        active30dIds.add(row.user_id)
+        if (row.created_at && row.created_at >= cutoff7dIso) active7dIds.add(row.user_id)
+      }
+    }
+
+    for (const row of streakActivityRes.data || []) {
+      if (row.user_id) {
+        active30dIds.add(row.user_id)
+        if (row.updated_at && row.updated_at >= cutoff7dIso) active7dIds.add(row.user_id)
+      }
+    }
+
+    let returningUsers7d = 0
+    let returningUsers30d = 0
+
+    for (const userId of active7dIds) {
+      if (eligible7dIds.has(userId)) returningUsers7d += 1
+    }
+    for (const userId of active30dIds) {
+      if (eligible30dIds.has(userId)) returningUsers30d += 1
+    }
+
     return NextResponse.json({
       totalLeads,
       newLeadsToday: todayRes.count || 0,
@@ -176,6 +243,14 @@ export async function GET(request: NextRequest) {
         emailClickRate: sentCount ? clickCount / sentCount : 0,
         websiteVisitRate: sentCount ? clickCount / sentCount : 0,
         quizCompletionRate: 0,
+      },
+      retentionMetrics: {
+        sevenDayReturnRate: safePercent(returningUsers7d, eligible7dIds.size),
+        thirtyDayReturnRate: safePercent(returningUsers30d, eligible30dIds.size),
+        activeUsers7d: active7dIds.size,
+        activeUsers30d: active30dIds.size,
+        eligibleUsers7d: eligible7dIds.size,
+        eligibleUsers30d: eligible30dIds.size,
       },
       winBackMetrics: {
         sent: sentCount,
