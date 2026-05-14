@@ -1,7 +1,7 @@
 // Server-side CRM reconciliation service
 // Handles syncing TPW auth users to JanaGana CRM without blocking authentication
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { 
   determineLifecycleStage, 
   mapToCRMContact, 
@@ -252,7 +252,7 @@ async function updateExistingContact(contactId: string, userData: AuthUserData):
  */
 async function storeCRMContactId(userId: string, contactId: string): Promise<void> {
   try {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     
     // Update user app_metadata with CRM contact ID (server-controlled)
     const { error } = await supabase.auth.admin.updateUserById(userId, {
@@ -291,7 +291,7 @@ async function verifyContactIdMatchesEmail(contactId: string, email: string): Pr
  */
 export async function getUserDataForCRM(userId: string, authSource: 'email' | 'google' | 'other' = 'other'): Promise<AuthUserData | null> {
   try {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     
     // Get user from auth
     const { data: { user }, error } = await supabase.auth.admin.getUserById(userId)

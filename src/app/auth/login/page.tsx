@@ -29,13 +29,13 @@ export default function LoginPage() {
     } else {
       // Trigger CRM reconciliation (non-blocking)
       try {
+        const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
+        const payload = currentUser ? { userId: currentUser.id, authSource: 'email' } : { email, authSource: 'email' }
+
         fetch('/api/auth/reconcile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            authSource: 'email'
-          })
+          body: JSON.stringify(payload)
         }).catch(err => {
           console.warn('CRM reconciliation failed (login):', err)
           // Don't block login

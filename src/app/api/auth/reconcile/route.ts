@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { NextResponse, NextRequest } from 'next/server'
 import { handleCRMReconciliation } from '@/lib/crm-reconciliation'
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     if (email) {
       try {
         // Get user by email (for signup flow)
-        const supabase = await createClient()
+        const supabase = createAdminClient()
         const { data: { users }, error } = await supabase.auth.admin.listUsers()
 
         if (error) {
