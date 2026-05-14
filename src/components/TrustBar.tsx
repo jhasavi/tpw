@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Image from 'next/image'
 
 export default function TrustBar() {
@@ -21,8 +20,9 @@ export default function TrustBar() {
               src="/images/needhamobserver.webp"
               alt="Needham Observer"
               width={140}
-              height={40}
-              className="h-8 w-auto object-contain"
+              height={32}
+              sizes="140px"
+              className="h-8 w-[140px] object-contain"
             />
           </a>
 

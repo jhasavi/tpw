@@ -53,6 +53,7 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
   const [topics, setTopics] = useState<string[]>([])
   const [goals, setGoals] = useState<string[]>([])
   const [timeCommitment, setTimeCommitment] = useState<'light' | 'moderate' | 'intensive'>('moderate')
+  const [lifeStage, setLifeStage] = useState<'40s' | '50s' | '60s' | null>(null)
   const [recommendations, setRecommendations] = useState<any[]>([])
 
   const availableTopics = [
@@ -75,6 +76,24 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
     'Understand my finances better',
     'Improve credit score',
     'Learn to budget effectively'
+  ]
+
+  const lifeStageOptions = [
+    {
+      value: '40s' as const,
+      label: 'In My 40s',
+      description: 'Balance family needs, career growth, and long-term investing.',
+    },
+    {
+      value: '50s' as const,
+      label: 'In My 50s',
+      description: 'Accelerate savings, optimize debt, and prepare retirement transitions.',
+    },
+    {
+      value: '60s' as const,
+      label: 'In My 60s+',
+      description: 'Protect wealth, create income stability, and plan legacy goals.',
+    },
   ]
 
   useEffect(() => {
@@ -244,8 +263,12 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
           completed_at: new Date().toISOString()
         }, { onConflict: 'user_id' })
 
+      if (lifeStage) {
+        router.push(`/life-stage/${lifeStage}`)
+      } else {
+        router.push('/dashboard')
+      }
       onComplete?.()
-      router.push('/dashboard')
     } catch (error) {
       console.error('Error completing onboarding:', error)
     } finally {
@@ -442,6 +465,27 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
                 ))}
               </div>
             </div>
+
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Life Stage Path</h3>
+              <p className="text-gray-600 mb-6">We'll guide you to a track designed for your current priorities.</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {lifeStageOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setLifeStage(option.value)}
+                    className={`p-5 rounded-lg border-2 text-left transition-all ${
+                      lifeStage === option.value
+                        ? 'border-purple-600 bg-purple-50'
+                        : 'border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <div className="font-semibold text-gray-900">{option.label}</div>
+                    <div className="text-sm text-gray-600 mt-2">{option.description}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         )
 
@@ -570,7 +614,7 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
             </button>
             <button
               onClick={handleNext}
-              disabled={isLoading}
+              disabled={isLoading || (currentStep === 2 && !lifeStage)}
               className="px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (

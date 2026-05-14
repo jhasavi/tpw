@@ -86,12 +86,13 @@ export default function Navigation() {
                   <Dropdown
                     key={item.label}
                     trigger={
-                      <button
+                      <span
                         className={`
                           text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-medium rounded-md 
                           hover:bg-purple-50 flex items-center transition-colors duration-150
                           ${isActive ? 'text-purple-600 bg-purple-50' : ''}
                         `}
+                        role="button"
                         aria-label={`${item.label} dropdown menu`}
                       >
                         {item.label}
@@ -103,7 +104,7 @@ export default function Navigation() {
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
-                      </button>
+                      </span>
                     }
                     items={item.dropdown}
                     position="left"

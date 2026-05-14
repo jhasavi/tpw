@@ -42,6 +42,8 @@ export async function GET(request: NextRequest) {
       sentRowsRes,
       openRowsRes,
       clickRowsRes,
+      campaignEventRowsRes,
+      winBackFailureRowsRes,
     ] = await Promise.all([
       adminSupabase.from('profiles').select('id', { count: 'exact', head: true }),
       adminSupabase.from('profiles').select('id', { count: 'exact', head: true }).gte('created_at', new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()),
@@ -54,6 +56,18 @@ export async function GET(request: NextRequest) {
       adminSupabase.from('email_campaign_events').select('id', { count: 'exact', head: true }).eq('event_type', 'sent').like('campaign_id', 'winback_%').gte('event_at', cutoff.toISOString()),
       adminSupabase.from('email_campaign_events').select('id', { count: 'exact', head: true }).eq('event_type', 'open').like('campaign_id', 'winback_%').gte('event_at', cutoff.toISOString()),
       adminSupabase.from('email_campaign_events').select('id', { count: 'exact', head: true }).eq('event_type', 'click').like('campaign_id', 'winback_%').gte('event_at', cutoff.toISOString()),
+      adminSupabase
+        .from('email_campaign_events')
+        .select('campaign_id, event_type, link_url')
+        .like('campaign_id', 'winback_%')
+        .gte('event_at', cutoff.toISOString()),
+      adminSupabase
+        .from('win_back_email_log')
+        .select('email, inactivity_day, status, last_error, sent_at')
+        .eq('status', 'failed')
+        .gte('sent_at', cutoff.toISOString())
+        .order('sent_at', { ascending: false })
+        .limit(20),
     ])
 
     const totalLeads = totalLeadsRes.count || 0
@@ -107,6 +121,40 @@ export async function GET(request: NextRequest) {
     const sentCount = sentRowsRes.count || 0
     const openCount = openRowsRes.count || 0
     const clickCount = clickRowsRes.count || 0
+    const failedCount = (winBackFailureRowsRes.data || []).length
+    const totalAttempts = sentCount + failedCount
+    const failureRate = totalAttempts ? failedCount / totalAttempts : 0
+
+    const campaignAgg = new Map<string, { sent: number; open: number; click: number }>()
+    const linkAgg = new Map<string, number>()
+    for (const row of campaignEventRowsRes.data || []) {
+      const key = row.campaign_id || 'winback_unknown'
+      const bucket = campaignAgg.get(key) || { sent: 0, open: 0, click: 0 }
+      if (row.event_type === 'sent') bucket.sent += 1
+      if (row.event_type === 'open') bucket.open += 1
+      if (row.event_type === 'click') bucket.click += 1
+      campaignAgg.set(key, bucket)
+
+      if (row.event_type === 'click' && row.link_url) {
+        linkAgg.set(row.link_url, (linkAgg.get(row.link_url) || 0) + 1)
+      }
+    }
+
+    const campaignPerformance = Array.from(campaignAgg.entries())
+      .map(([campaignId, stats]) => ({
+        campaignId,
+        sent: stats.sent,
+        opened: stats.open,
+        clicked: stats.click,
+        openRate: stats.sent ? stats.open / stats.sent : 0,
+        clickRate: stats.sent ? stats.click / stats.sent : 0,
+      }))
+      .sort((a, b) => b.sent - a.sent)
+
+    const topClickedLinks = Array.from(linkAgg.entries())
+      .map(([url, clicks]) => ({ url, clicks }))
+      .sort((a, b) => b.clicks - a.clicks)
+      .slice(0, 5)
 
     return NextResponse.json({
       totalLeads,
@@ -133,8 +181,18 @@ export async function GET(request: NextRequest) {
         sent: sentCount,
         opened: openCount,
         clicked: clickCount,
+        failed: failedCount,
         openRate: sentCount ? openCount / sentCount : 0,
         clickRate: sentCount ? clickCount / sentCount : 0,
+        failureRate,
+        campaignPerformance,
+        topClickedLinks,
+        recentFailures: (winBackFailureRowsRes.data || []).map((row) => ({
+          email: row.email,
+          inactivityDay: row.inactivity_day,
+          reason: row.last_error || 'unknown',
+          at: row.sent_at,
+        })),
       },
     })
   } catch (error) {

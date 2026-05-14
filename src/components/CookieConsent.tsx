@@ -38,7 +38,7 @@ export default function CookieConsent() {
               🍪 We use cookies to enhance your experience, analyze site traffic, and personalize content. 
               By clicking "Accept", you consent to our use of cookies. 
               <Link href="/privacy" className="text-purple-600 dark:text-purple-400 hover:underline ml-1">
-                Learn more
+                Read our privacy policy
               </Link>
             </p>
           </div>

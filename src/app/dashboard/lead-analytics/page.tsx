@@ -25,8 +25,28 @@ interface LeadMetrics {
     sent: number
     opened: number
     clicked: number
+    failed: number
     openRate: number
     clickRate: number
+    failureRate: number
+    campaignPerformance: Array<{
+      campaignId: string
+      sent: number
+      opened: number
+      clicked: number
+      openRate: number
+      clickRate: number
+    }>
+    topClickedLinks: Array<{
+      url: string
+      clicks: number
+    }>
+    recentFailures: Array<{
+      email: string
+      inactivityDay: number
+      reason: string
+      at: string
+    }>
   }
 }
 
@@ -142,6 +162,34 @@ export default function LeadAnalyticsDashboard() {
         </Card>
       </div>
 
+      {metrics.winBackMetrics.failureRate > 0.1 && (
+        <Card className="border-red-200 bg-red-50">
+          <CardHeader>
+            <CardTitle className="text-red-800">Win-back Delivery Alert</CardTitle>
+            <CardDescription className="text-red-700">
+              Failure rate is {(metrics.winBackMetrics.failureRate * 100).toFixed(1)}% which exceeds the 10% threshold.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-red-800 mb-3">
+              Sent: {metrics.winBackMetrics.sent} | Failed: {metrics.winBackMetrics.failed}
+            </p>
+            {metrics.winBackMetrics.recentFailures.length > 0 && (
+              <div className="space-y-2">
+                {metrics.winBackMetrics.recentFailures.slice(0, 3).map((failure, index) => (
+                  <div key={`${failure.email}-${index}`} className="rounded-lg border border-red-200 bg-white p-3">
+                    <p className="text-sm font-medium text-gray-900">
+                      {failure.email} ({failure.inactivityDay}d)
+                    </p>
+                    <p className="text-xs text-gray-600 break-all">{failure.reason}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Growth Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
@@ -222,6 +270,54 @@ export default function LeadAnalyticsDashboard() {
         </CardContent>
       </Card>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Campaign Comparison</CardTitle>
+            <CardDescription>Performance by inactivity stage</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {metrics.winBackMetrics.campaignPerformance.length === 0 && (
+                <p className="text-sm text-gray-500">No campaign events yet.</p>
+              )}
+              {metrics.winBackMetrics.campaignPerformance.map((campaign) => (
+                <div key={campaign.campaignId} className="rounded-lg border border-gray-200 p-3">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-gray-900">{campaign.campaignId}</p>
+                    <Badge variant="outline">{campaign.sent} sent</Badge>
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                    <p className="text-gray-600">Open rate: {(campaign.openRate * 100).toFixed(1)}%</p>
+                    <p className="text-gray-600">Click rate: {(campaign.clickRate * 100).toFixed(1)}%</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Clicked Destinations</CardTitle>
+            <CardDescription>Which comeback links users click most</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {metrics.winBackMetrics.topClickedLinks.length === 0 && (
+                <p className="text-sm text-gray-500">No click data yet.</p>
+              )}
+              {metrics.winBackMetrics.topClickedLinks.map((item, index) => (
+                <div key={`${item.url}-${index}`} className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
+                  <p className="text-sm text-gray-700 truncate max-w-[80%]">{item.url}</p>
+                  <Badge>{item.clicks}</Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Win-back Performance */}
       <Card>
         <CardHeader>
@@ -229,7 +325,7 @@ export default function LeadAnalyticsDashboard() {
           <CardDescription>Open and click performance for 7/14/30-day inactivity emails</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
             <div>
               <p className="text-sm text-gray-600">Sent</p>
               <p className="text-2xl font-bold text-purple-700">{metrics.winBackMetrics.sent}</p>
@@ -243,12 +339,20 @@ export default function LeadAnalyticsDashboard() {
               <p className="text-2xl font-bold text-green-700">{metrics.winBackMetrics.clicked}</p>
             </div>
             <div>
+              <p className="text-sm text-gray-600">Failed</p>
+              <p className="text-2xl font-bold text-red-700">{metrics.winBackMetrics.failed}</p>
+            </div>
+            <div>
               <p className="text-sm text-gray-600">Open Rate</p>
               <p className="text-2xl font-bold text-indigo-700">{(metrics.winBackMetrics.openRate * 100).toFixed(1)}%</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Click Rate</p>
               <p className="text-2xl font-bold text-emerald-700">{(metrics.winBackMetrics.clickRate * 100).toFixed(1)}%</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Failure Rate</p>
+              <p className="text-2xl font-bold text-red-700">{(metrics.winBackMetrics.failureRate * 100).toFixed(1)}%</p>
             </div>
           </div>
         </CardContent>
