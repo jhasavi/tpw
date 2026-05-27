@@ -52,6 +52,9 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const organizationSchema = generateOrganizationSchema()
+  const janaganaBaseUrl = process.env.NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL || (process.env.NODE_ENV === 'production'
+    ? 'https://janagana.namasteneedham.com'
+    : 'http://localhost:3020')
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
@@ -66,6 +69,40 @@ export default function HomePage() {
 
       {/* Trust Signals Bar */}
       <TrustBar />
+
+      {/* JanaGana class registration + lead entry points */}
+      <section className="py-10 bg-white border-y border-purple-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 p-8 text-white">
+            <p className="text-xs uppercase tracking-[0.25em] text-purple-200">Class registration now live</p>
+            <h2 className="mt-3 text-2xl md:text-3xl font-bold">Take the next step with JanaGana</h2>
+            <p className="mt-3 max-w-2xl text-sm text-purple-100">
+              Browse classes and events, register instantly, and join updates from The Purple Wings community.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href={`${janaganaBaseUrl}/portal/purple-wings`}
+                className="inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-slate-900 hover:bg-yellow-300 transition-colors"
+              >
+                View Classes & Register
+              </Link>
+              <Link
+                href={`${janaganaBaseUrl}/portal/purple-wings/contact?interest=newsletter`}
+                className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
+              >
+                Join Newsletter
+              </Link>
+              <Link
+                href={`${janaganaBaseUrl}/portal/purple-wings/contact?interest=membership-interest`}
+                className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-semibold text-slate-900 hover:bg-purple-50 transition-colors"
+              >
+                Yearly Membership Interest
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Returning Visitor Nudge */}
       <section className="py-6 bg-white">
