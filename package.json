@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint src/",
     "quality-check": "node scripts/quality-check-auto.js",
     "quality-check:sql": "bash scripts/quality-check-queries.sh",
     "quality-check:ts": "tsx scripts/comprehensive-quality-check.ts",
