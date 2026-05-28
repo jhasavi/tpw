@@ -10,6 +10,7 @@ import DonateButton from '@/components/DonateButton'
 import ReturningVisitorNudge from '@/components/ReturningVisitorNudge'
 import RevisitActionHub from '@/components/RevisitActionHub'
 import { generateOrganizationSchema } from '@/lib/seo'
+import { janaganaPurpleWings } from '@/lib/janagana-portal'
 
 export const metadata: Metadata = {
   title: 'The Purple Wings - Shalini Jha | Free Financial Education for Women | Needham, MA',
@@ -52,9 +53,6 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const organizationSchema = generateOrganizationSchema()
-  const janaganaBaseUrl = process.env.NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL || (process.env.NODE_ENV === 'production'
-    ? 'https://janagana.namasteneedham.com'
-    : 'http://localhost:3020')
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
@@ -80,21 +78,21 @@ export default function HomePage() {
               Browse classes and events, register instantly, and join updates from The Purple Wings community.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
-                href={`${janaganaBaseUrl}/portal/purple-wings`}
+                href={janaganaPurpleWings.portalHome()}
                 className="inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-slate-900 hover:bg-yellow-300 transition-colors"
               >
                 View Classes & Register
               </Link>
               <Link
-                href={`${janaganaBaseUrl}/portal/purple-wings/contact?interest=newsletter`}
+                href={janaganaPurpleWings.newsletter()}
                 className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
               >
-                Join Newsletter
+                Community Updates (JanaGana)
               </Link>
               <Link
-                href={`${janaganaBaseUrl}/portal/purple-wings/contact?interest=membership-interest`}
+                href={janaganaPurpleWings.membershipInterest()}
                 className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-semibold text-slate-900 hover:bg-purple-50 transition-colors"
               >
                 Yearly Membership Interest
@@ -282,23 +280,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Newsletter Signup Section */}
+      {/* Newsletter: two intentional paths */}
       <section className="py-14 bg-purple-50">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="text-4xl mb-4">📬</div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            Weekly Financial Tips, Free
+            Stay connected with The Purple Wings
           </h2>
-          <p className="text-lg text-gray-600 mb-6">
-            Join 500+ women getting practical money tips every week. No jargon, no spam — just actionable advice designed for women.
+          <p className="text-lg text-gray-600 mb-8">
+            Choose the list that matches what you want — both are free and you can use either or both.
           </p>
-          <Link
-            href="/newsletter/subscribe"
-            className="inline-block bg-purple-600 text-white hover:bg-purple-700 px-8 py-4 rounded-lg font-bold text-lg transition-colors shadow-md hover:shadow-lg"
-          >
-            Subscribe for Free Tips →
-          </Link>
-          <p className="mt-3 text-sm text-gray-500">No spam, ever. Unsubscribe anytime.</p>
+          <div className="grid gap-4 sm:grid-cols-2 text-left">
+            <div className="rounded-2xl border border-purple-200 bg-white p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900">Weekly financial tips</h3>
+              <p className="mt-2 text-sm text-gray-600">
+                Short, practical money tips by email — hosted on this site.
+              </p>
+              <Link
+                href="/newsletter/subscribe"
+                className="mt-4 inline-block bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Get weekly tips →
+              </Link>
+            </div>
+            <div className="rounded-2xl border border-purple-300 bg-purple-900/5 p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900">Classes, events & community updates</h3>
+              <p className="mt-2 text-sm text-gray-600">
+                Register for classes and hear about upcoming events — managed in JanaGana.
+              </p>
+              <a
+                href={janaganaPurpleWings.newsletter()}
+                className="mt-4 inline-block bg-yellow-400 text-slate-900 hover:bg-yellow-300 px-6 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Join on JanaGana →
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 

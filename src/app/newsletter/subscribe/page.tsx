@@ -3,11 +3,25 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { EnhancedNewsletterForm } from '@/components/EnhancedNewsletterForm'
+import { janaganaPurpleWings } from '@/lib/janagana-portal'
 
 export default function NewsletterSubscribePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 py-12">
       <div className="max-w-5xl mx-auto px-4">
+        <div className="mb-6 rounded-xl border border-purple-200 bg-purple-50 px-4 py-3 text-sm text-purple-900">
+          <strong>Looking for classes or event registration?</strong>{' '}
+          That lives on our JanaGana community portal —{' '}
+          <a
+            href={janaganaPurpleWings.portalHome()}
+            className="font-semibold text-purple-700 underline hover:text-purple-900"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            view classes &amp; register
+          </a>
+          . This page is only for <em>weekly financial tips</em> by email on The Purple Wings site.
+        </div>
         {/* Hero Image */}
         <div className="relative h-64 mb-8 rounded-2xl overflow-hidden shadow-xl">
           <Image

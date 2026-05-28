@@ -167,9 +167,17 @@ export default function RootLayout({
               </div>
               <div>
                 <h4 className="font-semibold mb-4 text-purple-300">Stay Connected</h4>
-                <p className="text-gray-400 text-sm mb-3">Get weekly financial tips in your inbox.</p>
-                <a href="/newsletter/subscribe" className="inline-block bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-lg transition-colors mb-4">
-                  📬 Subscribe to Newsletter
+                <p className="text-gray-400 text-sm mb-3">Weekly tips on this site, or classes &amp; events on JanaGana.</p>
+                <a href="/newsletter/subscribe" className="inline-block bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-lg transition-colors mb-2 w-full text-center">
+                  📬 Weekly financial tips
+                </a>
+                <a
+                  href={(process.env.NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL || 'https://janagana.namasteneedham.com') + '/portal/purple-wings'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block border border-purple-400 text-purple-200 hover:bg-purple-900/40 text-sm px-4 py-2 rounded-lg transition-colors mb-4 w-full text-center"
+                >
+                  🎓 Classes &amp; events (JanaGana)
                 </a>
                 <div className="flex gap-4 mt-2">
                   <a 

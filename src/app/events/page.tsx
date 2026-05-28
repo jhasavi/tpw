@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { EventCard } from '@/components/events/EventCard'
 import { FeaturedEvent } from '@/components/events/FeaturedEvent'
 import { getWebsiteEvents } from '@/lib/events'
+import { janaganaPurpleWings } from '@/lib/janagana-portal'
 
 export const metadata: Metadata = {
   title: 'Financial Education Events - The Purple Wings | Needham, MA',
@@ -84,8 +85,16 @@ export default async function EventsPage() {
           {upcoming.length === 0 ? (
             <div className="rounded-2xl border border-purple-100 bg-white p-10 text-center text-slate-600">
               <div className="text-4xl mb-4">📅</div>
-              <h3 className="text-xl font-semibold mb-2">No upcoming events yet</h3>
-              <p>Please check back soon for new workshop announcements.</p>
+              <h3 className="text-xl font-semibold mb-2">No upcoming events listed yet</h3>
+              <p className="mb-4">Browse all classes and register on our JanaGana community portal.</p>
+              <a
+                href={janaganaPurpleWings.portalHome()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg bg-purple-600 px-5 py-2.5 font-semibold text-white hover:bg-purple-700"
+              >
+                View classes &amp; register on JanaGana →
+              </a>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
@@ -135,18 +144,22 @@ export default async function EventsPage() {
             Join The Purple Wings community for notifications about upcoming workshops, webinars, and new event releases.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/auth/signup"
+            <a
+              href={janaganaPurpleWings.newsletter()}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-2.5 font-semibold text-purple-700 hover:bg-purple-50"
             >
-              Join Our Community
-            </Link>
-            <Link
-              href="/community"
+              Community updates (JanaGana)
+            </a>
+            <a
+              href={janaganaPurpleWings.portalHome()}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg border border-purple-200 px-5 py-2.5 font-semibold text-white hover:bg-white/10"
             >
-              Learn More
-            </Link>
+              Register for classes →
+            </a>
           </div>
         </section>
       </main>

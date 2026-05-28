@@ -81,9 +81,14 @@ export const navigationConfig: NavItem[] = [
         icon: '❓'
       },
       {
-        label: 'Newsletter',
+        label: 'Weekly Tips',
         href: '/newsletter/subscribe',
         icon: '📧'
+      },
+      {
+        label: 'Classes & Events',
+        href: (process.env.NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL || 'https://janagana.namasteneedham.com') + '/portal/purple-wings',
+        icon: '🎓'
       },
       {
         label: 'Comeback Plan',
