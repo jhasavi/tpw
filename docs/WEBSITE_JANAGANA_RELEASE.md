@@ -20,6 +20,11 @@
 - Public: `https://www.thepurplewings.org`
 - JanaGana: `https://janagana.namasteneedham.com`
 
+## Production verification (2026-05-28)
+
+- Deployed to production (Vercel `tpw`, ~8m build).
+- Live site shows dual newsletter paths; `/events` serves JanaGana register URLs.
+
 ## Rollback
 
 Revert `main` on TPW; event page falls back to legacy past archive if embed API unavailable.
