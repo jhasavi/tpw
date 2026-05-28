@@ -34,10 +34,10 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
   const [marketingConsent, setMarketingConsent] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
-  // null = unknown, true = subscribed, false = not subscribed
-  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null)
+  // null = unknown, true = hide popup, false = show popup
+  const [shouldHidePopup, setShouldHidePopup] = useState<boolean | null>(null)
 
-  // Get current user info and check subscription status
+  // Get current user info and determine if popup should be hidden
   useEffect(() => {
     const initUser = async () => {
       try {
@@ -59,36 +59,24 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
           const derivedFirst = metaName.split(' ')[0] || user.email?.split('@')[0] || ''
           setFirstName(derivedFirst)
 
-          // Check if already subscribed — if so, suppress the popup entirely
-          try {
-            const res = await fetch('/api/newsletter/check-status', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: user.email }),
-            })
-            const data = await res.json()
-            setIsSubscribed(data.isSubscribed === true)
-          } catch {
-            setIsSubscribed(false)
-          }
-        } else {
-          setIsSubscribed(false)
+          // Never show the exit-intent popup to authenticated users.
+          setShouldHidePopup(true)
+          return
         }
+
+        setShouldHidePopup(isSuppressed())
       } catch (error) {
         console.error('Failed to get current user:', error)
-        setIsSubscribed(false)
+        setShouldHidePopup(isSuppressed())
       }
     }
     initUser()
   }, [])
 
   useEffect(() => {
-    // Don't attach listeners until subscription status is resolved
-    if (isSubscribed === null) return
-    // Already subscribed — never show
-    if (isSubscribed) return
-    if (isSuppressed()) return
-    // Check if already shown this session
+    // Don't attach listeners until suppression status is resolved
+    if (shouldHidePopup === null) return
+    if (shouldHidePopup) return
     if (showOnce && sessionStorage.getItem('exitIntentShown')) {
       return
     }
@@ -114,7 +102,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
 
     // Show after delay if user hasn't left
     showTimer = setTimeout(() => {
-      if (!sessionStorage.getItem('exitIntentShown')) {
+      if (!sessionStorage.getItem('exitIntentShown') && !isSuppressed()) {
         setIsVisible(true)
         if (showOnce) {
           sessionStorage.setItem('exitIntentShown', 'true')
@@ -131,7 +119,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
       clearTimeout(mouseLeaveTimer)
       clearTimeout(showTimer)
     }
-  }, [delay, showOnce, isSubscribed])
+  }, [delay, showOnce, shouldHidePopup])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -179,6 +167,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
         }
 
         suppressPopup()
+        setShouldHidePopup(true)
         setIsVisible(false)
         // Show success message
         setTimeout(() => {
@@ -188,6 +177,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
         const result = await response.json()
         if (result.error?.includes('already subscribed')) {
           suppressPopup()
+          setShouldHidePopup(true)
           setIsVisible(false)
           setTimeout(() => {
             alert('📬 You\'re already subscribed! Check your email for our latest newsletter.')
