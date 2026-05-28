@@ -68,12 +68,18 @@ export default function LearningDashboard() {
     // Check onboarding status
     const { data: onboarding } = await supabase
       .from('onboarding_progress')
-      .select('is_complete')
+      .select('is_complete, deferred_at')
       .eq('user_id', currentUser.id)
       .maybeSingle()
 
-    // Show wizard if user hasn't completed onboarding
-    if (!onboarding || !onboarding.is_complete) {
+    const deferredUntil = onboarding?.deferred_at
+      ? new Date(onboarding.deferred_at).getTime() + 7 * 24 * 60 * 60 * 1000
+      : 0
+    const dbDeferred = deferredUntil > Date.now()
+    const localDefer = typeof window !== 'undefined' ? Number(localStorage.getItem('tpw_wizard_deferred_until') || 0) : 0
+    const locallyDeferred = localDefer > Date.now()
+
+    if ((!onboarding || !onboarding.is_complete) && !dbDeferred && !locallyDeferred) {
       setShowWizard(true)
     }
 

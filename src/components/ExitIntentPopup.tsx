@@ -9,6 +9,23 @@ interface ExitIntentPopupProps {
   showOnce?: boolean // Show only once per session
 }
 
+const SUPPRESS_KEY = 'tpw_exit_intent_suppressed_until'
+const SUPPRESS_DAYS = 30
+
+function isSuppressed(): boolean {
+  if (typeof window === 'undefined') return true
+  const until = localStorage.getItem(SUPPRESS_KEY)
+  if (!until) return false
+  return Date.now() < Number(until)
+}
+
+function suppressPopup() {
+  if (typeof window === 'undefined') return
+  const until = Date.now() + SUPPRESS_DAYS * 24 * 60 * 60 * 1000
+  localStorage.setItem(SUPPRESS_KEY, String(until))
+  sessionStorage.setItem('exitIntentShown', 'true')
+}
+
 export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [email, setEmail] = useState('')
@@ -70,6 +87,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
     if (isSubscribed === null) return
     // Already subscribed — never show
     if (isSubscribed) return
+    if (isSuppressed()) return
     // Check if already shown this session
     if (showOnce && sessionStorage.getItem('exitIntentShown')) {
       return
@@ -160,6 +178,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
           // Don't fail the submission for event logging errors
         }
 
+        suppressPopup()
         setIsVisible(false)
         // Show success message
         setTimeout(() => {
@@ -168,6 +187,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
       } else {
         const result = await response.json()
         if (result.error?.includes('already subscribed')) {
+          suppressPopup()
           setIsVisible(false)
           setTimeout(() => {
             alert('📬 You\'re already subscribed! Check your email for our latest newsletter.')
@@ -182,6 +202,7 @@ export function ExitIntentPopup({ delay = 30000, showOnce = true }: ExitIntentPo
   }
 
   const handleDismiss = () => {
+    suppressPopup()
     setIsVisible(false)
   }
 

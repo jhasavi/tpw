@@ -155,6 +155,10 @@ export default function WelcomeWizard({ user, onComplete }: WelcomeWizardProps) 
 
   const handleSkip = async () => {
     // Mark as deferred rather than complete to reduce annoyance
+    const deferredUntil = Date.now() + 7 * 24 * 60 * 60 * 1000
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tpw_wizard_deferred_until', String(deferredUntil))
+    }
     await supabase
       .from('onboarding_progress')
       .upsert({ user_id: user.id, is_complete: false, deferred_at: new Date().toISOString() }, { onConflict: 'user_id' })
