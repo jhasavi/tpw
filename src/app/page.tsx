@@ -80,7 +80,7 @@ export default function HomePage() {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
-                href={janaganaPurpleWings.portalHome()}
+                href={janaganaPurpleWings.events()}
                 className="inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-slate-900 hover:bg-yellow-300 transition-colors"
               >
                 View Classes & Register
@@ -96,6 +96,12 @@ export default function HomePage() {
                 className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-semibold text-slate-900 hover:bg-purple-50 transition-colors"
               >
                 Yearly Membership Interest
+              </Link>
+              <Link
+                href={janaganaPurpleWings.join()}
+                className="inline-flex items-center justify-center rounded-xl border border-yellow-300/60 px-6 py-3 font-semibold text-yellow-100 hover:bg-white/10 transition-colors"
+              >
+                Join / Renew Membership
               </Link>
             </div>
           </div>

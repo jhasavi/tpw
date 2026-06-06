@@ -8,9 +8,10 @@
 
 | Visitor intent | On-site location | Destination |
 |----------------|------------------|-------------|
-| Classes & event registration | Homepage JanaGana block, nav **Classes & Events**, footer | `/portal/purple-wings` |
+| Classes & event registration | Homepage JanaGana block, nav **Classes & Events**, footer | `/portal/purple-wings/events` |
 | Community / org newsletter | Homepage JanaGana block, dual newsletter section | `/portal/purple-wings/contact?interest=newsletter` |
 | Membership interest | Homepage JanaGana block | `/portal/purple-wings/contact?interest=membership-interest` |
+| Paid membership join / renew | Homepage JanaGana block, referral program | `/portal/purple-wings/join` |
 | Event list & register | `/events` | Embed API → portal register URLs on JanaGana |
 | Empty upcoming / event CTA | `/events` | Links to portal + community updates |
 
@@ -36,7 +37,9 @@ NEXT_PUBLIC_JANAGANA_TENANT_SLUG=purple-wings
 
 1. Homepage → **Community Updates (JanaGana)** → correct tenant contact form.
 2. `/events` → Register opens `janagana.namasteneedham.com/portal/purple-wings/register/...`
-3. Weekly tips subscribe does **not** require JanaGana (by design).
+3. Submit a test registration → appears only under Purple Wings in JanaGana admin Registrations.
+4. In JanaGana dashboard/settings, confirm tenant slug `purple-wings`, portal URL, and Clerk org ID.
+5. Weekly tips subscribe does **not** require JanaGana (by design).
 
 ## Related
 

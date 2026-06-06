@@ -12,7 +12,9 @@ export function getJanaganaPortalBaseUrl(): string {
 export const janaganaPurpleWings = {
   portalHome: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings`,
   events: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/events`,
+  join: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/join`,
   newsletter: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/contact?interest=newsletter`,
+  classInterest: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/contact?interest=class`,
   membershipInterest: () =>
     `${getJanaganaPortalBaseUrl()}/portal/purple-wings/contact?interest=membership-interest`,
 } as const;

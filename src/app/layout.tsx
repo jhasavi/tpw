@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import CookieConsent from "@/components/CookieConsent";
@@ -13,10 +12,9 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
 import { Toaster } from "sonner";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
+import { janaganaPurpleWings } from "@/lib/janagana-portal";
 
 const inter = Inter({ subsets: ["latin"] });
-const janaganaTenantSlug = process.env.NEXT_PUBLIC_JANAGANA_TENANT_SLUG || 'purple-wings'
-const janaganaApiUrl = process.env.NEXT_PUBLIC_JANAGANA_API_URL || 'https://janagana.namasteneedham.com'
 
 export const metadata: Metadata = {
   title: {
@@ -90,36 +88,6 @@ export default function RootLayout({
         <link rel="preload" href="/images/logo-nobg.png" as="image" />
         <StructuredData />
         <GoogleAnalytics />
-        <Script
-          src={`${janaganaApiUrl}/janagana-embed.js`}
-          strategy="afterInteractive"
-        />
-        <Script id="janagana-init" strategy="afterInteractive">
-          {`
-            (function initJanagana() {
-              if (typeof window === 'undefined') return;
-
-              var attempts = 0;
-              var maxAttempts = 20;
-              var tenantSlug = ${JSON.stringify(janaganaTenantSlug)};
-              var apiUrl = ${JSON.stringify(janaganaApiUrl)};
-
-              var tryInit = function() {
-                if (window.Janagana && typeof window.Janagana.init === 'function') {
-                  window.Janagana.init({ tenantSlug: tenantSlug, apiUrl: apiUrl });
-                  return;
-                }
-
-                attempts += 1;
-                if (attempts < maxAttempts) {
-                  window.setTimeout(tryInit, 250);
-                }
-              };
-
-              tryInit();
-            })();
-          `}
-        </Script>
       </head>
       <body className={inter.className}>
         <ErrorBoundary>
@@ -172,7 +140,7 @@ export default function RootLayout({
                   📬 Weekly financial tips
                 </a>
                 <a
-                  href={(process.env.NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL || 'https://janagana.namasteneedham.com') + '/portal/purple-wings'}
+                  href={janaganaPurpleWings.events()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block border border-purple-400 text-purple-200 hover:bg-purple-900/40 text-sm px-4 py-2 rounded-lg transition-colors mb-4 w-full text-center"

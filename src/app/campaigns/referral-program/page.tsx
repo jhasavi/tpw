@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { janaganaPurpleWings } from '@/lib/janagana-portal'
 import { Gift, Users, TrendingUp, Copy, CheckCircle, Crown, Star } from 'lucide-react'
 
 const REFERRAL_TIERS = [
@@ -111,21 +112,24 @@ export default function ReferralProgram() {
     return 0
   }
 
+  const referralJoinUrl = () => `${janaganaPurpleWings.join()}?ref=${userReferralCode}`
+
   const copyReferralLink = () => {
-    const link = `https://www.thepurplewings.org/join?ref=${userReferralCode}`
+    const link = referralJoinUrl()
     navigator.clipboard.writeText(link)
     setCopied(true)
     setTimeout(() => setCopied(false), 3000)
   }
 
   const shareReferral = () => {
-    const message = `I'm learning financial independence with The Purple Wings and thought you'd love it too! Join me: https://www.thepurplewings.org/join?ref=${userReferralCode}`
+    const link = referralJoinUrl()
+    const message = `I'm learning financial independence with The Purple Wings and thought you'd love it too! Join me: ${link}`
     
     if (navigator.share) {
       navigator.share({
         title: 'Join The Purple Wings',
         text: message,
-        url: `https://www.thepurplewings.org/join?ref=${userReferralCode}`
+        url: link
       })
     } else {
       navigator.clipboard.writeText(message)
@@ -301,7 +305,7 @@ export default function ReferralProgram() {
                 <div className="flex gap-4">
                   <input
                     type="text"
-                    value={`https://www.thepurplewings.org/join?ref=${userReferralCode}`}
+                    value={referralJoinUrl()}
                     readOnly
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-white"
                   />

@@ -1,4 +1,5 @@
 import type { User } from '@supabase/supabase-js'
+import { janaganaPurpleWings } from '@/lib/janagana-portal'
 
 export interface NavItem {
   label: string
@@ -87,7 +88,7 @@ export const navigationConfig: NavItem[] = [
       },
       {
         label: 'Classes & Events',
-        href: (process.env.NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL || 'https://janagana.namasteneedham.com') + '/portal/purple-wings',
+        href: janaganaPurpleWings.events(),
         icon: '🎓'
       },
       {
