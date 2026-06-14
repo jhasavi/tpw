@@ -108,7 +108,7 @@ export default function BreadcrumbNavigation() {
   }
   
   return (
-    <nav className="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
+    <nav className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800" aria-label="Breadcrumb">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ol className="flex items-center space-x-2 py-3 text-sm">
           {breadcrumbs.map((item, index) => (

@@ -22,17 +22,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { Resend } from 'resend'
+import { getAdminSupabase } from '@/lib/supabase/admin'
+import { requireResendClient } from '@/lib/resend-client'
 import { eventRegistrationLimiter, getClientIdentifier } from '@/lib/rate-limiter'
 import { registerForEvent } from '@/lib/janagana'
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'The Purple Wings <noreply@updates.namastebostonhomes.com>'
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@thepurplewings.org'
 
@@ -53,6 +47,11 @@ export async function POST(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
+    }
+
+    const adminSupabase = getAdminSupabase()
+    if (!adminSupabase) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
     }
 
     // Insert registration (unique constraint catches duplicates)
@@ -83,6 +82,8 @@ export async function POST(request: NextRequest) {
       console.error('JanaGana sync error:', error)
       // Don't fail the request if JanaGana sync fails
     }
+
+    const resend = requireResendClient()
 
     // Notify admin
     await resend.emails.send({

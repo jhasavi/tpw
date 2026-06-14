@@ -1,6 +1,4 @@
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { requireResendClient } from '@/lib/resend-client'
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'The Purple Wings <noreply@updates.namastebostonhomes.com>'
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@thepurplewings.org'
@@ -64,7 +62,7 @@ function openTrackingPixel(campaignId: string, email: string, userId?: string) {
 export async function sendContactEmail(data: ContactFormData) {
   try {
     // Send notification to admin
-    const adminEmail = await resend.emails.send({
+    const adminEmail = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: CONTACT_EMAIL,
       subject: `New Contact Form: ${data.subject}`,
@@ -87,7 +85,7 @@ export async function sendContactEmail(data: ContactFormData) {
     })
 
     // Send auto-reply to user
-    const autoReply = await resend.emails.send({
+    const autoReply = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: data.email,
       subject: 'We received your message - The Purple Wings',
@@ -138,7 +136,7 @@ export async function sendContactEmail(data: ContactFormData) {
 
 export async function sendNewsletterWelcome(subscriber: NewsletterSubscriber) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: subscriber.email,
       subject: 'Welcome to The Purple Wings Newsletter! 💜',
@@ -208,7 +206,7 @@ export async function sendNewsletterWelcome(subscriber: NewsletterSubscriber) {
 
 export async function sendUserWelcome(user: UserWelcomeData) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: 'Welcome to The Purple Wings - Start Your Financial Journey! 🚀',
@@ -294,7 +292,7 @@ export async function sendCourseCompletion(user: { email: string; name: string }
     const certificateUrl = course.slug
       ? `https://www.thepurplewings.org/certificate/${course.slug}`
       : `https://www.thepurplewings.org/dashboard`
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `🎓 Congratulations! You completed ${course.title}`,
@@ -374,7 +372,7 @@ export async function sendCourseCompletion(user: { email: string; name: string }
  */
 export async function sendDripDay3(user: UserWelcomeData) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `${user.name.split(' ')[0]}, your financial journey is waiting 💜`,
@@ -430,7 +428,7 @@ export async function sendDripDay3(user: UserWelcomeData) {
  */
 export async function sendDripDay7(user: UserWelcomeData) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `What women who master money have in common 🌟`,
@@ -490,7 +488,7 @@ export async function sendDripDay7(user: UserWelcomeData) {
  */
 export async function sendDripDay14(user: UserWelcomeData) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `2 weeks down — here's your personalized learning path 🗺️`,
@@ -560,7 +558,7 @@ export async function sendWinBackDay7(user: UserWelcomeData) {
     const quickQuizLink = trackedLink(campaignId, `${getSiteBaseUrl()}/quiz/personality`, user.email, user.userId)
     const pixel = openTrackingPixel(campaignId, user.email, user.userId)
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `${firstName}, your dashboard is waiting for you` ,
@@ -612,7 +610,7 @@ export async function sendWinBackDay14(user: UserWelcomeData) {
     const toolsLink = trackedLink(campaignId, `${getSiteBaseUrl()}/tools`, user.email, user.userId)
     const pixel = openTrackingPixel(campaignId, user.email, user.userId)
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `${firstName}, ready for your 14-day comeback challenge?`,
@@ -661,7 +659,7 @@ export async function sendWinBackDay30(user: UserWelcomeData) {
     const eventsLink = trackedLink(campaignId, `${getSiteBaseUrl()}/events`, user.email, user.userId)
     const pixel = openTrackingPixel(campaignId, user.email, user.userId)
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await requireResendClient().emails.send({
       from: FROM_EMAIL,
       to: user.email,
       subject: `${firstName}, we built a 10-step comeback plan for you`,
@@ -701,7 +699,7 @@ export async function sendWinBackDay30(user: UserWelcomeData) {
 export async function sendBlogNotification(subscribers: string[], post: { title: string; excerpt: string; slug: string; category: string }) {
   try {
     const emailPromises = subscribers.map(email =>
-      resend.emails.send({
+      requireResendClient().emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: `New Article: ${post.title}`,

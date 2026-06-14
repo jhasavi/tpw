@@ -23,7 +23,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { getAdminSupabase } from '@/lib/supabase/admin'
 import {
   sendDripDay3,
   sendDripDay7,
@@ -33,12 +33,6 @@ import {
   sendWinBackDay30,
 } from '@/lib/email'
 import { crmClient } from '@/lib/crm-retry-server'
-
-// Service role bypasses RLS — only used server-side
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 const ONBOARDING_DRIP_DAYS = [3, 7, 14] as const
 
@@ -131,6 +125,7 @@ function updateLatestActivity(
 }
 
 async function buildLatestActivityMap(profiles: WinBackProfile[]): Promise<Map<string, Date>> {
+  const adminSupabase = getAdminSupabase()
   const latestByUserId = new Map<string, Date>()
 
   for (const profile of profiles) {
@@ -139,7 +134,7 @@ async function buildLatestActivityMap(profiles: WinBackProfile[]): Promise<Map<s
   }
 
   const userIds = profiles.map((profile) => profile.id)
-  if (userIds.length === 0) return latestByUserId
+  if (userIds.length === 0 || !adminSupabase) return latestByUserId
 
   const chunkSize = 500
 
@@ -189,6 +184,9 @@ async function buildLatestActivityMap(profiles: WinBackProfile[]): Promise<Map<s
 }
 
 async function isEligibleForWinBack(email: string): Promise<boolean> {
+  const adminSupabase = getAdminSupabase()
+  if (!adminSupabase) return true
+
   try {
     const { data } = await adminSupabase
       .from('newsletter_subscribers')
@@ -209,6 +207,9 @@ async function isEligibleForWinBack(email: string): Promise<boolean> {
 }
 
 async function runOnboardingDrip(results: CronResult[], dryRun: boolean) {
+  const adminSupabase = getAdminSupabase()
+  if (!adminSupabase) return
+
   for (const day of ONBOARDING_DRIP_DAYS) {
     const windowStart = new Date(Date.now() - (day * 86_400_000) - 1_800_000).toISOString()
     const windowEnd = new Date(Date.now() - (day * 86_400_000) + 1_800_000).toISOString()
@@ -268,6 +269,9 @@ async function runOnboardingDrip(results: CronResult[], dryRun: boolean) {
 }
 
 async function runWinBackDrip(results: CronResult[], dryRun: boolean) {
+  const adminSupabase = getAdminSupabase()
+  if (!adminSupabase) return
+
   const { data: profiles, error } = await adminSupabase
     .from('profiles')
     .select('id, email, full_name, updated_at, created_at')

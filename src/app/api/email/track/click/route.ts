@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { getAdminSupabase } from '@/lib/supabase/admin'
 
 function decodeTarget(raw: string | null): string {
   if (!raw) return 'https://www.thepurplewings.org'
@@ -25,6 +20,10 @@ export async function GET(request: NextRequest) {
   const target = decodeTarget(encodedTarget)
 
   try {
+    const adminSupabase = getAdminSupabase()
+    if (!adminSupabase) {
+      return NextResponse.redirect(target, { status: 302 })
+    }
     await adminSupabase.from('email_campaign_events').insert({
       user_id: userId,
       email,

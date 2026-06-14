@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { getAdminSupabase } from '@/lib/supabase/admin'
 
 type TimeRange = '7d' | '30d' | '90d' | '1y'
 
@@ -25,6 +20,11 @@ function safePercent(numerator: number, denominator: number): number {
 }
 
 export async function GET(request: NextRequest) {
+  const adminSupabase = getAdminSupabase()
+  if (!adminSupabase) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
+  }
+
   const timeRange = (request.nextUrl.searchParams.get('timeRange') || '30d') as TimeRange
   const cutoff = getDateCutoff(timeRange)
   const now = new Date()
