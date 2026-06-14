@@ -140,12 +140,20 @@ export default function RootLayout({
                   📬 Weekly financial tips
                 </a>
                 <a
+                  href={janaganaPurpleWings.newsletter('/events')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block border border-purple-400 text-purple-200 hover:bg-purple-900/40 text-sm px-4 py-2 rounded-lg transition-colors mb-2 w-full text-center"
+                >
+                  🎓 Class & event updates
+                </a>
+                <a
                   href={janaganaPurpleWings.events()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block border border-purple-400 text-purple-200 hover:bg-purple-900/40 text-sm px-4 py-2 rounded-lg transition-colors mb-4 w-full text-center"
                 >
-                  🎓 Classes &amp; events (JanaGana)
+                  Register for classes
                 </a>
                 <div className="flex gap-4 mt-2">
                   <a 

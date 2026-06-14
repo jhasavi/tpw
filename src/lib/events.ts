@@ -1,4 +1,5 @@
 import { legacyPastEvents } from '@/data/events/past-events-legacy'
+import { withPortalReturnTo } from '@/lib/janagana-portal'
 
 export type WebsiteEvent = {
   id: string
@@ -58,8 +59,8 @@ function toWebsiteEvent(input: Record<string, unknown>): WebsiteEvent | null {
     priceCents: typeof input.priceCents === 'number' ? input.priceCents : 0,
     format: input.format === 'VIRTUAL' || input.format === 'HYBRID' ? input.format : 'IN_PERSON',
     isVirtual: Boolean(input.isVirtual),
-    detailsUrl: toAbsoluteUrl(input.detailsUrl),
-    registrationUrl: toAbsoluteUrl(input.registrationUrl),
+    detailsUrl: withPortalReturnTo(toAbsoluteUrl(input.detailsUrl), '/events'),
+    registrationUrl: withPortalReturnTo(toAbsoluteUrl(input.registrationUrl), '/events'),
     portalUrl: toAbsoluteUrl(input.portalUrl),
     status: input.status === 'DRAFT' || input.status === 'CANCELED' || input.status === 'COMPLETED'
       ? input.status

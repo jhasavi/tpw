@@ -9,12 +9,36 @@ export function getJanaganaPortalBaseUrl(): string {
   ).replace(/\/$/, "");
 }
 
+export function getTpwSiteBaseUrl(): string {
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://www.thepurplewings.org").replace(/\/$/, "");
+}
+
+function portalPath(path: string, returnPath?: string): string {
+  const base = `${getJanaganaPortalBaseUrl()}${path}`;
+  if (!returnPath) return base;
+  const returnTo = `${getTpwSiteBaseUrl()}${returnPath.startsWith("/") ? returnPath : `/${returnPath}`}`;
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}returnTo=${encodeURIComponent(returnTo)}`;
+}
+
 export const janaganaPurpleWings = {
-  portalHome: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings`,
-  events: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/events`,
-  join: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/join`,
-  newsletter: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/contact?interest=newsletter`,
-  classInterest: () => `${getJanaganaPortalBaseUrl()}/portal/purple-wings/contact?interest=class`,
-  membershipInterest: () =>
-    `${getJanaganaPortalBaseUrl()}/portal/purple-wings/contact?interest=membership-interest`,
+  portalHome: (returnPath = "/events") => portalPath("/portal/purple-wings", returnPath),
+  events: (returnPath = "/events") => portalPath("/portal/purple-wings/events", returnPath),
+  join: (returnPath = "/get-involved") => portalPath("/portal/purple-wings/join", returnPath),
+  newsletter: (returnPath = "/newsletter/subscribe") =>
+    portalPath("/portal/purple-wings/contact?interest=newsletter", returnPath),
+  classInterest: (returnPath = "/events") =>
+    portalPath("/portal/purple-wings/contact?interest=class", returnPath),
+  membershipInterest: (returnPath = "/get-involved") =>
+    portalPath("/portal/purple-wings/contact?interest=membership-interest", returnPath),
+  registerEvent: (eventSlug: string, returnPath = "/events") =>
+    portalPath(`/portal/purple-wings/register/${eventSlug}`, returnPath),
 } as const;
+
+/** Append returnTo when JanaGana embed API returns bare registration URLs. */
+export function withPortalReturnTo(url: string | null, returnPath = "/events"): string | null {
+  if (!url) return null;
+  const returnTo = `${getTpwSiteBaseUrl()}${returnPath.startsWith("/") ? returnPath : `/${returnPath}`}`;
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}returnTo=${encodeURIComponent(returnTo)}`;
+}

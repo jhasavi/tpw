@@ -146,6 +146,13 @@ export default function Navigation() {
             })}
 
             {/* User Account Menu */}
+            <Link
+              href="/search"
+              className="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-purple-50 transition-colors duration-150"
+              aria-label="Search site"
+            >
+              Search
+            </Link>
             <ThemeToggle />
             {user ? (
               <Dropdown

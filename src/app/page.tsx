@@ -80,16 +80,22 @@ export default function HomePage() {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
-                href={janaganaPurpleWings.events()}
+                href={janaganaPurpleWings.events('/')}
                 className="inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-slate-900 hover:bg-yellow-300 transition-colors"
               >
                 View Classes & Register
               </Link>
               <Link
-                href={janaganaPurpleWings.newsletter()}
+                href="/newsletter/subscribe"
+                className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-semibold text-purple-900 hover:bg-purple-50 transition-colors"
+              >
+                Weekly financial tips
+              </Link>
+              <Link
+                href={janaganaPurpleWings.newsletter('/')}
                 className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
               >
-                Community Updates (JanaGana)
+                Class & event updates
               </Link>
               <Link
                 href={janaganaPurpleWings.membershipInterest()}

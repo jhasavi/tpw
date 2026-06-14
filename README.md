@@ -61,23 +61,25 @@ vercel --prod
 
 ## JanaGana Integration
 
-Use separate environment variables for browser embed widgets and server-to-server API calls.
+For the NB/TPW pilot, JanaGana is used through public portal links and read-only event embed APIs. TPW does **not** need a JanaGana API key for visitor signup, class registration, or weekly tips.
 
-Browser embed (public):
+Browser portal/event integration (public):
 ```env
+NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL=https://janagana.namasteneedham.com
 NEXT_PUBLIC_JANAGANA_TENANT_SLUG=purple-wings
 NEXT_PUBLIC_JANAGANA_API_URL=https://janagana.namasteneedham.com
 ```
 
-Server API sync (private):
+Legacy server API sync is disabled unless explicitly opted in:
 ```env
+JANAGANA_LEGACY_API_SYNC_ENABLED=false
 JANAGANA_API_URL=https://janagana.namasteneedham.com/api/plugin
-JANAGANA_API_KEY=your_private_plugin_api_key
 ```
 
 Notes:
-- Use `NEXT_PUBLIC_...` vars only for loading `janagana-embed.js` and calling `Janagana.init(...)` in browser code.
-- Use `JANAGANA_API_*` only in server routes/scripts (never expose API keys to client code).
+- Use `NEXT_PUBLIC_JANAGANA_PORTAL_BASE_URL` for CTA links to `/portal/purple-wings`.
+- Use `NEXT_PUBLIC_JANAGANA_API_URL` for the read-only `/api/embed/events?tenantSlug=purple-wings` feed.
+- Do not configure `JANAGANA_API_KEY` for v1 unless the legacy API sync is intentionally re-enabled.
 
 ## 🛠 Tech Stack
 

@@ -94,3 +94,5 @@ courses_backup_*
 
 # Supabase CLI temporary files
 supabase/.temp
+
+*.csv

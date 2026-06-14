@@ -11,7 +11,19 @@ export const metadata: Metadata = {
     'Join free financial education workshops in Needham, Massachusetts. Explore upcoming and past events with expert speakers on investing, insurance, real estate, taxes, and retirement.',
 }
 
-export default async function EventsPage() {
+const REGISTRATION_MESSAGES: Record<string, string> = {
+  registered: 'Registration complete! You are signed up for the class.',
+  'already-registered': 'You were already registered for this event.',
+  'pending-payment': 'Registration saved. Complete payment to confirm your spot.',
+}
+
+export default async function EventsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ registration?: string }>
+}) {
+  const params = await searchParams
+  const registrationNotice = params.registration ? REGISTRATION_MESSAGES[params.registration] : null
   const { upcoming, past, usingLegacyPastFallback } = await getWebsiteEvents()
   const totalAttendees = past.reduce((sum, event) => sum + (event.attendeeCount || 0), 0)
   const featuredEvent = upcoming.length > 0 ? upcoming[0] : null
@@ -53,6 +65,11 @@ export default async function EventsPage() {
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
+        {registrationNotice && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+            {registrationNotice}
+          </div>
+        )}
         {/* Featured Event */}
         {featuredEvent && (
           <section className="space-y-6">
@@ -86,9 +103,9 @@ export default async function EventsPage() {
             <div className="rounded-2xl border border-purple-100 bg-white p-10 text-center text-slate-600">
               <div className="text-4xl mb-4">📅</div>
               <h3 className="text-xl font-semibold mb-2">No upcoming events listed yet</h3>
-              <p className="mb-4">Browse all classes and register on our JanaGana community portal.</p>
+              <p className="mb-4">Browse all JanaGana-published classes and register from the Purple Wings tenant portal.</p>
               <a
-                href={janaganaPurpleWings.portalHome()}
+                href={janaganaPurpleWings.events()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-lg bg-purple-600 px-5 py-2.5 font-semibold text-white hover:bg-purple-700"
@@ -153,7 +170,7 @@ export default async function EventsPage() {
               Community updates (JanaGana)
             </a>
             <a
-              href={janaganaPurpleWings.portalHome()}
+              href={janaganaPurpleWings.events()}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg border border-purple-200 px-5 py-2.5 font-semibold text-white hover:bg-white/10"

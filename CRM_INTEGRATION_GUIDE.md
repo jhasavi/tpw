@@ -1,5 +1,16 @@
 # TPW CRM Integration Guide
 
+## V1 pilot status
+
+The current NB/TPW pilot does **not** use JanaGana API keys for visitor signup, class registration, or public website CTAs. Production visitor flows use:
+
+- TPW website CTAs → `https://janagana.namasteneedham.com/portal/purple-wings/...`
+- TPW `/events` → read-only JanaGana embed API for published Purple Wings events
+- JanaGana portal forms → Purple Wings tenant Contacts and Event Registrations
+- TPW weekly financial tips → TPW local Supabase newsletter list
+
+The server-to-server CRM sync described below is legacy/deferred. It remains disabled unless `JANAGANA_LEGACY_API_SYNC_ENABLED=true` is intentionally configured.
+
 ## 🎯 Overview
 
 This guide covers the complete JanaGana CRM integration for The Purple Wings (TPW) platform, including all implemented events, architecture, and maintenance procedures.
@@ -81,8 +92,9 @@ POST /api/crm/events
 
 ```bash
 # JanaGana CRM Configuration
+JANAGANA_LEGACY_API_SYNC_ENABLED=false
 JANAGANA_API_URL=https://janagana.namasteneedham.com/api
-JANAGANA_API_KEY=your_api_key_here
+# JANAGANA_API_KEY is legacy/deferred for v1.
 
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
@@ -403,8 +415,9 @@ GROUP BY endpoint;
 npm run dev
 
 # Environment variables in .env.local
+JANAGANA_LEGACY_API_SYNC_ENABLED=false
 JANAGANA_API_URL=http://localhost:3000/api
-JANAGANA_API_KEY=dev_key
+# JANAGANA_API_KEY is legacy/deferred for v1.
 ```
 
 #### Production
@@ -413,8 +426,9 @@ JANAGANA_API_KEY=dev_key
 vercel --prod
 
 # Production environment variables
+vercel env add JANAGANA_LEGACY_API_SYNC_ENABLED
 vercel env add JANAGANA_API_URL
-vercel env add JANAGANA_API_KEY
+# Do not add JANAGANA_API_KEY for v1 unless legacy sync is intentionally re-enabled.
 ```
 
 ### Database Migrations

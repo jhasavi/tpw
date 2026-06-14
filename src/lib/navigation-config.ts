@@ -28,6 +28,27 @@ export interface UserMenuConfig {
 // Navigation configuration
 export const navigationConfig: NavItem[] = [
   {
+    label: 'Events',
+    href: '/events',
+    isActive: (pathname) => pathname === '/events' || pathname.startsWith('/events/')
+  },
+  {
+    label: 'Newsletter',
+    dropdown: [
+      {
+        label: 'Weekly financial tips',
+        href: '/newsletter/subscribe',
+        icon: '📬'
+      },
+      {
+        label: 'Class & event updates (JanaGana)',
+        href: janaganaPurpleWings.newsletter('/newsletter/subscribe'),
+        icon: '🎓'
+      }
+    ],
+    isActive: (pathname) => pathname.startsWith('/newsletter')
+  },
+  {
     label: 'Stories',
     href: '/stories',
     isActive: (pathname) => pathname === '/stories'
@@ -82,12 +103,7 @@ export const navigationConfig: NavItem[] = [
         icon: '❓'
       },
       {
-        label: 'Weekly Tips',
-        href: '/newsletter/subscribe',
-        icon: '📧'
-      },
-      {
-        label: 'Classes & Events',
+        label: 'Classes & Events (JanaGana)',
         href: janaganaPurpleWings.events(),
         icon: '🎓'
       },

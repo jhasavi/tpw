@@ -1,10 +1,16 @@
 const API_URL = process.env.JANAGANA_API_URL || 'http://localhost:3000/api/plugin'
 const API_KEY = process.env.JANAGANA_API_KEY
+const LEGACY_SYNC_ENABLED = process.env.JANAGANA_LEGACY_API_SYNC_ENABLED === 'true'
 
 async function janaganaRequest(endpoint: string, options: RequestInit = {}) {
-  if (!API_KEY) {
-    throw new Error('JANAGANA_API_KEY is not configured')
+  if (!LEGACY_SYNC_ENABLED) {
+    return { skipped: true, reason: 'legacy_janagana_api_sync_disabled' }
   }
+
+  if (!API_KEY) {
+    return { skipped: true, reason: 'janagana_api_key_not_configured' }
+  }
+
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
