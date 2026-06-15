@@ -11,8 +11,10 @@ jobs:
       # Use secrets with fallback values
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      RESEND_FROM_EMAIL: ${{ secrets.RESEND_FROM_EMAIL }}
+      ZEPTOMAIL_TOKEN: ${{ secrets.ZEPTOMAIL_TOKEN }}
+      ZEPTOMAIL_FROM: ${{ secrets.ZEPTOMAIL_FROM }}
+      ZEPTOMAIL_FROM_NAME: ${{ secrets.ZEPTOMAIL_FROM_NAME }}
+      LEADS_TO: ${{ secrets.LEADS_TO }}
       CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:

@@ -306,14 +306,14 @@ async function runWinBackDrip(results: CronResult[], dryRun: boolean) {
       continue
     }
 
-    const resendCutoff = new Date(now.getTime() - getBucketCooldownDays(inactivityBucket) * 86_400_000).toISOString()
+    const cooldownCutoff = new Date(now.getTime() - getBucketCooldownDays(inactivityBucket) * 86_400_000).toISOString()
     const { data: alreadySent } = await adminSupabase
       .from('win_back_email_log')
       .select('id')
       .eq('user_id', profile.id)
       .eq('inactivity_day', inactivityBucket)
       .eq('status', 'sent')
-      .gte('sent_at', resendCutoff)
+      .gte('sent_at', cooldownCutoff)
       .maybeSingle()
 
     if (alreadySent) continue

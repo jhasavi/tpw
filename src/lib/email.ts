@@ -1,7 +1,21 @@
-import { requireResendClient } from '@/lib/resend-client'
+import { sendZeptoMail } from '@/lib/zeptomail'
+import { escapeHtml } from '@/lib/email-sanitize'
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'The Purple Wings <noreply@updates.namastebostonhomes.com>'
-const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@thepurplewings.org'
+const CONTACT_EMAIL = process.env.LEADS_TO || process.env.CONTACT_EMAIL || 'info@thepurplewings.org'
+
+async function sendTransactionalEmail(options: {
+  to: string | string[]
+  subject: string
+  html: string
+  replyTo?: string
+  replyToName?: string
+}) {
+  const result = await sendZeptoMail(options)
+  if (!result.success) {
+    return { success: false as const, error: result.error }
+  }
+  return { success: true as const, data: result }
+}
 
 interface ContactFormData {
   name: string
@@ -59,75 +73,66 @@ function openTrackingPixel(campaignId: string, email: string, userId?: string) {
   return `${baseUrl}/api/email/track/open?${params.toString()}`
 }
 
+export async function sendContactAutoReply(data: ContactFormData) {
+  return sendTransactionalEmail({
+    to: data.email,
+    subject: 'We received your message - The Purple Wings',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
+          <h1 style="color: white; margin: 0;">The Purple Wings</h1>
+          <p style="color: #e9d5ff; margin: 10px 0 0 0;">Financial Literacy & Empowerment</p>
+        </div>
+        <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <h2 style="color: #7c3aed; margin-top: 0;">Thank You for Reaching Out!</h2>
+          <p style="color: #374151; line-height: 1.6;">Hi ${escapeHtml(data.name)},</p>
+          <p style="color: #374151; line-height: 1.6;">
+            We've received your message and appreciate you taking the time to contact us.
+            Our team will review your inquiry and get back to you within 24-48 hours.
+          </p>
+          <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p style="color: #6b7280; margin: 0; font-size: 14px;"><strong>Your message:</strong></p>
+            <p style="color: #374151; margin: 10px 0 0 0;">${escapeHtml(data.message)}</p>
+          </div>
+        </div>
+      </div>
+    `,
+  })
+}
+
 export async function sendContactEmail(data: ContactFormData) {
   try {
     // Send notification to admin
-    const adminEmail = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const adminEmail = await sendTransactionalEmail({
       to: CONTACT_EMAIL,
       subject: `New Contact Form: ${data.subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #7c3aed;">New Contact Form Submission</h2>
           <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Name:</strong> ${data.name}</p>
-            <p><strong>Email:</strong> ${data.email}</p>
-            <p><strong>Subject:</strong> ${data.subject}</p>
+            <p><strong>Name:</strong> ${escapeHtml(data.name)}</p>
+            <p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+            <p><strong>Subject:</strong> ${escapeHtml(data.subject)}</p>
             <p><strong>Message:</strong></p>
-            <p style="white-space: pre-wrap;">${data.message}</p>
+            <p style="white-space: pre-wrap;">${escapeHtml(data.message)}</p>
           </div>
           <p style="color: #6b7280; font-size: 14px;">
-            Reply directly to this email to respond to ${data.name}.
+            Reply directly to this email to respond to ${escapeHtml(data.name)}.
           </p>
         </div>
       `,
       replyTo: data.email,
+      replyToName: data.name,
     })
 
     // Send auto-reply to user
-    const autoReply = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
-      to: data.email,
-      subject: 'We received your message - The Purple Wings',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
-            <h1 style="color: white; margin: 0;">The Purple Wings</h1>
-            <p style="color: #e9d5ff; margin: 10px 0 0 0;">Financial Literacy & Empowerment</p>
-          </div>
-          <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <h2 style="color: #7c3aed; margin-top: 0;">Thank You for Reaching Out!</h2>
-            <p style="color: #374151; line-height: 1.6;">
-              Hi ${data.name},
-            </p>
-            <p style="color: #374151; line-height: 1.6;">
-              We've received your message and appreciate you taking the time to contact us. 
-              Our team will review your inquiry and get back to you within 24-48 hours.
-            </p>
-            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="color: #6b7280; margin: 0; font-size: 14px;"><strong>Your message:</strong></p>
-              <p style="color: #374151; margin: 10px 0 0 0;">${data.message}</p>
-            </div>
-            <p style="color: #374151; line-height: 1.6;">
-              In the meantime, feel free to explore our:
-            </p>
-            <ul style="color: #374151; line-height: 1.8;">
-              <li><a href="https://www.thepurplewings.org/courses" style="color: #7c3aed; text-decoration: none;">Free Financial Literacy Courses</a></li>
-              <li><a href="https://www.thepurplewings.org/blog" style="color: #7c3aed; text-decoration: none;">Educational Blog Articles</a></li>
-              <li><a href="https://www.thepurplewings.org/quiz" style="color: #7c3aed; text-decoration: none;">Financial Knowledge Quiz</a></li>
-            </ul>
-            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #e5e7eb;">
-              <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                Best regards,<br>
-                <strong style="color: #7c3aed;">The Purple Wings Team</strong>
-              </p>
-            </div>
-          </div>
-        </div>
-      `,
-    })
+    const autoReply = await sendContactAutoReply(data)
 
-    return { success: true, adminEmail, autoReply }
+    if (!adminEmail.success || !autoReply.success) {
+      return { success: false, error: adminEmail.success ? autoReply.error : adminEmail.error }
+    }
+
+    return { success: true, adminEmail: adminEmail.data, autoReply: autoReply.data }
   } catch (error) {
     console.error('Error sending contact email:', error)
     return { success: false, error }
@@ -136,8 +141,7 @@ export async function sendContactEmail(data: ContactFormData) {
 
 export async function sendNewsletterWelcome(subscriber: NewsletterSubscriber) {
   try {
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: subscriber.email,
       subject: 'Welcome to The Purple Wings Newsletter! 💜',
       html: `
@@ -192,12 +196,11 @@ export async function sendNewsletterWelcome(subscriber: NewsletterSubscriber) {
       `,
     })
 
-    if (error) {
-      console.error('Error sending newsletter welcome:', error)
-      return { success: false, error }
+    if (!result.success) {
+      console.error('Error sending newsletter welcome:', result.error)
+      return { success: false, error: result.error }
     }
-
-    return { success: true, data }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending newsletter welcome:', error)
     return { success: false, error }
@@ -206,8 +209,7 @@ export async function sendNewsletterWelcome(subscriber: NewsletterSubscriber) {
 
 export async function sendUserWelcome(user: UserWelcomeData) {
   try {
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: 'Welcome to The Purple Wings - Start Your Financial Journey! 🚀',
       html: `
@@ -275,12 +277,12 @@ export async function sendUserWelcome(user: UserWelcomeData) {
       `,
     })
 
-    if (error) {
-      console.error('Error sending user welcome:', error)
-      return { success: false, error }
+    if (!result.success) {
+      console.error('Error sending user welcome:', result.error)
+      return { success: false, error: result.error }
     }
 
-    return { success: true, data }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending user welcome:', error)
     return { success: false, error }
@@ -292,8 +294,7 @@ export async function sendCourseCompletion(user: { email: string; name: string }
     const certificateUrl = course.slug
       ? `https://www.thepurplewings.org/certificate/${course.slug}`
       : `https://www.thepurplewings.org/dashboard`
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `🎓 Congratulations! You completed ${course.title}`,
       html: `
@@ -353,12 +354,12 @@ export async function sendCourseCompletion(user: { email: string; name: string }
       `,
     })
 
-    if (error) {
-      console.error('Error sending course completion:', error)
-      return { success: false, error }
+    if (!result.success) {
+      console.error('Error sending course completion:', result.error)
+      return { success: false, error: result.error }
     }
 
-    return { success: true, data }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending course completion:', error)
     return { success: false, error }
@@ -372,8 +373,7 @@ export async function sendCourseCompletion(user: { email: string; name: string }
  */
 export async function sendDripDay3(user: UserWelcomeData) {
   try {
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `${user.name.split(' ')[0]}, your financial journey is waiting 💜`,
       html: `
@@ -415,8 +415,8 @@ export async function sendDripDay3(user: UserWelcomeData) {
         </div>
       `,
     })
-    if (error) return { success: false, error }
-    return { success: true, data }
+    if (!result.success) return { success: false, error: result.error }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending day-3 drip:', error)
     return { success: false, error }
@@ -428,8 +428,7 @@ export async function sendDripDay3(user: UserWelcomeData) {
  */
 export async function sendDripDay7(user: UserWelcomeData) {
   try {
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `What women who master money have in common 🌟`,
       html: `
@@ -475,8 +474,8 @@ export async function sendDripDay7(user: UserWelcomeData) {
         </div>
       `,
     })
-    if (error) return { success: false, error }
-    return { success: true, data }
+    if (!result.success) return { success: false, error: result.error }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending day-7 drip:', error)
     return { success: false, error }
@@ -488,8 +487,7 @@ export async function sendDripDay7(user: UserWelcomeData) {
  */
 export async function sendDripDay14(user: UserWelcomeData) {
   try {
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `2 weeks down — here's your personalized learning path 🗺️`,
       html: `
@@ -541,8 +539,8 @@ export async function sendDripDay14(user: UserWelcomeData) {
         </div>
       `,
     })
-    if (error) return { success: false, error }
-    return { success: true, data }
+    if (!result.success) return { success: false, error: result.error }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending day-14 drip:', error)
     return { success: false, error }
@@ -558,8 +556,7 @@ export async function sendWinBackDay7(user: UserWelcomeData) {
     const quickQuizLink = trackedLink(campaignId, `${getSiteBaseUrl()}/quiz/personality`, user.email, user.userId)
     const pixel = openTrackingPixel(campaignId, user.email, user.userId)
 
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `${firstName}, your dashboard is waiting for you` ,
       html: `
@@ -593,8 +590,8 @@ export async function sendWinBackDay7(user: UserWelcomeData) {
       `,
     })
 
-    if (error) return { success: false, error }
-    return { success: true, data }
+    if (!result.success) return { success: false, error: result.error }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending win-back day 7 email:', error)
     return { success: false, error }
@@ -610,8 +607,7 @@ export async function sendWinBackDay14(user: UserWelcomeData) {
     const toolsLink = trackedLink(campaignId, `${getSiteBaseUrl()}/tools`, user.email, user.userId)
     const pixel = openTrackingPixel(campaignId, user.email, user.userId)
 
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `${firstName}, ready for your 14-day comeback challenge?`,
       html: `
@@ -642,8 +638,8 @@ export async function sendWinBackDay14(user: UserWelcomeData) {
       `,
     })
 
-    if (error) return { success: false, error }
-    return { success: true, data }
+    if (!result.success) return { success: false, error: result.error }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending win-back day 14 email:', error)
     return { success: false, error }
@@ -659,8 +655,7 @@ export async function sendWinBackDay30(user: UserWelcomeData) {
     const eventsLink = trackedLink(campaignId, `${getSiteBaseUrl()}/events`, user.email, user.userId)
     const pixel = openTrackingPixel(campaignId, user.email, user.userId)
 
-    const { data, error } = await requireResendClient().emails.send({
-      from: FROM_EMAIL,
+    const result = await sendTransactionalEmail({
       to: user.email,
       subject: `${firstName}, we built a 10-step comeback plan for you`,
       html: `
@@ -688,8 +683,8 @@ export async function sendWinBackDay30(user: UserWelcomeData) {
       `,
     })
 
-    if (error) return { success: false, error }
-    return { success: true, data }
+    if (!result.success) return { success: false, error: result.error }
+    return { success: true, data: result.data }
   } catch (error) {
     console.error('Error sending win-back day 30 email:', error)
     return { success: false, error }
@@ -698,9 +693,8 @@ export async function sendWinBackDay30(user: UserWelcomeData) {
 
 export async function sendBlogNotification(subscribers: string[], post: { title: string; excerpt: string; slug: string; category: string }) {
   try {
-    const emailPromises = subscribers.map(email =>
-      requireResendClient().emails.send({
-        from: FROM_EMAIL,
+    const emailPromises = subscribers.map((email) =>
+      sendTransactionalEmail({
         to: email,
         subject: `New Article: ${post.title}`,
         html: `
@@ -734,7 +728,7 @@ export async function sendBlogNotification(subscribers: string[], post: { title:
     )
 
     const results = await Promise.allSettled(emailPromises)
-    const successful = results.filter(r => r.status === 'fulfilled').length
+    const successful = results.filter((r) => r.status === 'fulfilled' && r.value.success).length
     const failed = results.filter(r => r.status === 'rejected').length
 
     return { success: true, sent: successful, failed }

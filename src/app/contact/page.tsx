@@ -11,8 +11,10 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: '',
+    website: '',
   })
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -45,10 +47,14 @@ export default function ContactPage() {
     setErrorMessage('')
 
     try {
-      const response = await fetch('/api/email/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          formType: 'contact',
+          sourcePage: window.location.pathname + window.location.search,
+        }),
       })
 
       const data = await response.json()
@@ -58,7 +64,7 @@ export default function ContactPage() {
       }
       
       setStatus('success')
-      setFormData({ name: '', email: '', subject: '', message: '' })
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '', website: '' })
       
       setTimeout(() => setStatus('idle'), 5000)
     } catch (error) {
@@ -227,6 +233,20 @@ export default function ContactPage() {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot — hidden from users, bots may fill it */}
+                <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true">
+                  <label htmlFor="website">Website</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website}
+                    onChange={handleChange}
+                  />
+                </div>
+
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                     Your Name *
@@ -256,6 +276,21 @@ export default function ContactPage() {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="you@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone (optional)
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="(555) 123-4567"
                   />
                 </div>
 

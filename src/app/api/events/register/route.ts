@@ -23,12 +23,12 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getAdminSupabase } from '@/lib/supabase/admin'
-import { requireResendClient } from '@/lib/resend-client'
+import { sendZeptoMail } from '@/lib/zeptomail'
+import { escapeHtml } from '@/lib/email-sanitize'
 import { eventRegistrationLimiter, getClientIdentifier } from '@/lib/rate-limiter'
 import { registerForEvent } from '@/lib/janagana'
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'The Purple Wings <noreply@updates.namastebostonhomes.com>'
-const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@thepurplewings.org'
+const LEADS_EMAIL = process.env.LEADS_TO || process.env.CONTACT_EMAIL || 'info@thepurplewings.org'
 
 export async function POST(request: NextRequest) {
   try {
@@ -83,19 +83,19 @@ export async function POST(request: NextRequest) {
       // Don't fail the request if JanaGana sync fails
     }
 
-    const resend = requireResendClient()
-
-    // Notify admin
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: CONTACT_EMAIL,
+    const adminResult = await sendZeptoMail({
+      to: LEADS_EMAIL,
       subject: `New Event Registration: ${eventTitle}`,
-      html: `<p><strong>${name}</strong> (${email}) just registered for <strong>${eventTitle}</strong>.</p>`,
+      html: `<p><strong>${escapeHtml(name)}</strong> (${escapeHtml(email)}) just registered for <strong>${escapeHtml(eventTitle)}</strong>.</p>`,
+      replyTo: email,
+      replyToName: name,
     })
 
-    // Confirmation to registrant
-    await resend.emails.send({
-      from: FROM_EMAIL,
+    if (!adminResult.success) {
+      console.error('Event admin notification failed:', adminResult.error)
+    }
+
+    const confirmResult = await sendZeptoMail({
       to: email,
       subject: `You're registered: ${eventTitle} 🎉`,
       html: `
@@ -105,13 +105,13 @@ export async function POST(request: NextRequest) {
             <h1 style="color: white; margin: 10px 0 0 0;">You're In!</h1>
           </div>
           <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <p style="color: #374151; line-height: 1.6;">Hi ${name},</p>
+            <p style="color: #374151; line-height: 1.6;">Hi ${escapeHtml(name)},</p>
             <p style="color: #374151; line-height: 1.6;">
-              You are registered for <strong>${eventTitle}</strong>. We'll send you the location, 
+              You are registered for <strong>${escapeHtml(eventTitle)}</strong>. We'll send you the location, 
               time, and any materials 48 hours before the event.
             </p>
             <div style="background: #f3f4f6; border-left: 4px solid #7c3aed; padding: 20px; border-radius: 4px; margin: 24px 0;">
-              <p style="color: #374151; margin: 0;"><strong>Event:</strong> ${eventTitle}</p>
+              <p style="color: #374151; margin: 0;"><strong>Event:</strong> ${escapeHtml(eventTitle)}</p>
               <p style="color: #374151; margin: 8px 0 0 0;"><strong>Organizer:</strong> The Purple Wings</p>
               <p style="color: #374151; margin: 8px 0 0 0;"><strong>Location:</strong> Details coming soon</p>
             </div>
@@ -121,12 +121,16 @@ export async function POST(request: NextRequest) {
             </p>
             <p style="color: #6b7280; font-size: 14px; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
               Questions? Reply to this email or contact us at 
-              <a href="mailto:${CONTACT_EMAIL}" style="color: #7c3aed;">${CONTACT_EMAIL}</a>
+              <a href="mailto:${escapeHtml(LEADS_EMAIL)}" style="color: #7c3aed;">${escapeHtml(LEADS_EMAIL)}</a>
             </p>
           </div>
         </div>
       `,
     })
+
+    if (!confirmResult.success) {
+      console.error('Event confirmation email failed:', confirmResult.error)
+    }
 
     return NextResponse.json({ success: true, message: "You're registered! Check your email for confirmation." })
   } catch (error) {

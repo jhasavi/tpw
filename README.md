@@ -88,7 +88,7 @@ Notes:
 - **Styling:** Tailwind CSS
 - **Database:** Supabase (PostgreSQL)
 - **Authentication:** Supabase Auth + Google OAuth
-- **Email:** Resend
+- **Email:** ZeptoMail (transactional)
 - **Deployment:** Vercel
 - **Analytics:** Google Analytics
 

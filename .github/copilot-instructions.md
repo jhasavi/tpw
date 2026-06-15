@@ -86,7 +86,7 @@ bash scripts/quality-check-queries.sh
 - Uses `BookmarkButton.tsx` component (client-side)
 
 ### Email Integration
-- Uses Resend for transactional emails
+- Uses ZeptoMail for transactional emails (server-side API routes only)
 - API routes in `src/app/api/email/` (contact, newsletter-welcome)
 - Newsletter subscribers in `newsletter_subscribers` table
 
@@ -113,7 +113,7 @@ Transform generic financial education to practical, women-centered examples:
 - `NEXT_PUBLIC_SUPABASE_URL` - Client-accessible
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Client-accessible  
 - `SUPABASE_SERVICE_ROLE_KEY` - Server/scripts only, never expose to client
-- `RESEND_API_KEY` - Email service
+- `ZEPTOMAIL_TOKEN` - ZeptoMail transactional email (server-side only)
 
 ### Database Access Patterns
 - All tables have RLS (Row Level Security) enabled
