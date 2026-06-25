@@ -9,12 +9,11 @@ import TrustBar from '@/components/TrustBar'
 import DonateButton from '@/components/DonateButton'
 import ReturningVisitorNudge from '@/components/ReturningVisitorNudge'
 import RevisitActionHub from '@/components/RevisitActionHub'
-import { generateOrganizationSchema } from '@/lib/seo'
 import { janaganaPurpleWings } from '@/lib/janagana-portal'
 
 export const metadata: Metadata = {
-  title: 'The Purple Wings - Shalini Jha | Free Financial Education for Women | Needham, MA',
-  description: 'Shalini Jha offers free financial education for women and girls in Needham. Achieve financial independence and self-empowerment through comprehensive courses on budgeting, investing, and wealth building.',
+  title: 'The Purple Wings - Free Self-Study Financial Courses for Women | Needham, MA',
+  description: 'Free self-paced financial literacy courses for women. Learn budgeting, credit, emergency funds, and investing at your own pace — no signup required to start.',
   keywords: 'Shalini Jha, women empowerment, financial education, Needham, girl empowerment, financial independence, self-independent women, women financial literacy, budgeting courses, investing education, retirement planning, wealth building, financial empowerment',
   openGraph: {
     title: 'The Purple Wings - Free Financial Education for Women',
@@ -52,16 +51,8 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-  const organizationSchema = generateOrganizationSchema()
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      
       {/* Redesigned Hero Section */}
       <RedesignedHero />
 

@@ -42,6 +42,38 @@ export default async function CertificatePage({ params, searchParams }: Certific
   const { courseSlug } = await params
   const { name: nameParam } = await searchParams
 
+  // Verify course completion before showing certificate
+  const { data: courseRow } = await supabase
+    .from('courses')
+    .select('id, title, slug')
+    .eq('slug', courseSlug)
+    .maybeSingle()
+
+  if (!courseRow) {
+    redirect('/courses')
+  }
+
+  const { data: allLessons } = await supabase
+    .from('lessons')
+    .select('id')
+    .eq('course_id', courseRow.id)
+
+  if (allLessons && allLessons.length > 0) {
+    const { data: completed } = await supabase
+      .from('lesson_progress')
+      .select('lesson_id')
+      .eq('user_id', user.id)
+      .in('lesson_id', allLessons.map((l) => l.id))
+      .eq('status', 'completed')
+
+    const completedIds = new Set(completed?.map((c) => c.lesson_id) ?? [])
+    const allComplete = allLessons.every((l) => completedIds.has(l.id))
+
+    if (!allComplete) {
+      redirect(`/learn/womens-financial-literacy/${courseSlug}`)
+    }
+  }
+
   const course = COURSE_DISPLAY_NAMES[courseSlug] ?? {
     title: courseSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
     curriculum: "Women's Financial Literacy",

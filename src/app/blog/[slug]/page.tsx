@@ -3,8 +3,10 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { cacheWrapper, CACHE_DURATIONS } from '@/lib/data-cache'
+import { generateArticleSchema } from '@/lib/seo'
+import JsonLd from '@/components/JsonLd'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -50,6 +52,19 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
   )
 }
 
+export async function generateStaticParams() {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('blog_posts')
+      .select('slug')
+      .eq('is_published', true)
+    return (data ?? []).map((p) => ({ slug: p.slug }))
+  } catch {
+    return []
+  }
+}
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params
   const post = await getBlogPost(slug)
@@ -60,9 +75,18 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     }
   }
 
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'
   return {
     title: `${post.title} | The Purple Wings Blog`,
     description: post.excerpt,
+    alternates: { canonical: `${base.replace(/\/$/, '')}/blog/${slug}` },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+      publishedTime: post.published_date,
+      images: post.featured_image_url ? [{ url: post.featured_image_url }] : undefined,
+    },
   }
 }
 
@@ -74,8 +98,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound()
   }
 
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'
+  const articleUrl = `${base.replace(/\/$/, '')}/blog/${slug}`
+  const articleSchema = generateArticleSchema({
+    headline: post.title,
+    description: post.excerpt,
+    image: post.featured_image_url || `${base}/images/Women-fin.png`,
+    datePublished: post.published_date,
+    author: post.author || 'The Purple Wings',
+    url: articleUrl,
+  })
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+      <JsonLd data={articleSchema} />
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-purple-600 to-indigo-800 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

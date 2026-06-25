@@ -8,36 +8,37 @@ import { trackResourceUrl, resourceIcon } from '@/lib/affiliate'
 interface LessonContentProps {
   lesson: Lesson
   courseTitle: string
+  showHeader?: boolean
 }
 
-export default function LessonContent({ lesson, courseTitle }: LessonContentProps) {
+export default function LessonContent({ lesson, courseTitle, showHeader = true }: LessonContentProps) {
   const content = lesson.content
 
   return (
     <div className="lesson-content-wrapper">
-      {/* Lesson Header */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              {lesson.title}
-            </h1>
-            <p className="text-gray-600 text-lg">{lesson.description}</p>
-          </div>
-          <div className="flex flex-col gap-2 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <span>⏱️</span>
-              <span>30 min</span>
+      {showHeader && (
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                {lesson.title}
+              </h1>
+              <p className="text-gray-600 text-lg">{lesson.description}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span>📚</span>
-              <span>Beginner</span>
+            <div className="flex flex-col gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <span>⏱️</span>
+                <span>{lesson.durationMinutes ?? 30} min</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>📚</span>
+                <span>{courseTitle}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Lesson Content Sections */}
       {content.introduction && (
         <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Introduction</h2>

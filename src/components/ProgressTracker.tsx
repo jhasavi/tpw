@@ -15,8 +15,38 @@ interface ProgressTrackerProps {
   curriculumTitle?: string
 }
 
+const LOCAL_PROGRESS_PREFIX = 'tpw_lesson_progress_'
+
+function getLocalProgressKey(lessonId: string) {
+  return `${LOCAL_PROGRESS_PREFIX}${lessonId}`
+}
+
+function readLocalProgress(lessonId: string): 'not_started' | 'in_progress' | 'completed' | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(getLocalProgressKey(lessonId))
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as { status?: string }
+    if (parsed.status === 'completed' || parsed.status === 'in_progress' || parsed.status === 'not_started') {
+      return parsed.status
+    }
+  } catch {
+    /* ignore */
+  }
+  return null
+}
+
+function writeLocalProgress(lessonId: string, status: 'in_progress' | 'completed') {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(
+    getLocalProgressKey(lessonId),
+    JSON.stringify({ status, updatedAt: new Date().toISOString() })
+  )
+}
+
 export default function ProgressTracker({ lessonId, courseId, courseSlug, courseTitle, curriculumTitle }: ProgressTrackerProps) {
   const [status, setStatus] = useState<'not_started' | 'in_progress' | 'completed'>('not_started')
+  const [isAnonymous, setIsAnonymous] = useState(false)
   const [startTime, setStartTime] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -64,9 +94,14 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
       const { data: { user } } = await supabase.auth.getUser()
       
       if (!user) {
+        const local = readLocalProgress(lessonId)
+        if (local) setStatus(local)
+        setIsAnonymous(true)
         setLoading(false)
         return
       }
+
+      setIsAnonymous(false)
 
       const { data, error: queryError } = await supabase
         .from('lesson_progress')
@@ -96,7 +131,14 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       
-      if (!user) return
+      if (!user) {
+        const local = readLocalProgress(lessonId)
+        if (!local) {
+          writeLocalProgress(lessonId, 'in_progress')
+          setStatus('in_progress')
+        }
+        return
+      }
 
       // Check if progress exists
       const { data: existing, error: selectError } = await supabase
@@ -187,7 +229,9 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
       const { data: { user } } = await supabase.auth.getUser()
       
       if (!user) {
-        alert('Please sign in to track your progress')
+        writeLocalProgress(lessonId, 'completed')
+        setStatus('completed')
+        toast.success('Lesson marked complete! Sign up to save progress across devices.')
         return
       }
 
@@ -411,6 +455,15 @@ export default function ProgressTracker({ lessonId, courseId, courseSlug, course
             </button>
           )}
         </div>
+        {isAnonymous && status !== 'completed' && (
+          <p className="mt-3 text-xs text-gray-500">
+            Progress is saved in this browser only.{' '}
+            <a href={`/auth/signup?returnTo=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '/learn')}`} className="text-purple-600 hover:underline">
+              Create a free account
+            </a>{' '}
+            to sync across devices.
+          </p>
+        )}
       </div>
     </div>
   )

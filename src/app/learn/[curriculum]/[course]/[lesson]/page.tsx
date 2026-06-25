@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import type { Lesson } from '@/types/curriculum'
@@ -8,6 +8,8 @@ import ProgressTracker from '@/components/ProgressTracker'
 import ProgressPersistence from '@/components/ProgressPersistence'
 import BookmarkButton from '@/components/BookmarkButton'
 import CourseProgressTracker from '@/components/CourseProgressTracker'
+import SaveProgressBanner from '@/components/SaveProgressBanner'
+import LessonContent from '@/components/LessonContent'
 
 interface LessonPageProps {
   params: Promise<{
@@ -58,12 +60,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
     const { curriculum: curriculumSlug, course: courseSlug, lesson: lessonSlug } = await params
     const supabase = await createClient()
 
-    // Require auth and redirect to /auth with return url
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      const returnTo = `/learn/${curriculumSlug}/${courseSlug}/${lessonSlug}`
-      redirect(`/auth?returnTo=${encodeURIComponent(returnTo)}`)
-    }
 
     // Fetch lesson from database
     const { data: curriculaData, error: curriculaError } = await supabase
@@ -130,9 +127,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const totalLessons = allLessons?.length ?? 0
   const lessonNumber = currentIndex + 1
 
-    // Get user's progress in this course
-    // user is guaranteed here due to redirect above
-    const { data: { user: authedUser } } = await supabase.auth.getUser()
+    // Get user's progress in this course (optional — anonymous learners allowed)
+    const authedUser = user
     let completedLessons = 0
     let isBookmarked = false
     
@@ -199,6 +195,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <SaveProgressBanner isLoggedIn={!!authedUser} />
+
         {/* Breadcrumb */}
         <nav className="text-sm text-gray-600 mb-6">
           <Link href="/courses" className="hover:text-purple-600">Courses</Link>
@@ -286,148 +284,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
           )}
         </div>
 
-        {/* Introduction or Markdown */}
-        {content.introduction && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-            <div className="prose prose-purple max-w-none">
-              <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
-                {content.introduction}
-              </p>
-            </div>
-          </div>
-        )}
-        {!content.introduction && (content as any).markdown && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-            <div className="prose prose-purple max-w-none">
-              <div className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
-                {(content as any).markdown}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Content Sections */}
-        {content.sections && content.sections.map((section, idx) => (
-          <div key={idx} className="bg-white rounded-xl shadow-lg p-8 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.title}</h2>
-            <div className="prose prose-purple max-w-none">
-              <div className="text-gray-700 leading-relaxed whitespace-pre-line mb-6">
-                {section.content}
-              </div>
-            </div>
-
-            {section.examples && section.examples.length > 0 && (
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mt-6">
-                <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                  <span>💡</span> Examples
-                </h4>
-                <ul className="space-y-2">
-                  {section.examples.map((example, exIdx) => (
-                    <li key={exIdx} className="text-gray-700 flex items-start gap-2">
-                      <span className="text-blue-600 mt-1">•</span>
-                      <span>{example}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {section.tips && section.tips.length > 0 && (
-              <div className="bg-green-50 border-l-4 border-green-500 p-6 mt-6">
-                <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                  <span>💭</span> Tips
-                </h4>
-                <ul className="space-y-2">
-                  {section.tips.map((tip, tipIdx) => (
-                    <li key={tipIdx} className="text-gray-700 flex items-start gap-2">
-                      <span className="text-green-600 mt-1">→</span>
-                      <span>{tip}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
-
-        {/* Key Takeaways */}
-        {Array.isArray(content.keyTakeaways) && content.keyTakeaways.length > 0 && (
-          <div className="bg-gradient-to-br from-purple-600 to-purple-700 text-white rounded-xl shadow-lg p-8 mb-6">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              <span>🌟</span> Key Takeaways
-            </h2>
-            <ul className="space-y-3">
-              {content.keyTakeaways.map((takeaway: string, idx: number) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 bg-white text-purple-600 rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
-                    {idx + 1}
-                  </span>
-                  <span className="leading-relaxed">{takeaway}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Action Items */}
-        {Array.isArray(content.actionItems) && content.actionItems.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span>✅</span> Action Items
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Apply what you've learned! Complete these steps in the next week:
-            </p>
-            <ul className="space-y-3">
-              {content.actionItems.map((item: string, idx: number) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    className="mt-1 w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
-                  />
-                  <span className="text-gray-700">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Resources */}
-        {Array.isArray(content.resources) && content.resources.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span>📚</span> Resources & Tools
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {content.resources.map((resource: any, idx: number) => (
-                <div key={idx} className="border border-purple-200 rounded-lg p-4 hover:shadow-md transition-all">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">
-                      {resource.type === 'tool' ? '🔧' : 
-                       resource.type === 'worksheet' ? '📝' :
-                       resource.type === 'calculator' ? '🧮' :
-                       resource.type === 'article' ? '📄' : '🎥'}
-                    </span>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900">{resource.title}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{resource.description}</p>
-                      {resource.url && (
-                        <a
-                          href={resource.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-purple-600 hover:text-purple-700 font-medium mt-2 inline-block"
-                        >
-                          Access Resource →
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <LessonContent lesson={lesson} courseTitle={courseData.title} showHeader={false} />
 
         {/* Lesson Navigation - Enhanced Visibility */}
         <div className="bg-gradient-to-r from-purple-100 via-purple-50 to-indigo-100 rounded-2xl shadow-2xl p-8 mb-6 border-4 border-purple-300">

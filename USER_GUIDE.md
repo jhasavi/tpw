@@ -4,9 +4,15 @@
 
 The Purple Wings is a comprehensive financial literacy platform designed specifically for women. This guide will help you navigate the platform, access courses, track your progress, and make the most of your learning journey.
 
+### Self-study without an account
+
+You can read lessons and take quizzes **without signing up**. Visit the [Self-Study Portal](/learn) or any course under `/learn/...`. Progress is saved in your browser; create a free account anytime to sync progress, bookmarks, and certificates across devices.
+
 ## 🚀 Getting Started
 
-### Creating Your Account
+### Creating Your Account (optional)
+
+An account is **not required** to learn. Sign up when you want saved progress and certificates.
 
 #### Step 1: Sign Up
 1. Visit the TPW homepage

@@ -26,4 +26,20 @@ test.describe('Production readiness smoke', () => {
     await page.goto('/newsletter/subscribe');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
+
+  test('self-study portal loads', async ({ page }) => {
+    await page.goto('/learn');
+    await expect(page.getByRole('heading', { name: /Learn finance on your schedule/i })).toBeVisible();
+  });
+
+  test('anonymous user can open a lesson without auth redirect', async ({ page }) => {
+    await page.goto('/learn/womens-financial-literacy/financial-literacy-basics');
+    await expect(page).not.toHaveURL(/\/auth/);
+  });
+
+  test('guide page includes FAQ schema', async ({ page }) => {
+    await page.goto('/guides/budgeting-for-women');
+    const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent();
+    expect(jsonLd).toContain('FAQPage');
+  });
 });

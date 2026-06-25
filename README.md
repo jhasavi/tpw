@@ -42,16 +42,18 @@ vercel --prod
 ## 📚 Documentation
 
 ### Essential Documents
-- **[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md)** - Production checklist, where we left off, and ops runbook
-- **[ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md)** - Complete system architecture and technical overview
-- **[COURSE_GUIDE.md](COURSE_GUIDE.md)** - Course structure, learning paths, and educational features
+- **[docs/SELF_STUDY_PORTAL.md](docs/SELF_STUDY_PORTAL.md)** - Self-study learner journey and public vs signed-in features
+- **[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md)** - Production checklist and ops runbook
+- **[docs/COURSE_GUIDE.md](docs/COURSE_GUIDE.md)** - Course structure and beginner track
 - **[USER_GUIDE.md](USER_GUIDE.md)** - User onboarding, navigation, and platform features
 - **[CRM_INTEGRATION_GUIDE.md](CRM_INTEGRATION_GUIDE.md)** - CRM integration, events, and maintenance
 - **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** - Development setup, coding standards, and deployment
 
 ## ✨ Features
 
-- **Self-Assessment Quiz** - 15-question financial literacy assessment
+- **Self-Study Portal** — Free public lessons at [/learn](https://www.thepurplewings.org/learn); optional account for progress
+- **Topic Guides** — SEO hubs at `/guides` (budgeting, credit, investing, retirement, and more)
+- **Self-Assessment Quiz** — 15-question financial literacy assessment
 - **Course Library** - Comprehensive financial education courses
 - **Progress Tracking** - Track lesson completion and quiz scores
 - **Community** - Team showcases and supporter recognition
@@ -124,6 +126,9 @@ node scripts/quality-check.js
 
 # E2E (Playwright)
 npm run test:e2e
+
+# Sync lesson content to Supabase
+npm run sync-lessons
 
 # Health check (after deploy)
 curl -s https://www.thepurplewings.org/api/health

@@ -68,6 +68,19 @@ export default function ProgressPersistence({
         localStorage.setItem(key, JSON.stringify(progressData))
         
         setLastSaved(new Date())
+      } else {
+        const progressData: ProgressData = {
+          courseId,
+          lessonId,
+          lessonPosition: data.lessonPosition ?? 0,
+          scrollPosition: data.scrollPosition ?? 0,
+          timeSpent: data.timeSpent ?? 0,
+          lastActive: new Date().toISOString(),
+          quizProgress: data.quizProgress ?? []
+        }
+        const key = `progress_${courseId}_${lessonId}`
+        localStorage.setItem(key, JSON.stringify(progressData))
+        setLastSaved(new Date())
       }
     } catch (error) {
       console.error('Error saving progress:', error)

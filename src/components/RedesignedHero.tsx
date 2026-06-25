@@ -135,12 +135,12 @@ export default function RedesignedHero() {
             {/* Main Headline */}
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Free Financial Education
-                <span className="text-yellow-400"> That Changes Lives</span>
+                Free Self-Paced Financial Courses
+                <span className="text-yellow-400"> for Women</span>
               </h1>
               <p className="text-xl text-purple-100 leading-relaxed max-w-2xl">
-                Join 500+ Massachusetts women who've transformed their financial futures. 
-                Free courses, personal guidance, and a community that understands your journey.
+                Learn budgeting, credit, emergency planning, and more at your own pace. 
+                No signup required to start — built for women seeking financial independence.
               </p>
             </div>
 
@@ -166,19 +166,19 @@ export default function RedesignedHero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
-                href="/quiz/personality"
+                href="/learn"
                 className="bg-yellow-400 text-purple-900 px-8 py-4 rounded-lg font-bold hover:bg-yellow-300 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
               >
                 <Target className="w-5 h-5" />
-                Start Free Assessment
+                Start Self-Study
               </Link>
-              <button
-                onClick={handleVideoPlay}
+              <Link
+                href="/courses"
                 className="bg-white/20 backdrop-blur text-white px-8 py-4 rounded-lg font-bold hover:bg-white/30 transition-all flex items-center justify-center gap-2"
               >
-                <Play className="w-5 h-5" />
-                Watch Success Stories
-              </button>
+                Browse Courses
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           </div>
 

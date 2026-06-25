@@ -13,8 +13,8 @@ export async function proxy(request: NextRequest) {
     request.headers.get('x-request-id') ||
     `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`
 
-  // Protected routes - require authentication
-  const protectedRoutes = ['/dashboard', '/learn', '/quiz', '/assessment']
+  // Protected routes - require authentication (learning content is public)
+  const protectedRoutes = ['/dashboard', '/progress', '/bookmarks', '/profile']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   // Only run auth update for protected routes or auth-related paths

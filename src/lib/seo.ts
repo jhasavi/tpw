@@ -11,9 +11,10 @@ export interface SEOConfig {
   modifiedTime?: string
   section?: string
   tags?: string[]
+  canonicalPath?: string
 }
 
-const SITE_URL = 'https://www.thepurplewings.org'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'
 const SITE_NAME = 'The Purple Wings'
 const DEFAULT_DESCRIPTION = 'Empowering women through financial literacy. Free courses, resources, and community support for achieving financial independence.'
 const DEFAULT_IMAGE = `${SITE_URL}/images/Women-fin.png`
@@ -31,9 +32,13 @@ export function generateSEO(config: SEOConfig): Metadata {
     modifiedTime,
     section,
     tags = [],
+    canonicalPath,
   } = config
 
   const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`
+  const canonical = canonicalPath
+    ? `${SITE_URL.replace(/\/$/, '')}${canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`}`
+    : SITE_URL
 
   const metadata: Metadata = {
     title: fullTitle,
@@ -81,7 +86,7 @@ export function generateSEO(config: SEOConfig): Metadata {
       images: [image],
     },
     alternates: {
-      canonical: SITE_URL,
+      canonical,
     },
   }
 

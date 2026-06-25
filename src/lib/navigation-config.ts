@@ -26,7 +26,7 @@ export interface UserMenuConfig {
   onSignOut: () => void
 }
 
-const learnPaths = ['/courses', '/learn', '/quiz/personality', '/quiz/retirement-readiness', '/life-stage', '/life-events', '/tools', '/faq']
+const learnPaths = ['/courses', '/learn', '/guides', '/quiz/personality', '/quiz/retirement-readiness', '/life-stage', '/life-events', '/tools', '/faq']
 const communityPaths = ['/events', '/stories', '/blog', '/community', '/get-involved', '/newsletter', '/media', '/come-back']
 const aboutPaths = ['/about', '/impact', '/ambassador', '/campaigns', '/press', '/partnerships', '/corporate-sponsors', '/contact']
 
@@ -35,7 +35,9 @@ export const navigationConfig: NavItem[] = [
   {
     label: 'Learn',
     dropdown: [
+      { label: 'Self-Study Portal', href: '/learn', icon: '📖' },
       { label: 'All Courses', href: '/courses', icon: '📚' },
+      { label: 'Topic Guides', href: '/guides', icon: '📝' },
       { label: "Women's Curriculum", href: '/learn/womens-financial-literacy', icon: '💜' },
       { label: '40-Hour Professional', href: '/learn/finra-40-hour', icon: '🎓' },
       { label: 'Personality Quiz', href: '/quiz/personality', icon: '🧠' },

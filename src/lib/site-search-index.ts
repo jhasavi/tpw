@@ -7,6 +7,25 @@ export type SiteSearchEntry = {
 }
 
 /** Curated site index for client-side search (no crawl infra required). */
+import { guides } from '@/data/guides'
+
+const guideEntries: SiteSearchEntry[] = guides.map((g) => ({
+  title: g.title,
+  description: g.metaDescription,
+  href: `/guides/${g.slug}`,
+  keywords: g.keywords,
+  category: 'Guides',
+}))
+
+const learnEntries: SiteSearchEntry[] = [
+  { title: 'Self-Study Portal', description: 'Free self-paced courses for women', href: '/learn', keywords: ['self study', 'portal', 'learn'], category: 'Learn' },
+  { title: 'Financial Literacy Basics', description: 'Beginner course', href: '/learn/womens-financial-literacy/financial-literacy-basics', keywords: ['basics', 'beginner'], category: 'Learn' },
+  { title: 'Budgeting Basics', description: 'Create and maintain a budget', href: '/learn/womens-financial-literacy/budgeting-basics', keywords: ['budget', 'budgeting'], category: 'Learn' },
+  { title: 'Emergency Planning', description: 'Build your emergency fund', href: '/learn/womens-financial-literacy/emergency-planning', keywords: ['emergency', 'savings'], category: 'Learn' },
+  { title: 'Credit Management', description: 'Understand and improve credit', href: '/learn/womens-financial-literacy/credit-management', keywords: ['credit', 'score'], category: 'Learn' },
+  { title: 'All Guides', description: 'Topic guides for self-learners', href: '/guides', keywords: ['guides', 'articles'], category: 'Guides' },
+]
+
 export const siteSearchIndex: SiteSearchEntry[] = [
   { title: 'Home', description: 'The Purple Wings — free financial education for women in Needham', href: '/', keywords: ['home', 'purple wings', 'shalini jha'], category: 'Main' },
   { title: 'About Us', description: 'Our mission empowering women through financial literacy', href: '/about', keywords: ['about', 'mission', 'nonprofit'], category: 'About' },
@@ -26,6 +45,8 @@ export const siteSearchIndex: SiteSearchEntry[] = [
   { title: 'Corporate Sponsors', description: 'Partner with The Purple Wings', href: '/corporate-sponsors', keywords: ['sponsor', 'corporate', 'partnership'], category: 'About' },
   { title: 'Classes on JanaGana', description: 'Register for Purple Wings classes and events', href: 'https://janagana.namasteneedham.com/portal/purple-wings/events', keywords: ['janagana', 'register', 'class registration'], category: 'Events' },
   { title: 'Community updates (JanaGana)', description: 'Event and class announcements via JanaGana', href: 'https://janagana.namasteneedham.com/portal/purple-wings/contact?interest=newsletter', keywords: ['community updates', 'janagana newsletter', 'events email'], category: 'Newsletter' },
+  ...learnEntries,
+  ...guideEntries,
 ]
 
 export function searchSiteIndex(query: string, limit = 12): SiteSearchEntry[] {
