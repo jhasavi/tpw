@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.thepurplewings.org'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.thepurplewings.org'
   const currentDate = new Date()
 
   // Static pages
@@ -121,10 +121,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/search`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
+    },
+    {
       url: `${baseUrl}/come-back`,
       lastModified: currentDate,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: currentDate,
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: currentDate,
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
     },
   ]
 

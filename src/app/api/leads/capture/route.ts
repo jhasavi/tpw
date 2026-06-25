@@ -9,6 +9,7 @@ import {
   type LifecycleStage 
 } from '@/lib/crm-utils'
 import { crmClient } from '@/lib/crm-retry-server'
+import { leadsCaptureLimiter, getClientIdentifier } from '@/lib/rate-limiter'
 
 // Schema for smart lead capture
 const smartLeadSchema = z.object({
@@ -23,6 +24,11 @@ const smartLeadSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const identifier = getClientIdentifier(request)
+    if (!leadsCaptureLimiter.isAllowed(identifier)) {
+      return leadsCaptureLimiter.getResponse()
+    }
+
     const body = await request.json()
     const validatedData = smartLeadSchema.parse(body)
 

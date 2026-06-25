@@ -8,8 +8,13 @@ export async function GET(request: Request) {
   try {
     // Verify this is a cron job request (you may need to adjust based on your cron service)
     const authHeader = request.headers.get('authorization')
-    const cronSecret = process.env.CRON_SECRET || 'default-cron-secret'
-    
+    const cronSecret = process.env.CRON_SECRET
+
+    if (!cronSecret) {
+      console.error('CRON_SECRET is not configured for /api/cron/crm-replay')
+      return NextResponse.json({ error: 'Cron not configured' }, { status: 503 })
+    }
+
     if (authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json(
         { error: 'Unauthorized - cron secret required' },

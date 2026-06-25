@@ -59,13 +59,18 @@ supabase db push
 # Copy environment template
 cp .env.example .env.local
 
-# Required environment variables
+# Required environment variables — see .env.example for full list
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+CRON_SECRET=your_cron_secret
+ZEPTOMAIL_TOKEN=your_zeptomail_token
+ZEPTOMAIL_FROM=noreply@thepurplewings.org
 JANAGANA_API_URL=your_crm_api_url
 JANAGANA_API_KEY=your_crm_api_key
 ```
+
+See **[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md)** for the deploy checklist and health endpoints (`/api/health`, `/api/ready`).
 
 ### Code Quality Tools
 

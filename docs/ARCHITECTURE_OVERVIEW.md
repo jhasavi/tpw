@@ -258,7 +258,9 @@ New User → WelcomeWizard → Assessment → Recommendations → Profile Creati
 - **Database indexes** for query optimization
 - **API response time tracking**
 - **Client-side performance metrics**
-- **Server-side logging**
+- **Server-side logging** via `src/lib/logger.ts` (structured JSON)
+- **Health endpoints:** `GET /api/ready` (liveness), `GET /api/health` (config/deps)
+- **Request tracing:** `x-request-id` header on all responses
 
 ### CRM Observability
 - **Event tracking** for user actions
@@ -348,6 +350,6 @@ npm install && npm run dev
 
 ---
 
-**Last Updated:** May 3, 2026  
-**Version:** 1.0  
+**Last Updated:** June 25, 2026  
+**Version:** 2.1  
 **Maintainer:** TPW Development Team

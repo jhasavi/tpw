@@ -48,6 +48,8 @@ class RateLimiter {
 export const contactFormLimiter = new RateLimiter(5, 60 * 1000) // 5 requests per minute
 export const newsletterLimiter = new RateLimiter(3, 60 * 1000) // 3 requests per minute
 export const eventRegistrationLimiter = new RateLimiter(3, 60 * 1000) // 3 requests per minute
+export const authSignupLimiter = new RateLimiter(5, 15 * 60 * 1000) // 5 signups per 15 minutes
+export const leadsCaptureLimiter = new RateLimiter(10, 60 * 1000) // 10 leads per minute
 
 export function getClientIdentifier(request: NextRequest): string {
   // Use IP address as identifier

@@ -43,6 +43,7 @@ coverage/
 
 # Local development
 .env*
+!.env.example
 
 # Misc
 .cache/

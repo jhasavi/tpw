@@ -8,6 +8,10 @@
     {
       "path": "/api/cron/email-drip",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/crm-replay",
+      "schedule": "0 6 * * *"
     }
   ]
 }

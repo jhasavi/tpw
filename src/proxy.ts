@@ -2,8 +2,16 @@ import { updateSession } from '@/lib/supabase/middleware'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+function withRequestId(response: NextResponse, requestId: string) {
+  response.headers.set('x-request-id', requestId)
+  return response
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const requestId =
+    request.headers.get('x-request-id') ||
+    `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`
 
   // Protected routes - require authentication
   const protectedRoutes = ['/dashboard', '/learn', '/quiz', '/assessment']
@@ -23,17 +31,21 @@ export async function proxy(request: NextRequest) {
       
       // Simple check - if there's no session cookie, redirect to login
       if (!cookieHeader.includes('sb-')) {
-        return NextResponse.redirect(new URL('/auth/login', request.url))
+        return withRequestId(
+          NextResponse.redirect(new URL('/auth/login', request.url)),
+          requestId
+        )
       }
     }
 
-    return response
+    return withRequestId(response, requestId)
   }
 
   // For all other routes, skip auth processing
-  return NextResponse.next({
-    request,
-  })
+  return withRequestId(
+    NextResponse.next({ request }),
+    requestId
+  )
 }
 
 export const config = {

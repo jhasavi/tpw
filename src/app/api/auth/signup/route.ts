@@ -1,9 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 import { handleCRMReconciliation } from '@/lib/crm-reconciliation'
+import { authSignupLimiter, getClientIdentifier } from '@/lib/rate-limiter'
 
 export async function POST(request: NextRequest) {
   try {
+    const identifier = getClientIdentifier(request)
+    if (!authSignupLimiter.isAllowed(identifier)) {
+      return authSignupLimiter.getResponse()
+    }
+
     const body = await request.json()
     const email = body?.email?.toString().trim()
     const password = body?.password?.toString()

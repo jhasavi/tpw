@@ -42,6 +42,7 @@ vercel --prod
 ## 📚 Documentation
 
 ### Essential Documents
+- **[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md)** - Production checklist, where we left off, and ops runbook
 - **[ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md)** - Complete system architecture and technical overview
 - **[COURSE_GUIDE.md](COURSE_GUIDE.md)** - Course structure, learning paths, and educational features
 - **[USER_GUIDE.md](USER_GUIDE.md)** - User onboarding, navigation, and platform features
@@ -115,11 +116,17 @@ tpw/
 ## 🧪 Testing
 
 ```bash
+# Full verify (types + production build)
+npm run verify
+
 # Run quality check (tests all URLs)
 node scripts/quality-check.js
 
-# Run self-assessment creation
-npx tsx scripts/create-self-assessment.ts
+# E2E (Playwright)
+npm run test:e2e
+
+# Health check (after deploy)
+curl -s https://www.thepurplewings.org/api/health
 ```
 
 ## 🌟 Team

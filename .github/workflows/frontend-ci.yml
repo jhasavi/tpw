@@ -1,22 +1,25 @@
 name: Frontend CI
 
-# Temporarily disabled - configure secrets in GitHub repo settings first
 on:
-  workflow_dispatch: # Manual trigger only
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Use secrets with fallback values
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      ZEPTOMAIL_TOKEN: ${{ secrets.ZEPTOMAIL_TOKEN }}
-      ZEPTOMAIL_FROM: ${{ secrets.ZEPTOMAIL_FROM }}
-      ZEPTOMAIL_FROM_NAME: ${{ secrets.ZEPTOMAIL_FROM_NAME }}
-      LEADS_TO: ${{ secrets.LEADS_TO }}
-      CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key' }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET || 'ci-cron-secret' }}
+      ZEPTOMAIL_TOKEN: ${{ secrets.ZEPTOMAIL_TOKEN || 'ci-zeptomail-token' }}
+      ZEPTOMAIL_FROM: ${{ secrets.ZEPTOMAIL_FROM || 'ci@example.com' }}
+      ZEPTOMAIL_FROM_NAME: ${{ secrets.ZEPTOMAIL_FROM_NAME || 'TPW CI' }}
+      LEADS_TO: ${{ secrets.LEADS_TO || 'ci@example.com' }}
+      CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL || 'ci@example.com' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,12 +28,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Type-check
+        run: npm run typecheck
+
       - name: Build Next.js app
         run: npm run build
-
-      - name: Type-check
-        run: npx tsc --noEmit || true
